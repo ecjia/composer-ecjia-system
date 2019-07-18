@@ -50,11 +50,12 @@ use ReflectionClass;
 use Royalcms\Component\App\AppParentServiceProvider;
 use Ecjia\System\Plugin\PluginManager;
 use Ecjia\System\Theme\ThemeManager;
-use Ecjia\System\Site\SiteManager;
+use Ecjia\System\Frameworks\Site\SiteManager;
 use Ecjia\System\Version\VersionManager;
 use Ecjia\System\Config\Config;
 use Ecjia\System\Config\ConfigModel;
 use Ecjia\System\Config\DatabaseConfigRepository;
+use Ecjia\System\Frameworks\CleanCache\CacheManger;
 
 class SystemServiceProvider extends AppParentServiceProvider 
 {
@@ -97,15 +98,13 @@ class SystemServiceProvider extends AppParentServiceProvider
 	    $this->registerConfigRepository();
 	    
 	    $this->registerConfig();
+
+	    $this->registerCache();
 	    
 	    $this->loadAlias();
 
         if ($this->royalcms->environment() == 'local') {
             $this->royalcms->register('Royalcms\Component\Readme\ReadmeServiceProvider');
-
-            if (PHP_VERSION_ID > 70100) {
-                $this->royalcms->register('Royalcms\Component\DumpServer\DumpServerServiceProvider');
-            }
         }
 	}
 	
@@ -152,6 +151,18 @@ class SystemServiceProvider extends AppParentServiceProvider
 	        return new VersionManager($royalcms);
 	    });
 	}
+
+    /**
+     * Register the Cache service
+     * @return \Ecjia\System\Admins\CleanCache\CacheManger
+     */
+    public function registerCache()
+    {
+        $this->royalcms->bindShared('ecjia.cache', function($royalcms)
+        {
+            return new CacheManger();
+        });
+    }
 	
 	
 	/**
@@ -194,9 +205,13 @@ class SystemServiceProvider extends AppParentServiceProvider
 	        $loader->alias('Ecjia_SiteManager', 'Ecjia\System\Facades\SiteManager');
 	        $loader->alias('Ecjia_VersionManager', 'Ecjia\System\Facades\VersionManager');
 	        $loader->alias('ecjia_config', 'Ecjia\System\Facades\Config');
+	        $loader->alias('ecjia_update_cache', 'Ecjia\System\Facades\Cache');
+            $loader->alias('ecjia_admin_log', 'Ecjia\System\Facades\AdminLog');
 
 	        //compatible
 	        $loader->alias('ecjia_base', 'Ecjia\System\BaseController\EcjiaController');
+	        $loader->alias('ecjia_admin', 'Ecjia\System\BaseController\EcjiaAdminController');
+	        $loader->alias('ecjia_front', 'Ecjia\System\BaseController\EcjiaFrontController');
 	        $loader->alias('ecjia_error', 'Royalcms\Component\Error\Error');
 	    });
 	}
@@ -210,6 +225,7 @@ class SystemServiceProvider extends AppParentServiceProvider
 	{
 	    return array(
 	        'ecjia.config',
+	        'ecjia.cache',
 	    );
 	}
 
@@ -220,25 +236,58 @@ class SystemServiceProvider extends AppParentServiceProvider
      */
     public static function compiles()
     {
-        $dir = __DIR__ . '/../';
+        $dir = __DIR__ . '/..';
         return [
             $dir . "/Http/Kernel.php",
             $dir . "/Exceptions/Handler.php",
-            $dir . "/Sessions/Handler/MysqlSessionHandler.php",
-            $dir . "/Sessions/EcjiaSessionInterface.php",
+
             $dir . "/Facades/Config.php",
+            $dir . "/Facades/ThemeManager.php",
+            $dir . "/Facades/PluginManager.php",
+            $dir . "/Facades/SiteManager.php",
+            $dir . "/Facades/VersionManager.php",
+            $dir . "/Facades/AdminLog.php",
+            $dir . "/Admins/AdminLog/AdminLog.php",
+            $dir . "/Admins/AdminLog/CompatibleTrait.php",
+            $dir . "/Admins/AdminLog/AdminLogAction.php",
+            $dir . "/Admins/AdminLog/AdminLogObject.php",
+
+            $dir . "/Frameworks/Contracts/EcjiaSessionInterface.php",
+            $dir . "/Frameworks/Contracts/EcjiaTemplateFileLoader.php",
+            $dir . "/Frameworks/Contracts/PaidOrderProcessInterface.php",
+            $dir . "/Frameworks/Contracts/ScriptLoaderInterface.php",
+            $dir . "/Frameworks/Contracts/StyleLoaderInterface.php",
+            $dir . "/Frameworks/Contracts/UserAllotPurview.php",
+            $dir . "/Frameworks/Contracts/UserInterface.php",
+            $dir . "/Frameworks/Contracts/ShopInterface.php",
+            $dir . "/Frameworks/ScriptLoader/ScriptLoader.php",
+            $dir . "/Frameworks/ScriptLoader/StyleLoader.php",
+            $dir . "/Frameworks/Screens/NotInstallScreen.php",
+            $dir . "/Frameworks/Screens/AllScreen.php",
+
+            $dir . "/Frameworks/Model/Model.php",
+            $dir . "/Frameworks/Model/InsertOnDuplicateKey.php",
+
+            $dir . "/Frameworks/Sessions/Traits/EcjiaSessionSpecTrait.php",
+            $dir . "/Frameworks/Sessions/Handler/MysqlSessionHandler.php",
+            $dir . "/Frameworks/Sessions/Handler/RedisSessionHandler.php",
+
             $dir . "/Config/DatabaseConfigRepository.php",
             $dir . "/Config/ConfigRepositoryInterface.php",
             $dir . "/Config/ConfigModel.php",
             $dir . "/Config/Config.php",
             $dir . "/Config/CompatibleTrait.php",
-            $dir . "/BaseController/EcjiaController.php",
-            $dir . "/Facades/ThemeManager.php",
+
             $dir . "/Theme/ThemeManager.php",
             $dir . "/Theme/Theme.php",
             $dir . "/Theme/ParseThemeStyle.php",
-            $dir . "/interface/ecjia_template_fileloader.class.php",
 
+            $dir . "/BaseController/BasicController.php",
+            $dir . "/BaseController/EcjiaController.php",
+            $dir . "/BaseController/SimpleController.php",
+            $dir . "/BaseController/SmartyController.php",
+            $dir . "/BaseController/EcjiaAdminController.php",
+            $dir . "/BaseController/EcjiaFrontController.php",
 
             $dir . "/ecjia_view.class.php",
             $dir . "/ecjia_notification.class.php",

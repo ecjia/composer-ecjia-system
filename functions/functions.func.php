@@ -50,54 +50,32 @@ defined('IN_ECJIA') or exit('No permission resources.');
  * 加载ECJia项目主文件
  */
 RC_Package::package('system')->loadClass('ecjia', false);
-if (royalcms('request')->query('m') != 'installer') {
-    RC_Hook::add_action('init', 'load_theme_function');
-    RC_Hook::add_filter('app_scan_bundles', 'app_scan_bundles');
-    RC_Hook::add_action('royalcms_default_controller', function ($arg) {
-        new ecjia_controller();
-    });
+if (is_installed_ecjia()) {
+    (new \Ecjia\System\Frameworks\Screens\NotInstallScreen())->loading();
+} else {
+    (new \Ecjia\System\Frameworks\Screens\InstallScreen())->loading();
 }
- 
+
 /**
- * 加载主题扩展文件
+ * 检测是否安装ecjia
  */
-function load_theme_function() {
-    RC_Loader::load_app_func('functions', 'api');
-    $app = RC_Config::load_config('site', 'MAIN_APP');
-    if ($app) {
-        RC_Loader::load_app_func('functions', $app);
+function is_installed_ecjia()
+{
+    $install_lock = storage_path() . '/data/install.lock';
 
-        RC_Hook::add_filter('template', function () {
-            $template_code = RC_Hook::apply_filters('ecjia_theme_template_code', 'template');
-            return ecjia::config($template_code);
-        });
-    } else {
-        $request = royalcms('request');
-        if ($request->getBasePath() != '') {
-            RC_Hook::add_filter('template', function () {
-                return config('system.tpl_style');
-            });
-        } else {
-            RC_Hook::add_filter('template', function () {
-                $template_code = RC_Hook::apply_filters('ecjia_theme_template_code', 'template');
-                return ecjia::config($template_code);
-            });
+    if (!file_exists($install_lock) && !defined('NO_CHECK_INSTALL')) {
+
+        if (royalcms('request')->query('m') != 'installer')
+        {
+            $url = RC_Uri::url('installer/index/init');
+            rc_redirect($url);
+            exit();
         }
+
+        return false;
     }
 
-    $dir = RC_Theme::get_template_directory();
-    if (file_exists($dir . DS . 'functions.php')) {
-        include_once $dir . DS . 'functions.php';
-    }
-}
-
-function app_scan_bundles() {
-    $builtin_bundles = ecjia_app::builtin_bundles();
-    if (defined('ROUTE_M') && ROUTE_M != 'installer') {
-        $extend_bundles = ecjia_app::extend_bundles();
-        return array_merge($builtin_bundles, $extend_bundles);
-    }
-    return $builtin_bundles;
+    return true;
 }
 
 function ecjia_front_access_session() {
@@ -124,6 +102,7 @@ function ecjia_front_access_session() {
     }
 }
 RC_Hook::add_action('ecjia_front_access_session', 'ecjia_front_access_session');
+
 
 /**
  * 自定义后台管理访问URL
@@ -164,82 +143,6 @@ function custom_system_static_url($url, $path) {
 }
 RC_Hook::add_filter('system_static_url', 'custom_system_static_url', 10, 2);
 
-
-/**
- * 自定义项目访问URL
- * @param string $url
- * @param string $path
- * @return string
- */
-function custom_home_url($url, $path, $scheme) {
-    if (RC_Config::has('site.custom_home_url')) {
-        $home_url = RC_Config::get('site.custom_home_url');
-        $url = $home_url . '/' . $path;
-    }
-    return rtrim($url, '/');
-}
-RC_Hook::add_filter('home_url', 'custom_home_url', 10, 3);
-
-/**
- * 自定义项目访问URL
- * @param string $url
- * @param string $path
- * @return string
- */
-function custom_site_url($url, $path, $scheme) {
-    if (RC_Config::has('site.custom_site_url')) {
-        $home_url = RC_Config::get('site.custom_site_url');
-        $url = $home_url . '/' . $path;
-    }
-    return rtrim($url, '/');
-}
-RC_Hook::add_filter('site_url', 'custom_site_url', 10, 3);
-
-
-/**
- * 自定义上传目录访问URL
- * @param string $url
- * @param string $path
- * @return string
- */
-function custom_upload_url($url, $path) {
-    if (RC_Config::has('site.custom_upload_url')) {
-        $home_url = RC_Config::get('site.custom_upload_url');
-        $url = $home_url . '/' . $path;
-    }
-    return rtrim($url, '/');
-}
-RC_Hook::add_filter('upload_url', 'custom_upload_url', 10, 2);
-
-
-/**
- * 自定义上传目录路径
- * @param string $url
- * @param string $path
- * @return string
- */
-function custom_upload_path($url, $path) {
-    if (RC_Config::has('site.custom_upload_path')) {
-        $upload_path = RC_Config::get('site.custom_upload_path');
-    } else {
-        $upload_path = SITE_UPLOAD_PATH;
-    }
-    $upload_path = $upload_path . ltrim($path, '/');
-    return $upload_path;
-}
-RC_Hook::add_filter('upload_path', 'custom_upload_path', 10, 2);
-
-
-/**
- * 自定义商店关闭后输出
- */
-function custom_shop_closed() {
-    header('Content-type: text/html; charset='.RC_CHARSET);
-    die('<div style="margin: 150px; text-align: center; font-size: 14px"><p>' . __('本店盘点中，请您稍后再来...') . '</p><p>' . ecjia::config('close_comment') . '</p></div>');
-}
-RC_Hook::add_action('ecjia_shop_closed', 'custom_shop_closed');
-
-
 function compatible_process_handle() {
     ecjia_front::$view_object->assign('ecs_charset', RC_CHARSET);
     
@@ -254,18 +157,6 @@ function compatible_process_handle() {
 }
 RC_Hook::add_action('ecjia_compatible_process', 'compatible_process_handle');
 
-
-function ecjia_set_header() {
-    header('content-type: text/html; charset=' . RC_CHARSET);
-    header('Expires: Fri, 14 Mar 1980 20:53:00 GMT');
-    header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
-    header('Cache-Control: no-cache, must-revalidate');
-    header('Pragma: no-cache');
-}
-RC_Hook::add_action('ecjia_admin_finish_launching', 'ecjia_set_header');
-RC_Hook::add_action('ecjia_front_finish_launching', 'ecjia_set_header');
-
-RC_Hook::add_action('reset_mail_config', ['Ecjia\System\Frameworks\Component\Mailer', 'ecjia_mail_config']);
 
 function set_ecjia_config_filter($arr) {
     /* 对数值型设置处理 */
@@ -314,33 +205,7 @@ function set_ecjia_config_filter($arr) {
     
     return $arr;
 }
-RC_Hook::add_filter('set_ecjia_config_filter', 'set_ecjia_config_filter');    
-
-//移除$_ENV中的敏感信息
-function remove_env_pretty_page_table_data($tables) {
-    $env = collect($tables['Environment Variables']);
-    $server = collect($tables['Server/Request Data']);
-    
-    $col = collect([
-        'AUTH_KEY',
-        'DB_HOST', 
-        'DB_PORT', 
-        'DB_DATABASE', 
-        'DB_USERNAME', 
-        'DB_PASSWORD', 
-        'DB_PREFIX'
-    ]);
-    $col->map(function ($item) use ($env, $server) {
-        $env->pull($item);
-        $server->pull($item);
-    });
-    
-    $tables['Environment Variables'] = $env->all();
-    $tables['Server/Request Data'] = $server->all();
-    return $tables;
-}
-RC_Hook::add_filter('pretty_page_table_data', 'remove_env_pretty_page_table_data');
-
+RC_Hook::add_filter('set_ecjia_config_filter', 'set_ecjia_config_filter');
 
 
 // end

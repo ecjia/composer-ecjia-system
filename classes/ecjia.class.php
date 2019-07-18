@@ -49,11 +49,17 @@
  */
 defined('IN_ECJIA') or exit('No permission resources.');
 
+use Royalcms\Component\Foundation\Royalcms;
+
 define('APPNAME', 'ECJIA');
-define('VERSION', '1.35');
-define('RELEASE', '20180929');
+define('VERSION', ecjia::VERSION);
+define('RELEASE', ecjia::RELEASE);
 
 class ecjia {
+
+    const VERSION = '1.53';
+
+    const RELEASE = '20190703';
 	
 	protected $config;
 	
@@ -202,6 +208,19 @@ class ecjia {
 	public static function release() {
 	    return RC_Hook::apply_filters('ecjia_build_release', RELEASE);
 	}
+
+    /**
+     * Powered By
+     */
+	public static function powerByLink()
+    {
+        return with(new \Ecjia\System\Frameworks\Component\CharCode)->byLink();
+    }
+
+    public static function powerByText()
+    {
+        return with(new \Ecjia\System\Frameworks\Component\CharCode)->byText();
+    }
 	
     /**
      * ecjia 初始化
@@ -211,7 +230,7 @@ class ecjia {
 		ini_set('memory_limit',          '128M');
 		ini_set('display_errors',        1);
 
-		RC_Response::header('X-Powered-By', APPNAME.'/'.VERSION);
+		RC_Response::header('X-Powered-By', 'ROYALCMS/'.Royalcms::VERSION . ' ' . APPNAME.'/'.VERSION);
 
 		/**
 		 * 加载系统配置
@@ -219,6 +238,7 @@ class ecjia {
 		RC_Loader::load_sys_config('constant');
 		
 		RC_Loader::load_sys_func('global');
+		RC_Loader::load_sys_func('deprecated');
 		RC_Loader::load_sys_func('extention');
 		
 		RC_Hook::add_filter('set_server_timezone', array(__CLASS__, 'current_timezone'));
@@ -272,40 +292,62 @@ class ecjia {
 	{
 	    RC_Gettext::loadAppTextdomain($app);
 	}
-	
+
+
+	public static function loadGlobalPlugins()
+    {
+        $global_plugins = ecjia_config::instance()->get_addon_config('global_plugins', true);
+        if (is_array($global_plugins)) {
+            foreach ($global_plugins as $plugin_file) {
+                RC_Plugin::load_files($plugin_file);
+            }
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    public static function is_debug_display()
+    {
+        return (config('system.debug') === true && config('system.debug_display') === true);
+    }
     
     /**
      * 获得查询时间和次数，内存占用
      */
     public static function echo_query_info() {
-        if (RC_Config::get('system.debug') === false || RC_Config::get('system.debug_display') === false) {
+        if (! self::is_debug_display()) {
             return false;
         }
 
-    	$query_info = $memory_info = $gzip_enabled = '';
+    	$memory_info = $gzip_enabled = '';
+        $queries = RC_DB::getQueryLog();
+
+        $sql_count = RC_Model::sql_count() + count($queries);
 
     	/* 数据库查询情况 */
         $timer = RC_Timer::formatTimer(RC_Timer::getLoadTime());
-    	$query_info = sprintf(RC_Lang::get('system::system.query_info'), RC_Model::sql_count(), $timer);
+    	$query_info = sprintf(__('共执行 %d 个查询，程序运行用时 %s 秒'), $sql_count, $timer);
     
     	/* 内存占用情况 */
-    	if (RC_Lang::get('system::system.memory_info') && function_exists('memory_get_usage')) {
-    		$memory_info = sprintf(RC_Lang::get('system::system.memory_info'), memory_get_usage() / 1048576);
+    	if (function_exists('memory_get_usage')) {
+    		$memory_info = sprintf(__('，内存占用 %0.3f MB'), memory_get_usage() / 1048576);
     	}
     	 
     	/* 是否启用了 gzip */
-    	$gzip_enabled = ecjia_utility::gzip_enabled(RC_ENV::gzip_enabled()) ? RC_Lang::get('system::system.gzip_enabled') : RC_Lang::get('system::system.gzip_disabled');
+    	$gzip_enabled = ecjia_utility::gzip_enabled(RC_ENV::gzip_enabled()) ? __('，Gzip 已启用') : __('，Gzip 已禁用');
 
     	echo '<div class="main_content_bottom">' . rc_user_crlf();
     	echo '<hr />' . rc_user_crlf();
     	echo "{$query_info}{$gzip_enabled}{$memory_info} <br />";
     	
-    	if (RC_Config::get('system.debug_display_query') == true) {
+    	if (config('system.debug_display_query') === true && count($queries) > 0) {
         	echo "<br />";
         	echo "SQL查询清单 <br />";
         	
-        	foreach ($queries = RC_DB::getQueryLog() as $query) {
-        	    echo vsprintf(str_replace('?', '%s', $query["query"]), $query['bindings']). " (time: " . $query['time'] ."ms)" . "<br />";
+        	foreach ($queries as $key => $query) {
+        	    ++$key;
+        	    echo '<strong>' . $key . '</strong>. ' . vsprintf(str_replace('?', '%s', $query["query"]), $query['bindings']). " (time: " . $query['time'] ."ms)" . "<br />";
         	}
         	
         	foreach (RC_Model::sql_all() as $sql) {
@@ -313,7 +355,7 @@ class ecjia {
         	}
     	}
     	
-    	if (RC_Config::get('system.debug_display_included') == true) {
+    	if (RC_Config::get('system.debug_display_included') === true) {
     	    /* 加载文件顺序 */
     	    $load_files = get_included_files();
     	    
@@ -377,7 +419,7 @@ class ecjia {
      * 注销自动加载方法
      */
     public static function autoload_unregister() {
-        spl_autoload_unregister(array(__CLASS__, 'auto_load_classes'), true);
+        spl_autoload_unregister(array(__CLASS__, 'auto_load_classes'));
     }
     
 }

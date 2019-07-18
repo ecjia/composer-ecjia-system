@@ -467,7 +467,7 @@ class ecjia_screen {
 	 * @param string $parent_base The parent base of the screen. 
 	 * @param string $parent_file The parent file of the screen. Typically the $parent_file global.
 	 */
-	function set_parentage($parent_base, $parent_file ) {
+	function set_parentage($parent_base, $parent_file = null ) {
 		$this->parent_file = $parent_file;
 		$this->parent_base = $parent_base;
 	}
@@ -1144,7 +1144,7 @@ class ecjia_screen {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @return WP_Screen Current screen object
+	 * @return self Current screen object
 	 */
 	public static function get_current_screen() {
 	    if ( ! isset( self::$current_screen ) )

@@ -49,7 +49,8 @@
  * @author royalwang
  *
  */
-class ecjia_view {
+class ecjia_view
+{
     
     /**
      * 模板视图对象
@@ -63,7 +64,7 @@ class ecjia_view {
     
     protected $fileloader;
     
-    public function __construct(ecjia_template_fileloader $fileloader) {
+    public function __construct(\Ecjia\System\Frameworks\Contracts\EcjiaTemplateFileLoader $fileloader) {
         $this->fileloader = $fileloader;
         
         $this->smarty = royalcms('view')->getSmarty();
@@ -110,6 +111,8 @@ class ecjia_view {
      */
     public function display($resource_name, $cache_id = null, $show = true, $options = array())
     {
+        RC_Hook::do_action('ecjia_view_display_before');
+
         if (strpos($resource_name, 'string:') !== 0) {
             $resource_name = $this->fileloader->get_template_file($resource_name);
         }
@@ -125,14 +128,33 @@ class ecjia_view {
         $content = $this->smarty->fetch($resource_name, $cache_id, $compile_id, $parent, $display, $merge_tpl_vars, $no_output_filter);
     
         if ($show) {
-            $charset = strtoupper(RC_CHARSET) == 'UTF8' ? "UTF-8" : strtoupper(RC_CHARSET);
-            if (! headers_sent()) {
-                header("Content-type:" . $content_type . ';charset=' . $charset);
-            }
-            echo $content;
+//            $charset = strtoupper(RC_CHARSET) == 'UTF8' ? "UTF-8" : strtoupper(RC_CHARSET);
+//            if (! headers_sent()) {
+//                header("Content-type:" . $content_type . ';charset=' . $charset);
+//            }
+            return $this->displayContent($content, $content_type);
         } else {
             return $content;
         }
+    }
+
+    /**
+     * 输出内容
+     *
+     * @param string $msg 显示内容
+     */
+    public function displayContent($content, $content_type = 'text/html')
+    {
+        $response = royalcms('response');
+        if ($content_type) {
+            $response->header('Content-Type', $content_type);
+        }
+
+        $response->setContent($content);
+
+        royalcms()->instance('response', $response);
+
+        return $response;
     }
     
     

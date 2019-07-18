@@ -273,9 +273,6 @@ function trim_right($str)
     }
 }
 
-
-
-
 /**
  * 生成文件MD5值缓存
  */
@@ -699,18 +696,6 @@ if ( ! function_exists('ecjia_price_format'))
     }
 }
 
-
-if ( ! function_exists('price_format'))
-{
-    /**
-     * ecjia_price_format 方法的别名
-     */
-    function price_format($price, $change_price = true) 
-    {
-        return ecjia_price_format($price, $change_price);
-    }
-}
-
 if ( ! function_exists('ecjia_upload_url'))
 {
     function ecjia_upload_url($url) {
@@ -737,34 +722,61 @@ if ( ! function_exists('ecjia_mysql_like_quote'))
     }
 }
 
-if ( ! function_exists('mysql_like_quote'))
-{
-    /**
-     * ecjia_mysql_like_quote 方法别名
-     */
-    function mysql_like_quote($str)
-    {
-        return ecjia_mysql_like_quote($str);
-    }
-}
-
 if ( ! function_exists('is_ecjia_error'))
 {
     /**
-     * Check whether variable is a ecjia Error.
+     * Check whether variable is a Royalcms Error.
      *
-     * Returns true if $thing is an object of the ecjia_error class.
+     * Returns true if $thing is an object of the RC_Error class.
      *
      * @since 1.0.0
      *
-     * @param mixed $thing
-     *            Check if unknown variable is a ecjia_error object.
+     * @param mixed $thing Check if unknown variable is a ecjia_error object.
      * @return bool True, if ecjia_error. False, if not ecjia_error.
      */
     function is_ecjia_error($thing)
     {
         if (is_object($thing) && (is_a($thing, 'ecjia_error') || is_a($thing, '\Royalcms\Component\Error\Error')))
             return true;
+        return false;
+    }
+}
+
+if ( ! function_exists('is_redirect_response'))
+{
+    /**
+     * @param $response
+     * @return bool
+     */
+    function is_redirect_response($response) {
+        return $response instanceof \Royalcms\Component\Http\RedirectResponse;
+    }
+}
+
+if ( ! function_exists('is_ecjia_admin'))
+{
+    /**
+     * Determines whether the current request is for an administrative interface page.
+     *
+     * Does not check if the user is an administrator; current_user_can()
+     * for checking roles and capabilities.
+     *
+     * @since 1.5.1
+     *
+     * @global ecjia_screen $current_screen
+     *
+     * @return bool True if inside ecjia administration interface, false otherwise.
+     */
+    function is_ecjia_admin() {
+        if ( ecjia_screen::get_current_screen() )
+        {
+            return ecjia_screen::get_current_screen()->in_admin();
+        }
+        elseif ( defined( 'IN_ADMIN' ) )
+        {
+            return IN_ADMIN;
+        }
+
         return false;
     }
 }
@@ -778,9 +790,17 @@ if ( ! function_exists('ecjia_log_info'))
      * @param  array   $context
      * @return void
      */
-    function ecjia_log_info($message, $context = array())
+    function ecjia_log_info($message, $context = array(), $domain = null)
     {
-        return RC_Logger::getLogger('ecjia')->info($message, $context);
+        if (is_null($domain)) {
+            $domain = 'ecjia';
+        }
+
+        if (!is_array($context)) {
+            $context = (array)$context;
+        }
+
+        RC_Logger::getLogger($domain)->info($message, $context);
     }
 }
 
@@ -793,9 +813,17 @@ if ( ! function_exists('ecjia_log_error'))
      * @param  array   $context
      * @return void
      */
-    function ecjia_log_error($message, $context = array())
+    function ecjia_log_error($message, $context = array(), $domain = null)
     {
-        return RC_Logger::getLogger('ecjia')->error($message, $context);
+        if (is_null($domain)) {
+            $domain = 'ecjia';
+        }
+
+        if (!is_array($context)) {
+            $context = (array)$context;
+        }
+
+        RC_Logger::getLogger($domain)->error($message, $context);
     }
 }
 
@@ -808,9 +836,17 @@ if ( ! function_exists('ecjia_log_debug'))
      * @param  array   $context
      * @return void
      */
-    function ecjia_log_debug($message, $context = array())
+    function ecjia_log_debug($message, $context = array(), $domain = null)
     {
-        return RC_Logger::getLogger('ecjia')->debug($message, $context);
+        if (is_null($domain)) {
+            $domain = 'ecjia';
+        }
+
+        if (!is_array($context)) {
+            $context = (array)$context;
+        }
+
+        RC_Logger::getLogger($domain)->debug($message, $context);
     }
 }
 
@@ -823,9 +859,17 @@ if ( ! function_exists('ecjia_log_warning'))
      * @param  array   $context
      * @return void
      */
-    function ecjia_log_warning($message, $context = array())
+    function ecjia_log_warning($message, $context = array(), $domain = null)
     {
-        return RC_Logger::getLogger('ecjia')->warning($message, $context);
+        if (is_null($domain)) {
+            $domain = 'ecjia';
+        }
+
+        if (!is_array($context)) {
+            $context = (array)$context;
+        }
+
+        RC_Logger::getLogger($domain)->warning($message, $context);
     }
 }
 
@@ -838,9 +882,17 @@ if ( ! function_exists('ecjia_log_notice'))
      * @param  array   $context
      * @return void
      */
-    function ecjia_log_notice($message, $context = array())
+    function ecjia_log_notice($message, $context = array(), $domain = null)
     {
-        return RC_Logger::getLogger('ecjia')->notice($message, $context);
+        if (is_null($domain)) {
+            $domain = 'ecjia';
+        }
+
+        if (!is_array($context)) {
+            $context = (array)$context;
+        }
+
+        RC_Logger::getLogger($domain)->notice($message, $context);
     }
 }
 
@@ -929,5 +981,205 @@ if (! function_exists('ecjia_is_weixin'))
     }
 }
 
+if (! function_exists('ecjia_order_buy_sn'))
+{
+    /**
+     * 获取普通购物的订单号
+     */
+    function ecjia_order_buy_sn()
+    {
+        return with(new \Ecjia\System\Business\Orders\OrderSnGeneration(\Ecjia\System\Business\Orders\OrderSnGeneration::ORDER_BUY))->generation();
+    }
+}
+
+if (! function_exists('ecjia_order_separate_sn'))
+{
+    /**
+     * 获取普通购物的订单的分单号
+     */
+    function ecjia_order_separate_sn()
+    {
+        return with(new \Ecjia\System\Business\Orders\OrderSnGeneration(\Ecjia\System\Business\Orders\OrderSnGeneration::ORDER_SEPARATE))->generation();
+    }
+}
+
+if (! function_exists('ecjia_order_quickpay_sn')) {
+    /**
+     * 获取快速买单的订单号
+     */
+    function ecjia_order_quickpay_sn()
+    {
+        return with(new \Ecjia\System\Business\Orders\OrderSnGeneration(\Ecjia\System\Business\Orders\OrderSnGeneration::ORDER_QUICKPAY))->generation();
+    }
+}
+
+if (! function_exists('ecjia_order_deposit_sn')) {
+    /**
+     * 获取会员充值的订单号
+     */
+    function ecjia_order_deposit_sn()
+    {
+        return with(new \Ecjia\System\Business\Orders\OrderSnGeneration(\Ecjia\System\Business\Orders\OrderSnGeneration::ORDER_DEPOSIT))->generation();
+    }
+}
+
+if (! function_exists('ecjia_order_refund_sn'))
+{
+    /**
+     * 获取退款的订单号
+     */
+    function ecjia_order_refund_sn()
+    {
+        return with(new \Ecjia\System\Business\Orders\OrderSnGeneration(\Ecjia\System\Business\Orders\OrderSnGeneration::ORDER_REFUND))->generation();
+    }
+}
+
+if (! function_exists('ecjia_order_delivery_sn'))
+{
+    /**
+     * 获取发货单号订单
+     */
+    function ecjia_order_delivery_sn()
+    {
+        return with(new \Ecjia\System\Business\Orders\OrderSnGeneration(\Ecjia\System\Business\Orders\OrderSnGeneration::ORDER_DELIVERY))->generation();
+    }
+}
+
+if (! function_exists('ecjia_order_supplier_sn'))
+{
+    /**
+     * 获取采购供货订单号
+     */
+    function ecjia_order_supplier_sn()
+    {
+        return with(new \Ecjia\System\Business\Orders\OrderSnGeneration(\Ecjia\System\Business\Orders\OrderSnGeneration::ORDER_SUPPLIER))->generation();
+    }
+}
+
+if (! function_exists('ecjia_order_supplier_delivery_sn'))
+{
+    /**
+     * 获取采购供货发货单号
+     */
+    function ecjia_order_supplier_delivery_sn()
+    {
+        return with(new \Ecjia\System\Business\Orders\OrderSnGeneration(\Ecjia\System\Business\Orders\OrderSnGeneration::ORDER_SUPPLIER_DELIVERY))->generation();
+    }
+}
+
+if (! function_exists('ecjia_supplier_refund_sn'))
+{
+    /**
+     * 获取供货退款订单
+     */
+    function ecjia_supplier_refund_sn()
+    {
+        return with(new \Ecjia\System\Business\Orders\OrderSnGeneration(\Ecjia\System\Business\Orders\OrderSnGeneration::SUPPLIER_REFUND))->generation();
+    }
+}
+
+if (! function_exists('ecjia_order_express_sn'))
+{
+    /**
+     * 获取配送订单号
+     */
+    function ecjia_order_express_sn()
+    {
+        return with(new \Ecjia\System\Business\Orders\OrderSnGeneration(\Ecjia\System\Business\Orders\OrderSnGeneration::ORDER_EXPRESS))->generation();
+    }
+}
+
+if (! function_exists('ecjia_order_store_account_sn'))
+{
+    /**
+     * 获取商家提现订单号
+     */
+    function ecjia_order_store_account_sn()
+    {
+        return with(new \Ecjia\System\Business\Orders\OrderSnGeneration(\Ecjia\System\Business\Orders\OrderSnGeneration::ORDER_STORE_ACCOUNT))->generation();
+    }
+}
+
+if (! function_exists('ecjia_location_mapjs'))
+{
+    /**
+     * 获取定位地图的JS地址
+     * @param null $libraries
+     * @return string
+     */
+    function ecjia_location_mapjs($libraries = null)
+    {
+        if (is_null($libraries)) {
+            $jsurl = 'https://map.qq.com/api/js?v=2.exp&key='.ecjia::config('map_qq_key');
+        } else {
+            $jsurl = "https://map.qq.com/api/js?v=2.exp&libraries={$libraries}&key=".ecjia::config('map_qq_key');
+        }
+        return $jsurl;
+    }
+}
+
+if (! function_exists('ecjia_is_super_admin'))
+{
+    function ecjia_is_super_admin()
+    {
+        if (session('session_user_id') && session('session_user_type') == 'admin' && session('action_list') == 'all') {
+            return true;
+        } else {
+            return false;
+        }
+    }
+}
+
+if (! function_exists('ecjia_alert_links'))
+{
+    /**
+     * 提示页面多链接转换，参数格式
+     * ['href'=>'','text'=>''], ['href'=>'','text'=>'']....
+     * @return array
+     */
+    function ecjia_alert_links()
+    {
+        $links = func_get_args();
+
+        return $links;
+    }
+}
+
+
+if (! function_exists('ecjia_filter_request_input'))
+{
+    /**
+     * 过滤$_GET,$_POST,$_REQUEST,$_COOKIE
+     * @param $data
+     * @return int|string|array
+     */
+    function ecjia_filter_request_input(& $data)
+    {
+        if (is_array($data)) {
+            $new_data = [];
+            foreach ($data as $vkey => $vdata) {
+                $vkey = ecjia_filter_request_input($vkey);
+                $vdata = ecjia_filter_request_input($vdata);
+
+                $new_data[$vkey] = $vdata;
+            }
+
+            $data = $new_data;
+
+            return $data;
+        }
+
+        if (is_string($data)) {
+            if (function_exists('remove_xss')) {
+                return remove_xss($data);
+            }
+            else {
+                return simple_remove_xss($data);
+            }
+        }
+
+        return intval($data);
+    }
+}
 
 // end

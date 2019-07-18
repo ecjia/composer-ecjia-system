@@ -46,6 +46,12 @@
 //
 use Royalcms\Component\Support\Facades\Royalcms;
 
+// 请求数据自动转义
+$_POST      = rc_addslashes($_POST);
+$_GET       = rc_addslashes($_GET);
+$_REQUEST   = rc_addslashes($_REQUEST);
+$_COOKIE    = rc_addslashes($_COOKIE);
+
 // Load the default text localization domain.
 RC_Locale::loadDefaultTextdomain();
 
@@ -194,20 +200,6 @@ RC_Event::listen('royalcms.warning.exception', function($exception) {
         RC_Logger::getLogger(RC_Logger::LOG_WARNING)->info($exception->getMessage(), $err);
     }
 });
-    
-/**
- * 检测是否安装
- */
-RC_Hook::add_action('init', function () {
-    $install_lock = storage_path() . '/data/install.lock';
-    if (royalcms('request')->query('m') != 'installer' && !file_exists($install_lock) && !defined('NO_CHECK_INSTALL'))
-    {
-        $url = RC_Uri::url('installer/index/init');
-        rc_redirect($url);
-        exit();
-    }
-}, 2);
-
 
 RC_Hook::add_action('mail_init', function () {
     RC_Mail::macro('send_mail', function ($name, $email, $subject, $content, $type = 0, $notification = false) {

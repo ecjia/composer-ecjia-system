@@ -48,8 +48,11 @@
 namespace Ecjia\System\BaseController;
 
 use ecjia;
+use Ecjia\System\Frameworks\Component\ShowMessage\Options\JsonShowMessageOption;
+use Ecjia\System\Frameworks\Component\ShowMessage\Options\PjaxShowMessageOption;
+use Ecjia\System\Frameworks\Component\ShowMessage\ShowMessage;
 use ecjia_utility;
-use RC_Lang;
+use RC_DB;
 use RC_Redirect;
 use RC_Response;
 use RC_Package;
@@ -59,34 +62,66 @@ defined('IN_ECJIA') or exit('No permission resources.');
 
 /**
  * ECJIA 控制器基础类
+ * 原类名 ecjia_base
+ *
+ * @method string display($resource_name, $cache_id = null, $show = true, $options = array()) 显示视图
+ * @method string fetch($tpl_file = null, $cache_id = null, $options = array()) 获得视图显示内容 用于生成静态或生成缓存文件
+ * @method string fetch_string($tpl_string = null, $cache_id = null, $options = array()) 使用字符串作为模板，获取解析后输出内容
+ * @method bool is_cached($resource_name, $cache_id = null, $options = array()) 模板缓存是否过期
+ * @method bool clear_cache($resource_name, $cache_id = null, $options = array()) 清除单个模板缓存
+ * @method bool clear_all_cache($cache_time = null, $options = array()) 清除全部缓存
+ * @method void assign($name, $value = null) 向模版注册变量
+ * @method void assign_lang($lang = array()) 重新向模版注册语言包
+ * @method bool clear_compiled_files() 清除模版编译文件
+ * @method bool clear_cache_files() 清除缓存文件
  */
 abstract class EcjiaController extends RoyalcmsController
 {
     /**
      * 模板视图对象
      *
-     * @var view
+     * @var \ecjia_view
      */
     protected $view;
+
+    protected $view_method = [
+        'display',
+        'fetch',
+        'fetch_string',
+        'is_cached',
+        'clear_cache',
+        'clear_all_cache',
+        'assign',
+        'assign_lang',
+        'clear_compiled_files',
+        'clear_cache_files'
+    ];
     
     /**
      * HTTP请求对象
-     * @var \Royalcms\Component\HttpKernel\Request
+     * @var \Royalcms\Component\Http\Request
      */
     protected $request;
 
     /**
      * 模板视图对象静态属性
      *
-     * @var view
+     * @var \ecjia_view
      */
     public static $view_object;
 
     /**
      * 控制器对象静态属性
-     * @var
+     * @var \Ecjia\System\BaseController\EcjiaController
      */
     public static $controller;
+
+    /**
+     * 公开路由控制器
+     *
+     * @var array
+     */
+    protected $public_route = [];
 
 
     /**
@@ -97,32 +132,72 @@ abstract class EcjiaController extends RoyalcmsController
      *
      * @return  void
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->request = royalcms('request');
         
         $this->session_start();
-        
-        $this->view = $this->create_view();
+
+        $this->registerServiceProvider();
+        $this->registerViewServiceProvider();
         
         static::$controller = & $this;
         static::$view_object = & $this->view;
 
+        if (ecjia::is_debug_display() && config('system.debug_display_query') === true) {
+            RC_DB::enableQueryLog();
+        }
+
         $this->load_hooks();
+
+        RC_Response::header('X-XSS-Protection', '1; mode=block');
+        RC_Response::header('X-Frame-Options', 'SAMEORIGIN');
     }
     
     
     public function __call($method, $parameters) 
     {
-        if (in_array($method, array('display', 'fetch', 'fetch_string', 'is_cached', 'clear_cache', 'clear_all_cache', 'assign', 'assign_lang', 'clear_compiled_files', 'clear_cache_files'))) {
+        if (in_array($method, $this->view_method)) {
             return call_user_func_array(array($this->view, $method), $parameters);
         }
         
         return parent::__call($method, $parameters);
     }
 
+    /**
+     * @return \Royalcms\Component\Http\Request
+     */
     public function getRequest()
     {
         return $this->request;
+    }
+
+    protected function registerServiceProvider()
+    {
+        //sub class to do...
+    }
+
+    protected function registerViewServiceProvider()
+    {
+        royalcms()->forgeRegister('Royalcms\Component\SmartyView\SmartyServiceProvider');
+
+        $this->view = $this->create_view();
+    }
+
+    /**
+     * 验证公开路由是否通过
+     *
+     * @return bool
+     */
+    public function isVerificationPublicRoute()
+    {
+        $route_m = (ROUTE_M == config('system.admin_entrance')) ? 'system' : ROUTE_M;
+        $route_controller = $route_m . '/' . ROUTE_C . '/' . ROUTE_A;
+        if (in_array($route_controller, $this->public_route)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -191,7 +266,7 @@ abstract class EcjiaController extends RoyalcmsController
     }
 
     /**
-     * 直接跳转
+     * 直接跳转，返回Response对象
      *
      * @param string $url
      * @param int $code
@@ -217,6 +292,18 @@ abstract class EcjiaController extends RoyalcmsController
     {
         royalcms('response')->send();
         exit(0);
+    }
+
+    /**
+     * 直接跳转，并中断程序输出
+     *
+     * @param string $url
+     * @param int $code
+     */
+    public function redirectWithExited($url, $code = 302)
+    {
+        $this->redirect($url, $code);
+        $this->exited();
     }
 
     /**
@@ -304,6 +391,8 @@ abstract class EcjiaController extends RoyalcmsController
 
         $response->setContent($content);
 
+        royalcms()->instance('response', $response);
+
         return $response;
     }
 
@@ -343,9 +432,9 @@ abstract class EcjiaController extends RoyalcmsController
      * @param		array		$options		消息可选参数
      * @return      string | \Royalcms\Component\HttpKernel\Response
      */
-    public function showmessage($message, $type = ecjia::MSGTYPE_HTML, $options = array()) {
-        $state = $type & 0x0F;
-        $type = $type & 0xF0;
+    public function showmessage($message, $msgtype = ecjia::MSGTYPE_HTML, $options = array()) {
+        $state = $msgtype & 0x0F;
+        $type = $msgtype & 0xF0;
          
         if ($type === ecjia::MSGTYPE_JSON && !is_ajax()) {
             $type = ecjia::MSGTYPE_ALERT;
@@ -367,7 +456,7 @@ abstract class EcjiaController extends RoyalcmsController
 			         $this->assign('page_state', array('icon' => 'fontello-icon-cancel-circled', 'msg' => __('操作错误'), 'class' => 'alert-danger'));
             }
 
-        	$this->assign('ur_here',     RC_Lang::get('system::system.system_message'));
+        	$this->assign('ur_here',     __('系统信息'));
         	$this->assign('msg_detail',  $message);
         	$this->assign('msg_type',    $state);
 
@@ -392,20 +481,30 @@ abstract class EcjiaController extends RoyalcmsController
  
         // JSON消息提醒
         elseif ($type === ecjia::MSGTYPE_JSON) {
-            $res = array('message' => $message);
-            if ($state === 0) {
-                $res['state'] = 'error';
-            } elseif ($state === 1) {
-                $res['state'] = 'success';
-            }
-        
-            if (!empty($options)) {
-                foreach ($options AS $key => $val) {
-                    $res[$key] = $val;
-                }
+
+            if ($options instanceof PjaxShowMessageOption) {
+                $options->setMessage($message);
+                $options->setState($state);
+                return (new ShowMessage($message, $msgtype, $options))->getResponse();
             }
 
-            return $this->ajax($res);
+//            $res = array('message' => $message);
+//            if ($state === 0) {
+//                $res['state'] = 'error';
+//            } elseif ($state === 1) {
+//                $res['state'] = 'success';
+//            }
+//
+//            if (!empty($options)) {
+//                foreach ($options AS $key => $val) {
+//                    $res[$key] = $val;
+//                }
+//            }
+//
+//            return $this->ajax($res);
+
+            $jsonOption = (new JsonShowMessageOption())->setMessage($message)->setState($state)->setOptions($options);
+            return (new ShowMessage($message, $msgtype, $jsonOption))->getResponse();
         }
  
         // XML消息提醒

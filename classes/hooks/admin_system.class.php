@@ -163,6 +163,12 @@ EOF;
 	</div>	
 EOF;
 	}
+
+
+	public static function cloud_checked()
+    {
+        ecjia_cloud::instance()->api('product/analysis/record')->data(ecjia_utility::get_site_info())->cacheTime(21600)->run();
+    }
 	
 	
 	public static function admin_dashboard_left_1() {
@@ -175,7 +181,7 @@ EOF;
 		}
 		ecjia_admin::$controller->assign('title'			, $title);
 		ecjia_admin::$controller->assign('msg_lists'		, $chat_list['item']);
-		ecjia_admin::$controller->display('library/widget_admin_dashboard_messagelist.lbi');
+		echo ecjia_admin::$controller->fetch('library/widget_admin_dashboard_messagelist.lbi');
 	}
 	
 	
@@ -193,7 +199,7 @@ EOF;
 
 	    ecjia_admin::$controller->assign('title'	  , $title);
 	    ecjia_admin::$controller->assign('log_lists'  , $data);
-	    ecjia_admin::$controller->display('library/widget_admin_dashboard_loglist.lbi');
+	    echo ecjia_admin::$controller->fetch('library/widget_admin_dashboard_loglist.lbi');
 	}
 	
 	public static function admin_dashboard_right_2() {
@@ -203,7 +209,7 @@ EOF;
         if (! empty($product_news)) {
             ecjia_admin::$controller->assign('title'	  , $title);
             ecjia_admin::$controller->assign('product_news'  , $product_news);
-            ecjia_admin::$controller->display('library/widget_admin_dashboard_product_news.lbi');
+            echo ecjia_admin::$controller->fetch('library/widget_admin_dashboard_product_news.lbi');
         }	    
 	}
 	
@@ -264,7 +270,7 @@ EOF;
 		
 		if (! empty($remind)) {
 			ecjia_admin::$controller->assign('remind'  , $remind);
-			ecjia_admin::$controller->display('library/widget_admin_dashboard_remind_sidebar.lbi');
+			echo ecjia_admin::$controller->fetch('library/widget_admin_dashboard_remind_sidebar.lbi');
 		}
 
 	}
@@ -332,6 +338,43 @@ EOF;
 	    
 	    echo '</ul>'.PHP_EOL;
 	}
+
+	public static function display_admin_upgrade_checked()
+    {
+        $new_version = (new \Ecjia\System\Admins\UpgradeCheck\CloudCheck)->checkUpgrade();
+        if ($new_version) {
+            $upgrade_url = RC_Uri::url('@upgrade/init');
+            $warning = sprintf(__('ECJia到家 v%s 现已经可用！ 请现在下载更新，前往<a href="%s">更新检测</a>。'), $new_version['version'], $upgrade_url);
+            ecjia_screen::get_current_screen()->add_admin_notice(new admin_notice($warning));
+        }
+    }
+
+
+    public static function display_ecjia_license_checked()
+    {
+        if (! ecjia_license::instance()->license_check()) {
+            $license_url = RC_Uri::url('@license/license');
+            $empower_info = sprintf(__('授权提示：您的站点还未经过授权许可！请上传您的证书，前往<a href="%s">授权证书管理</a> 。'), $license_url);
+            ecjia_screen::get_current_screen()->add_admin_notice(new admin_notice($empower_info));
+        }
+    }
+
+
+    public static function record_admin_session_logins($row)
+    {
+        RC_Api::api('system', 'admin_session_logins', [
+            'user_id' => $row['user_id'],
+            'from_type' => 'weblogin',
+        ]);
+    }
+
+
+    public static function admin_session_logout_remove()
+    {
+        $session_id = session()->getId();
+
+        (new \Ecjia\System\Admins\SessionLogins\AdminSessionLogins($session_id, session('session_user_id')))->removeBySessionId();
+    }
 	
 }
 
@@ -340,8 +383,13 @@ RC_Hook::add_action( 'admin_sidebar_info', array('admin_system_hooks', 'admin_si
 RC_Hook::add_action( 'admin_dashboard_left', array('admin_system_hooks', 'admin_dashboard_left_1') );
 RC_Hook::add_action( 'admin_dashboard_right', array('admin_system_hooks', 'admin_dashboard_right_1') );
 RC_Hook::add_action( 'admin_dashboard_right', array('admin_system_hooks', 'admin_dashboard_right_2') );
+RC_Hook::add_action( 'ecjia_admin_dashboard_index', array('admin_system_hooks', 'display_admin_upgrade_checked') );
+RC_Hook::add_action( 'ecjia_admin_dashboard_index', array('admin_system_hooks', 'display_ecjia_license_checked') );
+RC_Hook::add_action( 'ecjia_admin_dashboard_index', array('admin_system_hooks', 'cloud_checked') );
 
 RC_Hook::add_action( 'display_admin_privilege_menus', array('admin_system_hooks', 'display_admin_privilege_menus') );
+RC_Hook::add_action( 'ecjia_admin_login_after', array('admin_system_hooks', 'record_admin_session_logins') );
+RC_Hook::add_action( 'ecjia_admin_logout_before', array('admin_system_hooks', 'admin_session_logout_remove') );
 
 // RC_Hook::add_action( 'admin_dashboard_header_links', array('admin_system_hooks', 'admin_dashboard_header_links') );
 

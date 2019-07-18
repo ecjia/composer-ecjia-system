@@ -44,30 +44,6 @@
 //
 //  ---------------------------------------------------------------------------------
 //
-use Royalcms\Component\ClassLoader\ClassManager;
-
-/*
- |--------------------------------------------------------------------------
- | Register The Class Loader
- |--------------------------------------------------------------------------
- |
- | In addition to using Composer, you may use the Laravel class loader to
- | load your controllers and models. This is useful for keeping all of
- | your classes in the "global" namespace without Composer updating.
- |
- */
-
-if (is_dir(SITE_PLUGIN_PATH.'ueditor')) {
-    ClassManager::addNamespaces(array(
-        'Royalcms\Component\UEditor' => SITE_PLUGIN_PATH.'ueditor/Royalcms/Component/UEditor',
-    ));
-} else {
-    ClassManager::addNamespaces(array(
-        'Royalcms\Component\UEditor' => RC_PLUGIN_PATH.'ueditor/Royalcms/Component/UEditor',
-    ));
-}
-
-royalcms()->forgeRegister('Royalcms\Component\UEditor\UEditorServiceProvider');
 
 //注册Session驱动
 RC_Session::extend('mysql', function ($royalcms) {
@@ -94,25 +70,48 @@ RC_Session::extend('mysql', function ($royalcms) {
     
     $table = $connection->getTablePrefix().$royalcms['config']['session.table'];
     
-    return new Ecjia\System\Sessions\Handler\MysqlSessionHandler($connection->getPdo(), $getDatabaseOptions($table, $royalcms));
+    return new Ecjia\System\Frameworks\Sessions\Handler\MysqlSessionHandler($connection->getPdo(), $getDatabaseOptions($table, $royalcms));
 });
 RC_Session::extend('memcache', function () {
-    $getMemcachePrefix = function () {
-        $defaultconnection = RC_Config::get('database.default');
-        $connection = array_get(RC_Config::get('database.connections'), $defaultconnection);
+    $getPrefix = function () {
+        $defaultconnection = config('database.default');
+        $connection = array_get(config('database.connections'), $defaultconnection);
         if (array_get($connection, 'database')) {
-            $memcache_prefix = $connection['database'] . ':';
+            $prefix = $connection['database'] . ':';
         }
         else {
-            $memcache_prefix = 'ecjia_session:';
+            $prefix = 'ecjia_session:';
         }
-    
-        return $memcache_prefix;
+
+        return $prefix;
     };
     
-    $options = ['prefix' => $getMemcachePrefix(), 'expiretime' => RC_Config::get('session.lifetime', 1440) * 60];
-    
-    return new Ecjia\System\Sessions\Handler\MemcacheSessionHandler(royalcms('memcache'), $options);
-});
+    $options = [
+        'prefix' => $getPrefix(),
+        'expiretime' => config('session.lifetime', 1440) * 60
+    ];
 
+    return new Ecjia\System\Frameworks\Sessions\Handler\MemcacheSessionHandler(royalcms('memcache'), $options);
+});
+RC_Session::extend('ecjiaredis', function () {
+    $getPrefix = function () {
+        $defaultconnection = config('database.default');
+        $connection = array_get(config('database.connections'), $defaultconnection);
+        if (array_get($connection, 'database')) {
+            $prefix = $connection['database'] . ':';
+        }
+        else {
+            $prefix = 'ecjia_session:';
+        }
+
+        return $prefix;
+    };
+
+    $options = [
+        'prefix' => $getPrefix(),
+        'expiretime' => config('session.lifetime', 1440) * 60,
+    ];
+
+    return new Ecjia\System\Frameworks\Sessions\Handler\RedisSessionHandler(royalcms('redis')->connection('session'), $options);
+});
 
