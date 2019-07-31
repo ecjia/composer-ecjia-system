@@ -48,6 +48,8 @@
 
 namespace Ecjia\Component\Config;
 
+use Ecjia\Component\Config\Compatible\CompatibleTrait;
+
 class Config
 {
     

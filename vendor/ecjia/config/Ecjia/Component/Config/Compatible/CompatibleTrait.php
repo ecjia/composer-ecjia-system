@@ -44,110 +44,191 @@
 //
 //  ---------------------------------------------------------------------------------
 //
-namespace Ecjia\Component\Config;
 
-interface ConfigRepositoryInterface
+
+namespace Ecjia\Component\Config\Compatible;
+
+trait CompatibleTrait
 {
     
     /**
-	 * Get the all codes.
+	 * 返回当前终级类对象的实例
 	 *
-	 * @return array
+	 * @return object
 	 */
-	public function allKeys();
+	public static function instance()
+	{
+	    return royalcms('ecjia.config');
+	}
+    
 	
 	/**
-	 * Determine if the given configuration value exists.
-	 *
-	 * @param  string  $key
-	 * @return bool
+	 * 强制重新加载config
 	 */
-	public function has($key);
+	public function reload_config() 
+	{
+	    return true;
+	}
+	
 	
 	/**
-	 * Get the specified configuration value.
+	 * 载入全部配置信息
 	 *
-	 * @param  string  $key
-	 * @param  mixed   $default
-	 * @return mixed
+	 * @access  public
+	 * @return  array
 	 */
-	public function get($key, $default = null);
+	public function load_config() 
+	{
+	    return $this->all();
+	}
+	
 	
 	/**
-	 * Set a given configuration value.
-	 *
-	 * @param  string  $key
-	 * @param  mixed   $value
-	 * @return void
+	 * 清除配置文件缓存
 	 */
-	public function set($key, $value);
+	public function clear_cache() {
+	    return $this->clearCache();
+	}
 	
 	/**
-	 * Write a given configuration value.
-	 *
-	 * @param  string  $key
-	 * @param  mixed   $value
-	 * @return void
+	 * 检查配置项是否存在
+	 * @param string $code
+	 * @return boolean
 	 */
-	public function write($key, $value);
+	public function check_config($code)
+	{
+	    return $this->has($code);
+	}
 	
 	/**
-	 * Delete the specified configuration value.
-	 * 
-	 * @param string $key
-	 * @return bool
+	 * 判断配置项值是否空, 为空是
+	 * @param string $code
 	 */
-	public function delete($key);
+	public function check_exists($code)
+	{
+	    return $this->has($code);
+	}
+	
 	
 	/**
-	 * Add a given configuration value.
-	 *
-	 * @param string $group
-	 * @param string $key
+	 * 读取某项配置
+	 * @param string $code
+	 * @return string
+	 */
+	public function read_config($code)
+	{
+	    return $this->get($code);
+	}
+	
+	
+	/**
+	 * 写入某项配置
+	 * @param string $code
 	 * @param string $value
-	 * @param array $options
-	 * @return bool
 	 */
-	public function add($group, $key, $value, $options = []);
+	public function write_config($code, $value)
+	{
+	    return $this->write($code, $value);
+	}
+	
 	
 	/**
-	 * Change a given configuration value.
+	 * 插入一个配置信息
 	 *
-	 * @param string $group
-	 * @param string $key
-	 * @param string $value
-	 * @param array $options
-	 * @return bool
+	 * @access  public
+	 * @param   string      $parent     分组的code
+	 * @param   string      $code       该配置信息的唯一标识
+	 * @param   string      $value      该配置信息值
+	 * @return  void
 	 */
-	public function change($group, $key, $value, $options = []);
-	
-	/**
-	 * Determine if a configuration group exists.
-	 *
-	 * @param  string  $key
-	 * @return bool
-	 */
-	public function hasGroup($key);
+	public function insert_config($parent, $code, $value, $options = array())
+	{
+	    return $this->add($parent, $code, $value, $options);
+	}
 	
 	
 	/**
-	 * Get all groups.
+	 * 删除配置项
+	 * @param string $code
 	 */
-	public function getGroups();
+	public function delete_config($code)
+	{
+	    return $this->delete($code);
+	}
+	
+	
+	public function add_group($code, $id = null)
+	{
+	    return $this->addGroup($code, $id);
+	}
+	
 	
 	/**
-	 * Get the specified configuration value.
-	 *
-	 * @param  string  $group
-	 * @param  mixed   $default
-	 * @return mixed
+	 * 检查配置项是否存在
+	 * @param string $code
+	 * @return boolean
 	 */
-	public function getGroup($group, $default = null);
+	public function check_group($code)
+	{
+	    return $this->hasGroup($code);
+	}
 	
 	
-	public function deleteGroup($group);
+	public function load_group()
+	{
+	    return $this->getGroups()->toArray();
+	}
+	
+	/**
+	 * 读取某项配置
+	 * @param string $code
+	 * @return string|boolean
+	 */
+	public function read_group($code)
+	{
+	    return $this->getGroup($code);
+	}
 	
 	
-	public function addGroup($group, $id = null);
+	/**
+	 * 删除配置项
+	 * @param string $code
+	 */
+	public function delete_group($code)
+	{
+	    return $this->deleteGroup($code);
+	}
+	
+	
+	/**
+	 * 获取插件的配置项
+	 * addon_app_actives
+	 * addon_plugin_actives
+	 * addon_widget_actives
+	 * @param string $type
+	 * @param string $code
+	 * @param string|array $value
+	 */
+	public function get_addon_config($code, $unserialize = false, $use_platform = false)
+	{
+	    return $this->getAddonConfig($code, $unserialize, $use_platform);
+	}
+	
+	
+	/**
+	 * 更新插件的配置项
+	 * addon_app_actives
+	 * addon_plugin_actives
+	 * addon_widget_actives
+	 * @param string $type
+	 * @param string $code
+	 * @param string|array $value
+	 */
+	public function set_addon_config($code, $value, $serialize = false, $use_platform = false)
+	{
+	    return $this->writeAddonConfig($code, $value, $serialize, $use_platform);
+	}
     
 }
+
+// end

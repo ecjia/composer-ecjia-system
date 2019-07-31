@@ -49,9 +49,11 @@ namespace Ecjia\Component\Config;
 use Closure;
 use ArrayAccess;
 use ecjia;
+use Ecjia\Component\Config\Contracts\ConfigRepositoryInterface;
 use Ecjia\System\Config\Exceptions\ConfigGroupRepeatException;
 
-class DatabaseConfigRepository implements ConfigRepositoryInterface, ArrayAccess {
+class DatabaseConfigRepository implements ConfigRepositoryInterface, ArrayAccess
+{
 
 	/**
 	 * The default group.
