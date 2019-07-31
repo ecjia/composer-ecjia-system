@@ -53,17 +53,40 @@ class ComponentFactory
 {
     
     protected static $factories;
-    
-    public function __construct()
+
+    /**
+     * @var string 缓存key
+     */
+    const CACHE_KEY = 'setting_component_factories';
+
+    /**
+     * @var string 组件所在的目录
+     */
+    protected $component_dir;
+
+    /**
+     * @var string 组件所在的命名空间
+     */
+    protected $component_namespace;
+
+    /**
+     * ComponentFactory constructor.
+     * @param $dir
+     * @param $namespace
+     */
+    public function __construct($dir, $namespace)
     {
+        $this->component_dir = $dir;
+        $this->component_namespace = $namespace;
+
         self::$factories = $this->getFactories();
     }
     
     public function getFactories()
     {
-        $cache_key = 'setting_component_factories';
+//        $cache_key = 'setting_component_factories';
     
-        $factories = ecjia_cache('setting')->get($cache_key);
+        $factories = ecjia_cache('setting')->get(self::CACHE_KEY);
         if (empty($factories)) {
     
             $dir = __DIR__ . '/SettingComponents';
@@ -81,7 +104,7 @@ class ComponentFactory
                 $factories[$key] = $className;
             }
     
-            ecjia_cache('setting')->put($cache_key, $factories, 10080);
+            ecjia_cache('setting')->put(self::CACHE_KEY, $factories, 10080);
         }
     
         return RC_Hook::apply_filters('ecjia_setting_component_filter', $factories);
