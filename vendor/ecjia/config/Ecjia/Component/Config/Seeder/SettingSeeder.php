@@ -13,6 +13,13 @@ use ecjia_config;
 class SettingSeeder
 {
 
+    protected $dir;
+
+    public function __construct($dir)
+    {
+        $this->dir = $dir;
+    }
+
     /**
      * shop_config字段填充
      */
