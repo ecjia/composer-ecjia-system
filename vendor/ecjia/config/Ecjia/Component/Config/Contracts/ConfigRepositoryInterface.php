@@ -60,6 +60,13 @@ interface ConfigRepositoryInterface
      * Clean the caches.
      */
     public function clearCache();
+
+    /**
+     * Get the all Items.
+     *
+     * @return array
+     */
+    public function all();
 	
 	/**
 	 * Determine if the given configuration value exists.

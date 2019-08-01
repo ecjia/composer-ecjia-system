@@ -7,6 +7,11 @@ namespace Ecjia\Component\Config\Manager;
 class ItemManager extends AbstractManager
 {
 
+    /**
+     * Get the all Items.
+     *
+     * @return array
+     */
     public function all()
     {
         return $this->getRepository()->all();
@@ -35,7 +40,7 @@ class ItemManager extends AbstractManager
      */
     public function set($key, $value)
     {
-        return $this->getRepository()->set($key, $value);
+        $this->getRepository()->set($key, $value);
     }
 
 
@@ -48,7 +53,7 @@ class ItemManager extends AbstractManager
      */
     public function write($key, $value)
     {
-        return $this->getRepository()->write($key, $value);
+        $this->getRepository()->write($key, $value);
     }
 
     /**

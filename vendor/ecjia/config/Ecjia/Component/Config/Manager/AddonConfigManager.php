@@ -14,9 +14,11 @@ class AddonConfigManager extends AbstractManager
      * addon_app_actives
      * addon_plugin_actives
      * addon_widget_actives
-     * @param string $type
-     * @param string $code
-     * @param string|array $value
+     *
+     * @param $code
+     * @param bool $unserialize
+     * @param bool $use_platform
+     * @return mixed|string|null
      */
     public function get($code, $unserialize = false, $use_platform = false)
     {
@@ -31,7 +33,7 @@ class AddonConfigManager extends AbstractManager
 
         if ($this->getRepository()->has($code))
         {
-            $value = $this->get($code);
+            $value = $this->getRepository()->get($code);
         }
         else
         {
@@ -53,9 +55,12 @@ class AddonConfigManager extends AbstractManager
      * addon_app_actives
      * addon_plugin_actives
      * addon_widget_actives
-     * @param string $type
-     * @param string $code
-     * @param string|array $value
+     *
+     * @param $code
+     * @param $value
+     * @param bool $serialize
+     * @param bool $use_platform
+     * @return void
      */
     public function write($code, $value, $serialize = false, $use_platform = false)
     {
@@ -77,14 +82,12 @@ class AddonConfigManager extends AbstractManager
 
         if ($this->getRepository()->has($code))
         {
-            $result = $this->write($code, $value);
+            $this->getRepository()->write($code, $value);
         }
         else
         {
-            $result = $this->getRepository()->add('addon', $code, $value, ['type' => 'hidden']);
+            $this->getRepository()->add('addon', $code, $value, ['type' => 'hidden']);
         }
-
-        return $result;
     }
 
 }

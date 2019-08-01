@@ -48,7 +48,6 @@ namespace Ecjia\Component\Config;
 
 use Closure;
 use ArrayAccess;
-use ecjia;
 use Ecjia\Component\Config\Contracts\ConfigRepositoryInterface;
 use Ecjia\System\Config\Exceptions\ConfigGroupRepeatException;
 
@@ -93,7 +92,7 @@ class DatabaseConfigRepository implements ConfigRepositoryInterface, ArrayAccess
 	/**
 	 * Create a new configuration repository.
 	 *
-	 * @param  \Ecjia\System\Config\ConfigModel  $tableModel
+	 * @param  \Ecjia\Component\Config\Models\ConfigModel  $tableModel
 	 * @return void
 	 */
 	public function __construct($tableModel)

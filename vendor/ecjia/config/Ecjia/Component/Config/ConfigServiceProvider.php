@@ -46,10 +46,19 @@
 //
 namespace Ecjia\Component\Config;
 
+use Ecjia\Component\Config\Models\ConfigModel;
+use ReflectionClass;
 use Royalcms\Component\Support\ServiceProvider;
 
 class ConfigServiceProvider extends ServiceProvider
 {
+    /**
+     * Indicates if loading of the provider is deferred.
+     *
+     * @var bool
+     */
+    protected $defer = true;
+
     /**
      * Bootstrap any application services.
      *
@@ -57,7 +66,7 @@ class ConfigServiceProvider extends ServiceProvider
      */
     public function boot() 
     {
-
+        $this->package('ecjia/config');
     }
 
 	/**
@@ -67,31 +76,81 @@ class ConfigServiceProvider extends ServiceProvider
 	 */
 	public function register()
 	{
-	    $this->registerConfig();
-	    
-	    $this->loadAlias();
+        $this->registerConfigRepository();
+
+        $this->registerConfig();
 	}
-	
-	/**
-	 * Register the region
-	 */
-	public function registerConfig()
-	{
-//	    $this->royalcms->bindShared('ecjia.config', function($royalcms) {
-//	    	return new Config();
-//	    });
-	}
-	
-	/**
-	 * Load the alias = One less install step for the user
-	 */
-	protected function loadAlias()
-	{
-//	    $this->royalcms->booting(function()
-//	    {
-//	        $loader = \Royalcms\Component\Foundation\AliasLoader::getInstance();
-//	        $loader->alias('ecjia_config', 'Ecjia\App\Setting\Facades\Region');
-//	    });
-	}
+
+    /**
+     * Register the Config service
+     *
+     * @return void
+     */
+    public function registerConfig()
+    {
+        $this->royalcms->bindShared('ecjia.config', function($royalcms)
+        {
+            $repository = $royalcms['ecjia.config.repository'];
+
+            return new Config($repository);
+        });
+    }
+
+    /**
+     * Register the Config repository service.
+     *
+     * @return void
+     */
+    protected function registerConfigRepository()
+    {
+        $this->royalcms->bindShared('ecjia.config.repository', function($royalcms)
+        {
+            return new DatabaseConfigRepository(new ConfigModel());
+        });
+    }
+
+    /**
+     * Get the services provided by the provider.
+     *
+     * @return array
+     */
+    public function provides()
+    {
+        return array(
+            'ecjia.config',
+        );
+    }
+
+    /**
+     * Guess the package path for the provider.
+     *
+     * @param null $namespace
+     * @return bool|string
+     * @throws \ReflectionException
+     */
+    public function guessPackagePath($namespace = null)
+    {
+        $path = with(new ReflectionClass($this))->getFileName();
+
+        return realpath(dirname($path).'/../../../');
+    }
+
+    /**
+     * Get a list of files that should be compiled for the package.
+     *
+     * @return array
+     */
+    public static function compiles()
+    {
+        $dir = __DIR__ . '';
+        return [
+            $dir . "/DatabaseConfigRepository.php",
+            $dir . "/Config.php",
+            $dir . "/Contracts/ConfigRepositoryInterface.php",
+            $dir . "/Contracts/ConfigModelInterface.php",
+            $dir . "/Models/ConfigModel.php",
+            $dir . "/Compatible/CompatibleTrait.php",
+        ];
+    }
 	
 }

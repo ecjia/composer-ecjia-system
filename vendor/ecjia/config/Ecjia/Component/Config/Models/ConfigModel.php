@@ -129,7 +129,7 @@ class ConfigModel extends Model implements ConfigModelInterface
     public function addItem($group_id, $key, $value, $options = [])
     {
         $data = [
-            'id'            => $this->getNextItemIdByGroupId($group_id),
+//            'id'            => $this->getNextItemIdByGroupId($group_id),
         	'parent_id'     => $group_id,
             'code'          => $key,
             'value'         => $value,

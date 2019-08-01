@@ -45,9 +45,16 @@
 //  ---------------------------------------------------------------------------------
 //
 
-
 namespace Ecjia\Component\Config\Compatible;
 
+/**
+ * Trait CompatibleTrait
+ * @package Ecjia\Component\Config\Compatible
+ *
+ * @method \Ecjia\Component\Config\Manager\ItemManager item()
+ * @method \Ecjia\Component\Config\Manager\GroupManager group()
+ * @method \Ecjia\Component\Config\Manager\AddonConfigManager addon()
+ */
 trait CompatibleTrait
 {
     
@@ -79,15 +86,16 @@ trait CompatibleTrait
 	 */
 	public function load_config() 
 	{
-	    return $this->all();
+	    return $this->item()->all();
 	}
 	
 	
 	/**
 	 * 清除配置文件缓存
+     * @return void
 	 */
 	public function clear_cache() {
-	    return $this->clearCache();
+	    $this->item()->clearCache();
 	}
 	
 	/**
@@ -97,7 +105,7 @@ trait CompatibleTrait
 	 */
 	public function check_config($code)
 	{
-	    return $this->has($code);
+	    return $this->item()->has($code);
 	}
 	
 	/**
@@ -106,7 +114,7 @@ trait CompatibleTrait
 	 */
 	public function check_exists($code)
 	{
-	    return $this->has($code);
+	    return $this->item()->has($code);
 	}
 	
 	
@@ -117,7 +125,7 @@ trait CompatibleTrait
 	 */
 	public function read_config($code)
 	{
-	    return $this->get($code);
+	    return $this->item()->get($code);
 	}
 	
 	
@@ -128,7 +136,7 @@ trait CompatibleTrait
 	 */
 	public function write_config($code, $value)
 	{
-	    return $this->write($code, $value);
+	    $this->item()->write($code, $value);
 	}
 	
 	
@@ -143,7 +151,7 @@ trait CompatibleTrait
 	 */
 	public function insert_config($parent, $code, $value, $options = array())
 	{
-	    return $this->add($parent, $code, $value, $options);
+	    $this->item()->add($parent, $code, $value, $options);
 	}
 	
 	
@@ -153,13 +161,13 @@ trait CompatibleTrait
 	 */
 	public function delete_config($code)
 	{
-	    return $this->delete($code);
+	    return $this->item()->delete($code);
 	}
 	
 	
 	public function add_group($code, $id = null)
 	{
-	    return $this->addGroup($code, $id);
+	    return $this->group()->add($code, $id);
 	}
 	
 	
@@ -170,13 +178,13 @@ trait CompatibleTrait
 	 */
 	public function check_group($code)
 	{
-	    return $this->hasGroup($code);
+	    return $this->group()->has($code);
 	}
 	
 	
 	public function load_group()
 	{
-	    return $this->getGroups()->toArray();
+	    return $this->group()->all()->toArray();
 	}
 	
 	/**
@@ -186,7 +194,7 @@ trait CompatibleTrait
 	 */
 	public function read_group($code)
 	{
-	    return $this->getGroup($code);
+	    return $this->group()->get($code);
 	}
 	
 	
@@ -196,7 +204,7 @@ trait CompatibleTrait
 	 */
 	public function delete_group($code)
 	{
-	    return $this->deleteGroup($code);
+	    return $this->group()->delete($code);
 	}
 	
 	
@@ -211,7 +219,7 @@ trait CompatibleTrait
 	 */
 	public function get_addon_config($code, $unserialize = false, $use_platform = false)
 	{
-	    return $this->getAddonConfig($code, $unserialize, $use_platform);
+	    return $this->addon()->get($code, $unserialize, $use_platform);
 	}
 	
 	
@@ -226,8 +234,87 @@ trait CompatibleTrait
 	 */
 	public function set_addon_config($code, $value, $serialize = false, $use_platform = false)
 	{
-	    return $this->writeAddonConfig($code, $value, $serialize, $use_platform);
+	    $this->addon()->write($code, $value, $serialize, $use_platform);
 	}
+
+    /**
+     * 获取插件的配置项
+     * addon_app_actives
+     * addon_plugin_actives
+     * addon_widget_actives
+     * @param string $type
+     * @param string $code
+     * @param string|array $value
+     */
+    public function getAddonConfig($code, $unserialize = false, $use_platform = false)
+    {
+        return $this->addon()->get($code, $unserialize, $use_platform);
+    }
+
+    /**
+     * 更新插件的配置项
+     * addon_app_actives
+     * addon_plugin_actives
+     * addon_widget_actives
+     * @param string $type
+     * @param string $code
+     * @param string|array $value
+     */
+    public function writeAddonConfig($code, $value, $serialize = false, $use_platform = false)
+    {
+        $this->addon()->write($code, $value, $serialize, $use_platform);
+    }
+
+
+    /**
+     * Get all groups.
+     */
+    public function getGroups()
+    {
+        return $this->group()->all();
+    }
+
+    /**
+     * Determine if a configuration group exists.
+     *
+     * @param  string  $group
+     * @return bool
+     */
+    public function hasGroup($group)
+    {
+        return $this->group()->has($group);
+    }
+
+    /**
+     * Get the specified configuration value.
+     *
+     * @param  string  $group
+     * @param  mixed   $default
+     * @return mixed
+     */
+    public function getGroup($group, $default = null)
+    {
+        return $this->group()->get($group, $default);
+    }
+
+    /**
+     * @param $group
+     * @return mixed
+     */
+    public function deleteGroup($group)
+    {
+        return $this->group()->delete($group);
+    }
+
+    /**
+     * @param $group
+     * @param null $id
+     * @return mixed
+     */
+    public function addGroup($group, $id = null)
+    {
+        return $this->group()->add($group, $id);
+    }
     
 }
 
