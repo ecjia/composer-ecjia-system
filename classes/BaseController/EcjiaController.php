@@ -48,9 +48,9 @@
 namespace Ecjia\System\BaseController;
 
 use ecjia;
-use Ecjia\System\Frameworks\Component\ShowMessage\Options\JsonShowMessageOption;
-use Ecjia\System\Frameworks\Component\ShowMessage\Options\PjaxShowMessageOption;
-use Ecjia\System\Frameworks\Component\ShowMessage\ShowMessage;
+use Ecjia\Component\ShowMessage\Options\JsonShowMessageOption;
+use Ecjia\Component\ShowMessage\Options\PjaxShowMessageOption;
+use Ecjia\Component\ShowMessage\ShowMessage;
 use ecjia_utility;
 use RC_DB;
 use RC_Redirect;

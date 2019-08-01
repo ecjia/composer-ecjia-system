@@ -53,7 +53,7 @@ namespace Ecjia\System\Controllers;
 
 use admin_nav_here;
 use ecjia;
-use Ecjia\System\Frameworks\Component\ShowMessage\Options\PjaxShowMessageOption;
+use Ecjia\Component\ShowMessage\Options\PjaxShowMessageOption;
 use Ecjia\System\Admins\Users\AdminUserModel;
 use Ecjia\System\Admins\Users\Password;
 use ecjia_admin;
