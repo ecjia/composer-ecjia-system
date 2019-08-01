@@ -47,8 +47,6 @@
 
 namespace Ecjia\Component\ApiServer\Responses\Contracts;
 
-use Royalcms\Component\HttpKernel\Request;
-
 /**
  * API接口类
  * @author royalwang
@@ -59,7 +57,7 @@ interface ApiHandler
      * API接口响应方法
      * @param \Royalcms\Component\Http\Request $request
      */
-    public function handleRequest(Request $request);
+    public function handleRequest($request);
     
 }
 
