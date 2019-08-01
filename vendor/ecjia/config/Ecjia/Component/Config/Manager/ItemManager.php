@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Ecjia\Component\Config;
+namespace Ecjia\Component\Config\Manager;
 
 
 class ItemManager extends AbstractManager

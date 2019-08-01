@@ -1,5 +1,5 @@
-<?php
-//
+<?php 
+//  
 //    ______         ______           __         __         ______
 //   /\  ___\       /\  ___\         /\_\       /\_\       /\  __ \
 //   \/\  __\       \/\ \____        \/\_\      \/\_\      \/\ \_\ \
@@ -7,7 +7,7 @@
 //     \/_____/       \/_____/     \/__\/_/       \/_/       \/_/ /_/
 //
 //   上海商创网络科技有限公司
-//
+//   
 //  ---------------------------------------------------------------------------------
 //
 //   一、协议的许可和权利
@@ -44,115 +44,15 @@
 //
 //  ---------------------------------------------------------------------------------
 //
-namespace Ecjia\Component\Config\Contracts;
+namespace Ecjia\Component\Config\Facades;
 
-interface ConfigRepositoryInterface
-{
-    
-    /**
-	 * Get the all codes.
-	 *
-	 * @return array
-	 */
-	public function allKeys();
+use Royalcms\Component\Support\Facades\Facade;
 
-    /**
-     * Clean the caches.
-     */
-    public function clearCache();
-	
-	/**
-	 * Determine if the given configuration value exists.
-	 *
-	 * @param  string  $key
-	 * @return bool
-	 */
-	public function has($key);
-	
-	/**
-	 * Get the specified configuration value.
-	 *
-	 * @param  string  $key
-	 * @param  mixed   $default
-	 * @return mixed
-	 */
-	public function get($key, $default = null);
-	
-	/**
-	 * Set a given configuration value.
-	 *
-	 * @param  string  $key
-	 * @param  mixed   $value
-	 * @return void
-	 */
-	public function set($key, $value);
-	
-	/**
-	 * Write a given configuration value.
-	 *
-	 * @param  string  $key
-	 * @param  mixed   $value
-	 * @return void
-	 */
-	public function write($key, $value);
-	
-	/**
-	 * Delete the specified configuration value.
-	 * 
-	 * @param string $key
-	 * @return bool
-	 */
-	public function delete($key);
-	
-	/**
-	 * Add a given configuration value.
-	 *
-	 * @param string $group
-	 * @param string $key
-	 * @param string $value
-	 * @param array $options
-	 * @return bool
-	 */
-	public function add($group, $key, $value, $options = []);
-	
-	/**
-	 * Change a given configuration value.
-	 *
-	 * @param string $group
-	 * @param string $key
-	 * @param string $value
-	 * @param array $options
-	 * @return bool
-	 */
-	public function change($group, $key, $value, $options = []);
-	
-	/**
-	 * Determine if a configuration group exists.
-	 *
-	 * @param  string  $key
-	 * @return bool
-	 */
-	public function hasGroup($key);
-	
-	
-	/**
-	 * Get all groups.
-	 */
-	public function getGroups();
-	
-	/**
-	 * Get the specified configuration value.
-	 *
-	 * @param  string  $group
-	 * @param  mixed   $default
-	 * @return mixed
-	 */
-	public function getGroup($group, $default = null);
-	
-	
-	public function deleteGroup($group);
-	
-	
-	public function addGroup($group, $id = null);
+class Config extends Facade {
+
+    protected static function getFacadeAccessor()
+    {
+        return 'ecjia.config';
+    }
     
 }

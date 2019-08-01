@@ -1,8 +1,10 @@
 <?php
 
 
-namespace Ecjia\Component\Config;
+namespace Ecjia\Component\Config\Manager;
 
+
+use Ecjia\Component\Config\Contracts\ConfigRepositoryInterface;
 
 abstract class AbstractManager
 {
@@ -10,14 +12,14 @@ abstract class AbstractManager
     /**
      * The config repository implementation.
      *
-     * @var \Ecjia\System\Config\ConfigRepositoryInterface
+     * @var \Ecjia\Component\Config\Contracts\ConfigRepositoryInterface
      */
     protected $repository;
 
     /**
      * Create a new config instance.
      *
-     * @param  \Ecjia\System\Config\ConfigRepositoryInterface  $repository
+     * @param  \Ecjia\Component\Config\Contracts\ConfigRepositoryInterface  $repository
      * @return void
      */
     public function __construct(ConfigRepositoryInterface $repository)
@@ -28,7 +30,7 @@ abstract class AbstractManager
     /**
      * Get the config repository instance.
      *
-     * @return \Ecjia\System\Config\ConfigRepositoryInterface
+     * @return \Ecjia\Component\Config\Contracts\ConfigRepositoryInterface
      */
     public function getRepository()
     {
@@ -45,9 +47,12 @@ abstract class AbstractManager
         return $this->getRepository()->allKeys();
     }
 
+    /**
+     * Clean the caches.
+     */
     public function clearCache()
     {
-        return $this->getRepository()->clearCache();
+        $this->getRepository()->clearCache();
     }
 
 }

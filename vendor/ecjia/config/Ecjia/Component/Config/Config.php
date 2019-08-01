@@ -49,14 +49,87 @@
 namespace Ecjia\Component\Config;
 
 use Ecjia\Component\Config\Compatible\CompatibleTrait;
+use Ecjia\Component\Config\Contracts\ConfigRepositoryInterface;
+use Ecjia\Component\Config\Manager\AddonConfigManager;
+use Ecjia\Component\Config\Manager\GroupManager;
+use Ecjia\Component\Config\Manager\ItemManager;
 
 class Config
 {
     
     use CompatibleTrait;
+
+    /**
+     * @var \Ecjia\Component\Config\Manager\ItemManager
+     */
+    protected $itemManager;
+
+    /**
+     * @var \Ecjia\Component\Config\Manager\GroupManager
+     */
+    protected $groupManager;
+
+    /**
+     * @var \Ecjia\Component\Config\Manager\AddonConfigManager
+     */
+    protected $addonMananger;
+
+    /**
+     * The config repository implementation.
+     *
+     * @var \Ecjia\Component\Config\Contracts\ConfigRepositoryInterface
+     */
+    protected $repository;
+
+    /**
+     * Create a new config instance.
+     *
+     * @param  \Ecjia\Component\Config\Contracts\ConfigRepositoryInterface $repository
+     * @return void
+     */
+    public function __construct(ConfigRepositoryInterface $repository)
+    {
+        $this->repository = $repository;
+    }
+
+    /**
+     * Get the config repository instance.
+     *
+     * @return \Ecjia\Component\Config\Contracts\ConfigRepositoryInterface
+     */
+    public function getRepository()
+    {
+        return $this->repository;
+    }
     
 
-  
+    public function item()
+    {
+        if (is_null($this->itemManager)) {
+            $this->itemManager = new ItemManager($this->repository);
+        }
+
+        return $this->itemManager;
+    }
+
+    public function group()
+    {
+        if (is_null($this->groupManager)) {
+            $this->groupManager = new GroupManager($this->repository);
+        }
+
+        return $this->groupManager;
+    }
+
+
+    public function addon()
+    {
+        if (is_null($this->addonMananger)) {
+            $this->addonMananger = new AddonConfigManager($this->repository);
+        }
+
+        return $this->addonMananger;
+    }
 
     
     
