@@ -53,35 +53,18 @@
  */
 namespace Ecjia\Component\Config\Seeder;
 
-use Ecjia\App\Setting\ComponentFactory;
+use Ecjia\Component\Config\Component\ComponentFactory;
+use Ecjia\Component\Config\Component\ComponentNamespace;
 use Ecjia\Component\Config\Facades\Config;
 
 class SettingSeeder
 {
 
-    protected $dir;
-    protected $namespace;
+    protected $component;
 
     public function __construct($dir = null, $namespace = null)
     {
-        $this->dir = $dir ?: $this->getDefaultDir();
-        $this->namespace = $namespace ?: $this->getDefaultNamespace();
-    }
-
-    /**
-     * 获取默认的目录
-     */
-    protected function getDefaultDir()
-    {
-        return royalcms()->resourcePath('components/SettingComponents');
-    }
-
-    /**
-     * 获取默认的命名空间
-     */
-    protected function getDefaultNamespace()
-    {
-        return 'Ecjia\Resources\Components\SettingComponents';
+        $this->component = new ComponentNamespace($dir, $namespace);
     }
 
     /**
@@ -90,7 +73,7 @@ class SettingSeeder
     public function seeder()
     {
 
-        $components = with(new ComponentFactory($this->dir, ''))->getComponents();
+        $components = with(new ComponentFactory($this->component))->getComponents();
 
         collect($components)->each(function($item) {
             $group = $item->getCode();

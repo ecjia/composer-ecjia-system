@@ -44,7 +44,7 @@
 //
 //  ---------------------------------------------------------------------------------
 //
-namespace Ecjia\App\Setting;
+namespace Ecjia\Component\Config\Component;
 
 use RC_Hook;
 use InvalidArgumentException;
@@ -60,11 +60,6 @@ class ComponentFactory
     const CACHE_KEY = 'setting_component_factories';
 
     /**
-     * @var string 组件所在的目录
-     */
-    protected $component_dir;
-
-    /**
      * @var string 组件所在的命名空间
      */
     protected $component_namespace;
@@ -74,10 +69,9 @@ class ComponentFactory
      * @param $dir
      * @param $namespace
      */
-    public function __construct($dir, $namespace)
+    public function __construct(ComponentNamespace $component_namespace)
     {
-        $this->component_dir = $dir;
-        $this->component_namespace = $namespace;
+        $this->component_namespace = $component_namespace;
 
         self::$factories = $this->getFactories();
     }
@@ -87,14 +81,14 @@ class ComponentFactory
         $factories = ecjia_cache('setting')->get(self::CACHE_KEY);
         if (empty($factories)) {
     
-            $platforms = royalcms('files')->files($this->component_dir);
+            $platforms = royalcms('files')->files($this->component_namespace->getDir());
 
             $factories = [];
     
             foreach ($platforms as $key => $value) {
-                $value = str_replace($this->component_dir . '/', '', $value);
+                $value = str_replace($this->component_namespace->getDir() . '/', '', $value);
                 $value = str_replace('.php', '', $value);
-                $className = $this->component_namespace . '\\' . $value;
+                $className = $this->component_namespace->getNamespace() . '\\' . $value;
                 
                 $key = with(new $className)->getCode();
                 $factories[$key] = $className;

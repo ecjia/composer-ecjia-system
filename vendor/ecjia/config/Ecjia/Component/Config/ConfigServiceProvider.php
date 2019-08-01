@@ -46,6 +46,8 @@
 //
 namespace Ecjia\Component\Config;
 
+use Ecjia\Component\Config\Component\ComponentFactory;
+use Ecjia\Component\Config\Component\ComponentNamespace;
 use Ecjia\Component\Config\Models\ConfigModel;
 use ReflectionClass;
 use Royalcms\Component\Support\ServiceProvider;
@@ -79,6 +81,10 @@ class ConfigServiceProvider extends ServiceProvider
         $this->registerConfigRepository();
 
         $this->registerConfig();
+
+        $this->registerComponentNamespace();
+
+        $this->registerComponentFactory();
 	}
 
     /**
@@ -86,7 +92,7 @@ class ConfigServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function registerConfig()
+    protected function registerConfig()
     {
         $this->royalcms->bindShared('ecjia.config', function($royalcms)
         {
@@ -106,6 +112,28 @@ class ConfigServiceProvider extends ServiceProvider
         $this->royalcms->bindShared('ecjia.config.repository', function($royalcms)
         {
             return new DatabaseConfigRepository(new ConfigModel());
+        });
+    }
+
+    /**
+     * Register the Config file with Dir and Namespace.
+     */
+    protected function registerComponentNamespace()
+    {
+        $this->royalcms->bindShared('ecjia.config.component.namespace', function($royalcms)
+        {
+            return new ComponentNamespace();
+        });
+    }
+
+    /**
+     * Register the Config with Factory.
+     */
+    protected function registerComponentFactory()
+    {
+        $this->royalcms->bindShared('ecjia.config.component.factory', function($royalcms)
+        {
+            return new ComponentFactory($royalcms['ecjia.config.component.namespace']);
         });
     }
 
