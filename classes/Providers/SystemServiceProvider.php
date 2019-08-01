@@ -65,7 +65,7 @@ class SystemServiceProvider extends AppParentServiceProvider
      * @return void
      */
     public function boot() {
-        $this->package('ecjia/system');
+
     }
     
     /**
@@ -87,6 +87,8 @@ class SystemServiceProvider extends AppParentServiceProvider
 	 */
 	public function register()
 	{
+        $this->package('ecjia/system');
+
 	    $this->registerPluginManager();
 	    
 	    $this->registerThemeManager();
@@ -103,10 +105,19 @@ class SystemServiceProvider extends AppParentServiceProvider
 	    
 	    $this->loadAlias();
 
-        if ($this->royalcms->environment() == 'local') {
-            $this->royalcms->register('Royalcms\Component\Readme\ReadmeServiceProvider');
-        }
+        $this->registerLocalProviders();
 	}
+
+    /**
+     * Register the Local Providers
+     */
+	public function registerLocalProviders() {
+        if ($this->royalcms->environment() == 'local') {
+            collect(config('system::provider_local'))->each(function($item) {
+                $this->royalcms->register($item);
+            });
+        }
+    }
 	
 	/**
 	 * Register the Plugin manager
@@ -200,19 +211,11 @@ class SystemServiceProvider extends AppParentServiceProvider
 	    $this->royalcms->booting(function()
 	    {
 	        $loader = \Royalcms\Component\Foundation\AliasLoader::getInstance();
-	        $loader->alias('Ecjia_PluginManager', 'Ecjia\System\Facades\PluginManager');
-	        $loader->alias('Ecjia_ThemeManager', 'Ecjia\System\Facades\ThemeManager');
-	        $loader->alias('Ecjia_SiteManager', 'Ecjia\System\Facades\SiteManager');
-	        $loader->alias('Ecjia_VersionManager', 'Ecjia\System\Facades\VersionManager');
-	        $loader->alias('ecjia_config', 'Ecjia\System\Facades\Config');
-	        $loader->alias('ecjia_update_cache', 'Ecjia\System\Facades\Cache');
-            $loader->alias('ecjia_admin_log', 'Ecjia\System\Facades\AdminLog');
 
-	        //compatible
-	        $loader->alias('ecjia_base', 'Ecjia\System\BaseController\EcjiaController');
-	        $loader->alias('ecjia_admin', 'Ecjia\System\BaseController\EcjiaAdminController');
-	        $loader->alias('ecjia_front', 'Ecjia\System\BaseController\EcjiaFrontController');
-	        $loader->alias('ecjia_error', 'Royalcms\Component\Error\Error');
+	        collect(config('system::facade'))->each(function ($item, $key) use ($loader) {
+                $loader->alias($key, $item);
+            });
+
 	    });
 	}
 	
