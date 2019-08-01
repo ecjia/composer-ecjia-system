@@ -87,16 +87,14 @@ class ComponentFactory
         $factories = ecjia_cache('setting')->get(self::CACHE_KEY);
         if (empty($factories)) {
     
-            $dir = __DIR__ . '/SettingComponents';
-    
-            $platforms = royalcms('files')->files($dir);
+            $platforms = royalcms('files')->files($this->component_dir);
 
             $factories = [];
     
             foreach ($platforms as $key => $value) {
-                $value = str_replace($dir . '/', '', $value);
+                $value = str_replace($this->component_dir . '/', '', $value);
                 $value = str_replace('.php', '', $value);
-                $className = __NAMESPACE__ . '\SettingComponents\\' . $value;
+                $className = $this->component_namespace . '\\' . $value;
                 
                 $key = with(new $className)->getCode();
                 $factories[$key] = $className;

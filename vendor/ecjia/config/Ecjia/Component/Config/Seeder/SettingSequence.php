@@ -4,6 +4,7 @@
 namespace Ecjia\Component\Config\Seeder;
 
 use Ecjia\Component\Config\Models\ConfigModel;
+use Royalcms\Component\Database\Eloquent\Builder;
 
 /**
  * 分组排序
@@ -18,7 +19,9 @@ class SettingSequence
      */
     public function seeder()
     {
-
+        /**
+         * @var $model ConfigModel | Builder
+         */
         $model = new ConfigModel();
 
         $data = $model->where('id', '>', 100)->get();
@@ -39,8 +42,13 @@ class SettingSequence
 
     protected function updateGroupId($group_id)
     {
+        /**
+         * @var $model ConfigModel | Builder
+         */
         $model = new ConfigModel();
+
         $data = $model->where('id', '>', 100)->where('parent_id', $group_id)->get();
+
         $data->map(function ($item, $key) use ($model) {
 
             $id = $key + 1;

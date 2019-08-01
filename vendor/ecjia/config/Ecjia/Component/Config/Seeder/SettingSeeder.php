@@ -60,10 +60,28 @@ class SettingSeeder
 {
 
     protected $dir;
+    protected $namespace;
 
-    public function __construct($dir)
+    public function __construct($dir = null, $namespace = null)
     {
-        $this->dir = $dir;
+        $this->dir = $dir ?: $this->getDefaultDir();
+        $this->namespace = $namespace ?: $this->getDefaultNamespace();
+    }
+
+    /**
+     * 获取默认的目录
+     */
+    protected function getDefaultDir()
+    {
+        return royalcms()->resourcePath('components/SettingComponents');
+    }
+
+    /**
+     * 获取默认的命名空间
+     */
+    protected function getDefaultNamespace()
+    {
+        return 'Ecjia\Resources\Components\SettingComponents';
     }
 
     /**
