@@ -53,7 +53,8 @@
  */
 namespace Ecjia\Component\Config\Seeder;
 
-use ecjia_config;
+use Ecjia\App\Setting\ComponentFactory;
+use Ecjia\Component\Config\Facades\Config;
 
 class SettingSeeder
 {
@@ -68,25 +69,26 @@ class SettingSeeder
     /**
      * shop_config字段填充
      */
-    public static function seeder()
+    public function seeder()
     {
 
-        $components = with(new Factory())->getComponents();
+        $components = with(new ComponentFactory($this->dir, ''))->getComponents();
 
         collect($components)->each(function($item) {
             $group = $item->getCode();
             $data = $item->handle();
+
             collect($data)->each(function($item) use ($group) {
-                if (ecjia_config::has($item['code'])) {
-                    ecjia_config::change($group, $item['code'], null, $item['options']);
+                if (Config::has($item['code'])) {
+                    Config::change($group, $item['code'], null, $item['options']);
                 } else {
-                    ecjia_config::add($group, $item['code'], $item['value'], $item['options']);
+                    Config::add($group, $item['code'], $item['value'], $item['options']);
                 }
             });
 
         });
 
-        ecjia_config::clearCache();
+        Config::clearCache();
     }
 
 }

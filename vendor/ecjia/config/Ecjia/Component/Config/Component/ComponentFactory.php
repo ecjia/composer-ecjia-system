@@ -84,8 +84,6 @@ class ComponentFactory
     
     public function getFactories()
     {
-//        $cache_key = 'setting_component_factories';
-    
         $factories = ecjia_cache('setting')->get(self::CACHE_KEY);
         if (empty($factories)) {
     
