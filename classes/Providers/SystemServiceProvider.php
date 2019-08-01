@@ -67,11 +67,13 @@ class SystemServiceProvider extends AppParentServiceProvider
     public function boot() {
 
     }
-    
+
     /**
      * Guess the package path for the provider.
      *
-     * @return string
+     * @param null $namespace
+     * @return bool|string
+     * @throws \ReflectionException
      */
     public function guessPackagePath($namespace = null)
     {
@@ -97,9 +99,9 @@ class SystemServiceProvider extends AppParentServiceProvider
 	    
 	    $this->registerVersionManager();
 	    
-	    $this->registerConfigRepository();
-	    
-	    $this->registerConfig();
+//	    $this->registerConfigRepository();
+//
+//	    $this->registerConfig();
 
 	    $this->registerCache();
 
@@ -214,32 +216,32 @@ class SystemServiceProvider extends AppParentServiceProvider
     }
 	
 	
-	/**
-	 * Register the Config service
-	 * @return \Ecjia\System\Config\Config
-	 */
-	public function registerConfig()
-	{
-	    $this->royalcms->bindShared('ecjia.config', function($royalcms)
-	    {
-	        $repository = $royalcms['ecjia.config.repository'];
-	        
-	        return new Config($repository);
-	    });
-	}
-	
-	/**
-	 * Register the Config repository service.
-	 *
-	 * @return void
-	 */
-	protected function registerConfigRepository()
-	{
-	    $this->royalcms->bindShared('ecjia.config.repository', function($royalcms)
-	    {
-	        return new DatabaseConfigRepository(new ConfigModel());
-	    });
-	}
+//	/**
+//	 * Register the Config service
+//	 * @return \Ecjia\System\Config\Config
+//	 */
+//	public function registerConfig()
+//	{
+//	    $this->royalcms->bindShared('ecjia.config', function($royalcms)
+//	    {
+//	        $repository = $royalcms['ecjia.config.repository'];
+//
+//	        return new Config($repository);
+//	    });
+//	}
+//
+//	/**
+//	 * Register the Config repository service.
+//	 *
+//	 * @return void
+//	 */
+//	protected function registerConfigRepository()
+//	{
+//	    $this->royalcms->bindShared('ecjia.config.repository', function($royalcms)
+//	    {
+//	        return new DatabaseConfigRepository(new ConfigModel());
+//	    });
+//	}
 
 	
 	/**
@@ -250,7 +252,7 @@ class SystemServiceProvider extends AppParentServiceProvider
 	public function provides()
 	{
 	    return array(
-	        'ecjia.config',
+//	        'ecjia.config',
 	        'ecjia.cache',
 	    );
 	}
@@ -298,11 +300,11 @@ class SystemServiceProvider extends AppParentServiceProvider
             $dir . "/Frameworks/Sessions/Handler/MysqlSessionHandler.php",
             $dir . "/Frameworks/Sessions/Handler/RedisSessionHandler.php",
 
-            $dir . "/Config/DatabaseConfigRepository.php",
-            $dir . "/Config/ConfigRepositoryInterface.php",
-            $dir . "/Config/ConfigModel.php",
-            $dir . "/Config/Config.php",
-            $dir . "/Config/CompatibleTrait.php",
+//            $dir . "/Config/DatabaseConfigRepository.php",
+//            $dir . "/Config/ConfigRepositoryInterface.php",
+//            $dir . "/Config/ConfigModel.php",
+//            $dir . "/Config/Config.php",
+//            $dir . "/Config/CompatibleTrait.php",
 
             $dir . "/Theme/ThemeManager.php",
             $dir . "/Theme/Theme.php",
