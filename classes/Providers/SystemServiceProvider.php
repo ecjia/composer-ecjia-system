@@ -52,9 +52,6 @@ use Ecjia\System\Plugin\PluginManager;
 use Ecjia\System\Theme\ThemeManager;
 use Ecjia\System\Frameworks\Site\SiteManager;
 use Ecjia\System\Version\VersionManager;
-use Ecjia\System\Config\Config;
-use Ecjia\System\Config\ConfigModel;
-use Ecjia\System\Config\DatabaseConfigRepository;
 use Ecjia\System\Frameworks\CleanCache\CacheManger;
 
 class SystemServiceProvider extends AppParentServiceProvider 
@@ -98,10 +95,6 @@ class SystemServiceProvider extends AppParentServiceProvider
 	    $this->registerSiteManager();
 	    
 	    $this->registerVersionManager();
-	    
-//	    $this->registerConfigRepository();
-//
-//	    $this->registerConfig();
 
 	    $this->registerCache();
 
@@ -215,35 +208,6 @@ class SystemServiceProvider extends AppParentServiceProvider
         });
     }
 	
-	
-//	/**
-//	 * Register the Config service
-//	 * @return \Ecjia\System\Config\Config
-//	 */
-//	public function registerConfig()
-//	{
-//	    $this->royalcms->bindShared('ecjia.config', function($royalcms)
-//	    {
-//	        $repository = $royalcms['ecjia.config.repository'];
-//
-//	        return new Config($repository);
-//	    });
-//	}
-//
-//	/**
-//	 * Register the Config repository service.
-//	 *
-//	 * @return void
-//	 */
-//	protected function registerConfigRepository()
-//	{
-//	    $this->royalcms->bindShared('ecjia.config.repository', function($royalcms)
-//	    {
-//	        return new DatabaseConfigRepository(new ConfigModel());
-//	    });
-//	}
-
-	
 	/**
 	 * Get the services provided by the provider.
 	 *
@@ -252,7 +216,6 @@ class SystemServiceProvider extends AppParentServiceProvider
 	public function provides()
 	{
 	    return array(
-//	        'ecjia.config',
 	        'ecjia.cache',
 	    );
 	}
@@ -299,13 +262,7 @@ class SystemServiceProvider extends AppParentServiceProvider
             $dir . "/Frameworks/Sessions/Traits/EcjiaSessionSpecTrait.php",
             $dir . "/Frameworks/Sessions/Handler/MysqlSessionHandler.php",
             $dir . "/Frameworks/Sessions/Handler/RedisSessionHandler.php",
-
-//            $dir . "/Config/DatabaseConfigRepository.php",
-//            $dir . "/Config/ConfigRepositoryInterface.php",
-//            $dir . "/Config/ConfigModel.php",
-//            $dir . "/Config/Config.php",
-//            $dir . "/Config/CompatibleTrait.php",
-
+            
             $dir . "/Theme/ThemeManager.php",
             $dir . "/Theme/Theme.php",
             $dir . "/Theme/ParseThemeStyle.php",
