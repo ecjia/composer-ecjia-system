@@ -53,7 +53,7 @@ class SettingSequence
 
             $id = $key + 1;
 
-            $id = $item['parent_id'] * 100 + $id;
+            $id = $item['parent_id'] * 1000 + $id;
 
             $model->where('code', $item['code'])->update(['id' => $id]);
         });
