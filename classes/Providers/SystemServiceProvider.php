@@ -102,11 +102,33 @@ class SystemServiceProvider extends AppParentServiceProvider
 	    $this->registerConfig();
 
 	    $this->registerCache();
-	    
-	    $this->loadAlias();
+
+        $this->registerNamespaces();
+
+        $this->registerProviders();
 
         $this->registerLocalProviders();
+
+        $this->registerFacades();
 	}
+
+    /**
+     * Register the Namespaces
+     */
+	public function registerNamespaces()
+    {
+        \Royalcms\Component\ClassLoader\ClassManager::addNamespaces(config('system::namespaces'));
+    }
+
+    /**
+     * Register the Providers
+     */
+    public function registerProviders()
+    {
+        collect(config('system::provider'))->each(function($item) {
+            $this->royalcms->register($item);
+        });
+    }
 
     /**
      * Register the Local Providers
@@ -117,6 +139,22 @@ class SystemServiceProvider extends AppParentServiceProvider
                 $this->royalcms->register($item);
             });
         }
+    }
+
+    /**
+     * Load the alias = One less install step for the user
+     */
+    protected function registerFacades()
+    {
+        $this->royalcms->booting(function()
+        {
+            $loader = \Royalcms\Component\Foundation\AliasLoader::getInstance();
+
+            collect(config('system::facade'))->each(function ($item, $key) use ($loader) {
+                $loader->alias($key, $item);
+            });
+
+        });
     }
 	
 	/**
@@ -203,21 +241,6 @@ class SystemServiceProvider extends AppParentServiceProvider
 	    });
 	}
 
-	/**
-	 * Load the alias = One less install step for the user
-	 */
-	protected function loadAlias()
-	{
-	    $this->royalcms->booting(function()
-	    {
-	        $loader = \Royalcms\Component\Foundation\AliasLoader::getInstance();
-
-	        collect(config('system::facade'))->each(function ($item, $key) use ($loader) {
-                $loader->alias($key, $item);
-            });
-
-	    });
-	}
 	
 	/**
 	 * Get the services provided by the provider.
