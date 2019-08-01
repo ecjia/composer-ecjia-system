@@ -47,33 +47,31 @@
 namespace Ecjia\Component\Config\Models;
 
 use Ecjia\Component\Config\Contracts\ConfigModelInterface;
+use Royalcms\Component\Database\Eloquent\Collection;
 use Royalcms\Component\Database\Eloquent\Model;
-use RC_Cache;
 use RC_Hook;
 
 class ConfigModel extends Model implements ConfigModelInterface
 {
+    use CacheTrait;
+    use ComputeLastIdTrait;
 
-    const CACHE_KEY = 'shop_config';
-    
     protected $table = 'shop_config';
     
     public $timestamps = false;
+
+    public $primaryKeyEnabled = false;
     
     public function load($group)
     {
-        if ($group == 'shop') 
-        {
+        if ($group == 'shop') {
             return $this->loadItems();
         }
-        else if ($group == 'group')
-        {
+        else if ($group == 'group') {
             return $this->loadGroups();
         }
-        else 
-        {
-            return null;
-        }
+
+        return null;
     }
     
     /**
@@ -129,7 +127,6 @@ class ConfigModel extends Model implements ConfigModelInterface
     public function addItem($group_id, $key, $value, $options = [])
     {
         $data = [
-//            'id'            => $this->getNextItemIdByGroupId($group_id),
         	'parent_id'     => $group_id,
             'code'          => $key,
             'value'         => $value,
@@ -139,6 +136,10 @@ class ConfigModel extends Model implements ConfigModelInterface
             'store_dir'     => array_get($options, 'store_dir', ''),
             'sort_order'    => array_get($options, 'sort_order', 0),
         ];
+
+        if ($this->primaryKeyEnabled) {
+            $data['id'] = $this->getNextItemIdByGroup($group_id);
+        }
 
         $result = $this->insert($data);
         
@@ -180,10 +181,13 @@ class ConfigModel extends Model implements ConfigModelInterface
     
     /**
      * 获取所有的配置组
-     * @return array
+     * @return Collection
      */
     public function loadGroups()
     {
+        /**
+         * @var $data Collection
+         */
         $data = $this->select('code', 'id')->where('parent_id', 0)->where('type', 'group')->get();
         $groups = $data->mapWithKeys(function($group) {
         	return [$group['code'] => $group['id']];
@@ -194,7 +198,7 @@ class ConfigModel extends Model implements ConfigModelInterface
     
     /**
      * 添加用户组项
-     * @param unknown $group
+     * @param string $group
      * @param string $id
      */
     public function addGroup($group, $id = null)
@@ -205,13 +209,12 @@ class ConfigModel extends Model implements ConfigModelInterface
             'type'      => 'group'
         ];
         
-        if ($id)
-        {
+        if ($id) {
             $data['id'] = intval($id);
         }
-        else 
-        {
-            $data['id'] = $this->getNextGroupId();
+
+        if ($this->primaryKeyEnabled) {
+            $data['id'] = isset($data['id']) ? $data['id'] : $this->getNextGroupId();
         }
 
         return $this->insertGetId($data);
@@ -219,81 +222,11 @@ class ConfigModel extends Model implements ConfigModelInterface
     
     /**
      * 删除某个配置组
-     * @param unknown $group
+     * @param string $group
      */
     public function deleteGroup($group)
     {
         return $this->where('parent_id', 0)->where('code', $group)->delete();
     }
-    
-    /**
-     * Get the next group id number.
-     *
-     * @return int
-     */
-    public function getNextGroupId()
-    {
-        return $this->getLastGroupId() + 1;
-    }
-    
-    /**
-	 * Get the last group id number.
-	 *
-	 * @return int
-	 */
-    protected function getLastGroupId()
-    {
-        $groups = $this->loadGroups();
-        $max = $groups->values()->max();
-        return $max;
-    }
-    
-    
-    protected function getLastItemIdByGroupId($group_id)
-    {
-        $id = $this->where('parent_id', $group_id)->max('id');
-        $id = $id ?: '00';
-        return substr($id, -2);
-    }
-    
-    public function getNextItemIdByGroupId($group_id)
-    {
-        return intval($group_id . $this->getLastItemIdByGroupId($group_id) + 1);
-    }
-    
-    
-    /**
-     * 添加数据缓存
-     * @param array $items
-     */
-    protected function setCache($items)
-    {
-        $items = $items->toArray();
-        
-        return RC_Cache::app_cache_set(self::CACHE_KEY, $items, 'system');
-    }
-    
-    /**
-     * 获取数据缓存
-     */
-    protected function getCache()
-    {
-        $items = RC_Cache::app_cache_get(self::CACHE_KEY, 'system');
-        
-        if (!empty($items) && is_array($items))
-        {
-            return collect($items);
-        }
-        
-        return null;
-    }
-    
-    /**
-     * 清除数据缓存
-     */
-    public function clearCache()
-    {
-        return RC_Cache::app_cache_delete(self::CACHE_KEY, 'system');
-    }
-    
+
 }
