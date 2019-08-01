@@ -343,7 +343,13 @@ class DatabaseConfigRepository implements ConfigRepositoryInterface, ArrayAccess
 	    
 	    $this->items['group']->forget('group');
 	}
-	
+
+    /**
+     * @param $group
+     * @param null $id
+     * @return |null
+     * @throws ConfigGroupRepeatException
+     */
 	public function addGroup($group, $id = null)
 	{
 	    $allKeys = $this->allKeys();
@@ -357,83 +363,6 @@ class DatabaseConfigRepository implements ConfigRepositoryInterface, ArrayAccess
 	    $this->items['group']->put($group, $id);
 	    
 	    return $id;
-	}
-	
-	/**
-	 * 获取插件的配置项
-	 * addon_app_actives
-	 * addon_plugin_actives
-	 * addon_widget_actives
-	 * @param string $type
-	 * @param string $code
-	 * @param string|array $value
-	 */
-	public function getAddonConfig($code, $unserialize = false, $use_platform = false)
-	{
-	    if ($use_platform) 
-	    {
-	        $code = 'addon_' . ecjia::current_platform() . '_' . $code;
-	    } 
-	    else 
-	    {
-	        $code = 'addon_' . $code;
-	    }
-	    
-	    if ($this->has($code))
-	    {
-	        $value = $this->get($code);
-	    }
-	    else 
-	    {
-	        $this->add('addon', $code, null, ['type' => 'hidden']);
-	        $value = null;
-	    }
-	    
-	    if ($unserialize)
-	    {
-	        $value or $value = serialize(array());
-	        $value = unserialize($value);
-	    }
-	    
-	    return $value;
-	}
-	
-	/**
-	 * 更新插件的配置项
-	 * addon_app_actives
-	 * addon_plugin_actives
-	 * addon_widget_actives
-	 * @param string $type
-	 * @param string $code
-	 * @param string|array $value
-	 */
-	public function writeAddonConfig($code, $value, $serialize = false, $use_platform = false)
-	{
-	    if ($use_platform)
-	    {
-	        $code = 'addon_' . ecjia::current_platform() . '_' . $code;
-	    }
-	    else
-	    {
-	        $code = 'addon_' . $code;
-	    }
-	    
-	    if ($serialize) 
-	    {
-	        $value or $value = array();
-	        $value = serialize($value);
-	    }
-	    
-	    if ($this->has($code))
-	    {
-	        $result = $this->write($code, $value);
-	    }
-	    else
-	    {
-	        $result = $this->add('addon', $code, $value, ['type' => 'hidden']);
-	    }
-	    
-	    return $result;
 	}
 	
 	

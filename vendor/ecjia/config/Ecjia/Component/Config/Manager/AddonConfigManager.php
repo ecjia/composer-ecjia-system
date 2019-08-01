@@ -4,6 +4,8 @@
 namespace Ecjia\Component\Config\Manager;
 
 
+use ecjia;
+
 class AddonConfigManager extends AbstractManager
 {
 
@@ -18,7 +20,32 @@ class AddonConfigManager extends AbstractManager
      */
     public function get($code, $unserialize = false, $use_platform = false)
     {
-        return $this->getRepository()->getAddonConfig($code, $unserialize, $use_platform);
+        if ($use_platform)
+        {
+            $code = 'addon_' . ecjia::current_platform() . '_' . $code;
+        }
+        else
+        {
+            $code = 'addon_' . $code;
+        }
+
+        if ($this->getRepository()->has($code))
+        {
+            $value = $this->get($code);
+        }
+        else
+        {
+            $this->getRepository()->add('addon', $code, null, ['type' => 'hidden']);
+            $value = null;
+        }
+
+        if ($unserialize)
+        {
+            $value or $value = serialize(array());
+            $value = unserialize($value);
+        }
+
+        return $value;
     }
 
     /**
@@ -32,7 +59,32 @@ class AddonConfigManager extends AbstractManager
      */
     public function write($code, $value, $serialize = false, $use_platform = false)
     {
-        return $this->getRepository()->writeAddonConfig($code, $value, $serialize, $use_platform);
+
+        if ($use_platform)
+        {
+            $code = 'addon_' . ecjia::current_platform() . '_' . $code;
+        }
+        else
+        {
+            $code = 'addon_' . $code;
+        }
+
+        if ($serialize)
+        {
+            $value or $value = array();
+            $value = serialize($value);
+        }
+
+        if ($this->getRepository()->has($code))
+        {
+            $result = $this->write($code, $value);
+        }
+        else
+        {
+            $result = $this->getRepository()->add('addon', $code, $value, ['type' => 'hidden']);
+        }
+
+        return $result;
     }
 
 }
