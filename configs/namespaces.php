@@ -7,6 +7,7 @@ return array(
 	'Ecjia\Component\AdminLog' => $vendorDir . '/ecjia/admin-log/Ecjia/Component/AdminLog',
 	'Ecjia\Component\ApiClient' => $vendorDir . '/ecjia/api-client/Ecjia/Component/ApiClient',
 	'Ecjia\Component\ApiServer' => $vendorDir . '/ecjia/api-server/Ecjia/Component/ApiServer',
+	'Ecjia\Component\ShowMessage' => $vendorDir . '/ecjia/show-message/Ecjia/Component/ShowMessage',
 
 
 );
