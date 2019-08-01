@@ -52,11 +52,15 @@ use Ecjia\Component\Config\Contracts\ConfigRepositoryInterface;
 use Ecjia\Component\Config\Manager\AddonConfigManager;
 use Ecjia\Component\Config\Manager\GroupManager;
 use Ecjia\Component\Config\Manager\ItemManager;
+use Royalcms\Component\Support\Traits\Macroable;
 
 class Config
 {
     
     use CompatibleTrait;
+    use Macroable {
+        __call as __macroCall;
+    }
 
     /**
      * @var \Ecjia\Component\Config\Manager\ItemManager
@@ -138,6 +142,7 @@ class Config
             return call_user_func_array([$this->item(), $name], $arguments);
         }
 
+        return $this->__macroCall($name, $arguments);
     }
      
 }
