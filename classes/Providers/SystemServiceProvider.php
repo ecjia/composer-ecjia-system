@@ -262,7 +262,7 @@ class SystemServiceProvider extends AppParentServiceProvider
             $dir . "/Frameworks/Sessions/Traits/EcjiaSessionSpecTrait.php",
             $dir . "/Frameworks/Sessions/Handler/MysqlSessionHandler.php",
             $dir . "/Frameworks/Sessions/Handler/RedisSessionHandler.php",
-            
+
             $dir . "/Theme/ThemeManager.php",
             $dir . "/Theme/Theme.php",
             $dir . "/Theme/ParseThemeStyle.php",
