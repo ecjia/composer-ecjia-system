@@ -44,8 +44,6 @@
 //
 //  ---------------------------------------------------------------------------------
 //
-
-
 namespace Ecjia\Component\Config\Exceptions;
 
 use Exception as PHPException;
