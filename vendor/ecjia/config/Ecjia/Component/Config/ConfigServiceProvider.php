@@ -74,13 +74,12 @@ class ConfigServiceProvider extends ServiceProvider
 	
 	/**
 	 * Register the region
-	 * @return \Ecjia\App\Setting\Region
 	 */
-	public function registerRegion() 
+	public function registerConfig()
 	{
-	    $this->royalcms->bindShared('ecjia.config', function($royalcms) {
-	    	return new Config();
-	    });
+//	    $this->royalcms->bindShared('ecjia.config', function($royalcms) {
+//	    	return new Config();
+//	    });
 	}
 	
 	/**
