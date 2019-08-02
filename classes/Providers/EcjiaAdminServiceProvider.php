@@ -16,16 +16,8 @@ class EcjiaAdminServiceProvider extends AppParentServiceProvider
      */
     public function register()
     {
-//        $this->registerAdminLog();
-
-    }
 
 
-    public function registerAdminLog()
-    {
-//        $this->royalcms->bindShared('ecjia.admin.log', function($royalcms) {
-//            return AdminLog::instance();
-//        });
     }
 
     /**
@@ -35,9 +27,9 @@ class EcjiaAdminServiceProvider extends AppParentServiceProvider
      */
     public function provides()
     {
-//        return array(
-//            'ecjia.admin.log',
-//        );
+        return array(
+
+        );
     }
 
 }
