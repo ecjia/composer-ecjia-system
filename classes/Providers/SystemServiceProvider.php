@@ -217,7 +217,7 @@ class SystemServiceProvider extends AppParentServiceProvider
         return [
             $dir . "/Http/Kernel.php",
             $dir . "/Exceptions/Handler.php",
-            
+
             $dir . "/Facades/ThemeManager.php",
             $dir . "/Facades/PluginManager.php",
             $dir . "/Facades/SiteManager.php",
