@@ -53,7 +53,7 @@ defined('IN_ECJIA') or exit('No permission resources.');
  * @method bool clean($handle)
  * @method $this make()
  */
-class ecjia_update_cache extends Ecjia\System\Facades\Cache
+class ecjia_update_cache extends Ecjia\Component\CleanCache\Facades\CleanCache
 {
 
 }
