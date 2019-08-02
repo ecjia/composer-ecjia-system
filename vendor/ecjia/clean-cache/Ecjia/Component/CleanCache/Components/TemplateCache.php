@@ -6,9 +6,9 @@
  * Time: 13:00
  */
 
-namespace Ecjia\System\Frameworks\CleanCache\Components;
+namespace Ecjia\Component\CleanCache\Components;
 
-use Ecjia\System\Frameworks\CleanCache\CacheComponentAbstract;
+use Ecjia\Component\CleanCache\CacheComponentAbstract;
 
 class TemplateCache extends CacheComponentAbstract
 {

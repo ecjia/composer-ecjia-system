@@ -53,7 +53,6 @@
 
 namespace Ecjia\Component\CleanCache\Components;
 
-
 use Ecjia\Component\CleanCache\CacheComponentAbstract;
 
 class FrontTemplateCache extends CacheComponentAbstract

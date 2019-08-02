@@ -44,15 +44,15 @@
 //
 //  ---------------------------------------------------------------------------------
 //
-namespace Ecjia\System\Facades;
+namespace Ecjia\Component\CleanCache\Facades;
 
 use Royalcms\Component\Support\Facades\Facade;
 
-class Cache extends Facade {
+class CleanCache extends Facade {
 
     protected static function getFacadeAccessor()
     {
-        return 'ecjia.cache';
+        return 'ecjia.clean-cache';
     }
     
 }
