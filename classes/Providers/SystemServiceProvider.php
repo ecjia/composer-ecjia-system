@@ -96,7 +96,7 @@ class SystemServiceProvider extends AppParentServiceProvider
 	    
 	    $this->registerVersionManager();
 
-	    $this->registerCache();
+//	    $this->registerCache();
 
         $this->registerNamespaces();
 
@@ -196,17 +196,17 @@ class SystemServiceProvider extends AppParentServiceProvider
 	    });
 	}
 
-    /**
-     * Register the Cache service
-     * @return \Ecjia\System\Admins\CleanCache\CacheManger
-     */
-    public function registerCache()
-    {
-        $this->royalcms->bindShared('ecjia.cache', function($royalcms)
-        {
-            return new CacheManger();
-        });
-    }
+//    /**
+//     * Register the Cache service
+//     * @return \Ecjia\System\Admins\CleanCache\CacheManger
+//     */
+//    public function registerCache()
+//    {
+//        $this->royalcms->bindShared('ecjia.cache', function($royalcms)
+//        {
+//            return new CacheManger();
+//        });
+//    }
 	
 	/**
 	 * Get the services provided by the provider.
@@ -216,7 +216,7 @@ class SystemServiceProvider extends AppParentServiceProvider
 	public function provides()
 	{
 	    return array(
-	        'ecjia.cache',
+//	        'ecjia.cache',
 	    );
 	}
 
@@ -237,11 +237,12 @@ class SystemServiceProvider extends AppParentServiceProvider
             $dir . "/Facades/PluginManager.php",
             $dir . "/Facades/SiteManager.php",
             $dir . "/Facades/VersionManager.php",
-            $dir . "/Facades/AdminLog.php",
-            $dir . "/Admins/AdminLog/AdminLog.php",
-            $dir . "/Admins/AdminLog/CompatibleTrait.php",
-            $dir . "/Admins/AdminLog/AdminLogAction.php",
-            $dir . "/Admins/AdminLog/AdminLogObject.php",
+
+//            $dir . "/Facades/AdminLog.php",
+//            $dir . "/Admins/AdminLog/AdminLog.php",
+//            $dir . "/Admins/AdminLog/CompatibleTrait.php",
+//            $dir . "/Admins/AdminLog/AdminLogAction.php",
+//            $dir . "/Admins/AdminLog/AdminLogObject.php",
 
             $dir . "/Frameworks/Contracts/EcjiaSessionInterface.php",
             $dir . "/Frameworks/Contracts/EcjiaTemplateFileLoader.php",
