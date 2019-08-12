@@ -64,16 +64,23 @@ class ApiRouter
 
     protected $className;
 
+    /**
+     * @var ApiParseRoute
+     */
+    protected $apiParse;
+
     static protected $apiRoutes = array();
 
-    public function __construct($name) {
+    public function __construct($name)
+    {
 
         self::$apiRoutes = config('api');
 
         $this->key = $name;
     }
 
-    public function hasKey() {
+    public function hasKey()
+    {
         if (isset(self::$apiRoutes[$this->key])) {
             return true;
         } else {
@@ -81,45 +88,36 @@ class ApiRouter
         }
     }
 
-    public function getKey() {
+    public function getKey()
+    {
         return $this->key;
     }
 
-    public function parseKey() {
-        $api_class = explode('::', self::$apiRoutes[$this->key]);
-        $this->appModule = $api_class[0];
+    public function parseKey()
+    {
 
-        $path = dirname($api_class[1]);
-        $name = basename($api_class[1]);
-        if ($path == '.') {
-            $controller = null;
-        } else {
-            $controller = $path;
-        }
-
-        $this->classPath = $controller;
-
-        $this->className = $name . '_module';
+        $this->apiParse = new ApiParseRoute($this->key, self::$apiRoutes[$this->key]);
 
         return $this;
     }
 
-    public function getApp() {
-        return $this->appModule;
+    public function getApp()
+    {
+        return $this->apiParse->getApp();
     }
 
     public function getFullClassName()
     {
-        $class = $this->classPath . '/' . $this->className;
-        $className = str_replace('/', '_', $class);
-        return $className;
+        return $this->apiParse->getFullClassName();
     }
 
-    public function getClassName() {
-        return $this->className;
+    public function getClassName()
+    {
+        return $this->apiParse->getClassName();
     }
 
-    public function getClassPath() {
-        return $this->classPath;
+    public function getClassPath()
+    {
+        return $this->apiParse->getClassPath();
     }
 }
