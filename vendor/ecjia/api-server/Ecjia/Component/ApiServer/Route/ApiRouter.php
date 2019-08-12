@@ -44,21 +44,80 @@
 //
 //  ---------------------------------------------------------------------------------
 //
-
-namespace Ecjia\Component\ApiServer\Responses\Contracts;
-
 /**
- * API接口类
- * @author royalwang
+ * Created by PhpStorm.
+ * User: royalwang
+ * Date: 2018/9/13
+ * Time: 22:47
  */
-interface ApiHandler
-{
-    /**
-     * API接口响应方法
-     * @param \Royalcms\Component\Http\Request $request
-     */
-    public function handleRequest($request);
-    
-}
 
-// end
+namespace Ecjia\Component\ApiServer\Route;
+
+
+class ApiRouter
+{
+    protected $key;
+
+    protected $appModule;
+
+    protected $classPath;
+
+    protected $className;
+
+    /**
+     * @var ApiParseRoute
+     */
+    protected $apiParse;
+
+    static protected $apiRoutes = array();
+
+    public function __construct($name)
+    {
+
+        self::$apiRoutes = config('api');
+
+        $this->key = $name;
+    }
+
+    public function hasKey()
+    {
+        if (isset(self::$apiRoutes[$this->key])) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function getKey()
+    {
+        return $this->key;
+    }
+
+    public function parseKey()
+    {
+
+        $this->apiParse = new ApiParseRoute($this->key, self::$apiRoutes[$this->key]);
+
+        return $this;
+    }
+
+    public function getApp()
+    {
+        return $this->apiParse->getApp();
+    }
+
+    public function getFullClassName()
+    {
+        return $this->apiParse->getFullClassName();
+    }
+
+    public function getClassName()
+    {
+        return $this->apiParse->getClassName();
+    }
+
+    public function getClassPath()
+    {
+        return $this->apiParse->getClassPath();
+    }
+}

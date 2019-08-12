@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Ecjia\Component\ApiServer\Responses;
+namespace Ecjia\Component\ApiServer\Route;
 
 
 class ApiParseRoute

@@ -53,6 +53,7 @@
 
 namespace Ecjia\Component\ApiServer\Responses;
 
+use Ecjia\Component\ApiServer\Route\ApiRouter;
 use ecjia_error;
 use RC_Loader;
 
