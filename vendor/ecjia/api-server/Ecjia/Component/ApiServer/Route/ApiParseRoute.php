@@ -76,6 +76,11 @@ class ApiParseRoute
         $this->fileName = $name;
     }
 
+    public function getApi()
+    {
+        return $this->api;
+    }
+
     /**
      * 获取APP
      * @return string
