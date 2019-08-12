@@ -52,6 +52,11 @@ class ApiRouteManager
     {
         $apis = $this->apis->groupBy(function ($item) {
             return $item->getApp();
+        })->map(function ($item) {
+            $item = $item->sortBy(function ($item) {
+                return $item->getApi();
+            });
+            return $item;
         })->toArray();
 
         return $apis;
