@@ -46,6 +46,8 @@
 //
 namespace Ecjia\Component\FileHash\Console;
 
+use Ecjia\Component\FileHash\FileCheck;
+use Ecjia\Component\FileHash\Menu;
 use Royalcms\Component\Console\Command;
 
 class FileHashCommand extends Command
@@ -66,14 +68,14 @@ class FileHashCommand extends Command
     {
         $this->info('starting generate file...');
 
-        $menus = (new \Ecjia\System\Admins\FileHash\Menu())->getMenus();
+        $menus = (new Menu())->getMenus();
 
         $menus->map(function($item) {
             if ($item['type'] == 'nav-header') {
                 return;
             }
 
-            $hash = new \Ecjia\System\Admins\FileHash\FileCheck($item['dir']);
+            $hash = new FileCheck($item['dir']);
             $result = $hash->builder();
             $hash->writeFile($result);
 
