@@ -271,7 +271,6 @@ class ecjia_utility {
             $data = array();
         } else {
             $data = $cloud->getReturnData();
-            dd($data);
         }
         return $data;
     }
