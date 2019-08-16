@@ -53,6 +53,6 @@ use Royalcms\Component\Container\Container;
 class Ecjia extends Container
 {
 
-    
+
     
 }
