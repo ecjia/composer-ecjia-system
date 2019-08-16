@@ -50,7 +50,6 @@ use Royalcms\Component\Console\Scheduling\Schedule;
 use Royalcms\Component\Contracts\Foundation\Royalcms;
 use Royalcms\Component\Contracts\Events\Dispatcher;
 use Royalcms\Component\Foundation\Console\Kernel as ConsoleKernel;
-use RC_Hook;
 
 class Kernel extends ConsoleKernel
 {
@@ -59,16 +58,7 @@ class Kernel extends ConsoleKernel
      *
      * @var array
      */
-    protected $commands = array(
-        Commands\FileHashCommand::class,
-        Commands\CronTestCommand::class,
-        Commands\TSmartyGettextCommand::class,
-        Commands\GettextTextdomainCommand::class,
-        Commands\GettextMakePOTCommand::class,
-        Commands\GettextMetadataCommand::class,
-        Commands\GettextCommentCommand::class,
-        Commands\GettextMakeBatchCommand::class,
-    );
+    protected $commands = array();
 
     /**
      * Create a new console kernel instance.

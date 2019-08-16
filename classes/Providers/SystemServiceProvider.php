@@ -103,12 +103,14 @@ class SystemServiceProvider extends AppParentServiceProvider
         $this->registerLocalProviders();
 
         $this->registerFacades();
+
+        $this->registerCommands();
 	}
 
     /**
      * Register the Namespaces
      */
-	public function registerNamespaces()
+    protected function registerNamespaces()
     {
         \Royalcms\Component\ClassLoader\ClassManager::addNamespaces(config('system::namespaces'));
     }
@@ -116,7 +118,7 @@ class SystemServiceProvider extends AppParentServiceProvider
     /**
      * Register the Providers
      */
-    public function registerProviders()
+    protected function registerProviders()
     {
         collect(config('system::provider'))->each(function($item) {
             $this->royalcms->register($item);
@@ -126,12 +128,22 @@ class SystemServiceProvider extends AppParentServiceProvider
     /**
      * Register the Local Providers
      */
-	public function registerLocalProviders() {
+    protected function registerLocalProviders() {
         if ($this->royalcms->environment() == 'local') {
             collect(config('system::provider_local'))->each(function($item) {
                 $this->royalcms->register($item);
             });
         }
+    }
+
+    /**
+     * Register the Commands
+     */
+    protected function registerCommands()
+    {
+        $commands = config('system::commands');
+
+        $this->commands($commands);
     }
 
     /**
