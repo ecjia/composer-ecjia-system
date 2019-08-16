@@ -45,10 +45,14 @@
 //  ---------------------------------------------------------------------------------
 //
 
-namespace Ecjia\System\Frameworks;
+namespace Ecjia\Component\Framework;
 
 
-class Ecjia
+use Royalcms\Component\Container\Container;
+
+class Ecjia extends Container
 {
+
+    
     
 }
