@@ -17,6 +17,7 @@ return array(
     'ecjia_base'         => 'Ecjia\System\BaseController\EcjiaController',
     'ecjia_admin'        => 'Ecjia\System\BaseController\EcjiaAdminController',
     'ecjia_front'        => 'Ecjia\System\BaseController\EcjiaFrontController',
+    'ecjia_cloud'        => 'Ecjia\Component\EcjiaCloud\EcjiaCloud',
     'ecjia_error'        => 'Royalcms\Component\Error\Error',
 
 );

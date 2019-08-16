@@ -44,17 +44,24 @@
 //
 //  ---------------------------------------------------------------------------------
 //
+namespace Ecjia\Component\EcjiaCloud;
+
+use ecjia_error;
+use RC_Cache;
+use RC_Error;
+use RC_Http;
+use RC_Object;
+
 /**
  * ecjia cloud 业务处理类
  * @author royalwang
- *
  */
-class ecjia_cloud extends RC_Object
+class EcjiaCloud extends RC_Object
 {
     
     /**
      * 服务器地址
-     * @var serverHost
+     * @var string
      */
     const serverHost = 'https://cloud.ecjia.com/sites/api/?url=';
     
@@ -95,13 +102,14 @@ class ecjia_cloud extends RC_Object
     /**
      * 返回当前终级类对象的实例
      *
-     * @param $cache_config 缓存配置
-     * @return ecjia_cloud
+     * @return EcjiaCloud
      */
-    public static function instance() {
+    public static function instance()
+    {
         return static::make();
     }
-    
+
+
     public function addError($code = '', $message = '', $data = '')
     {
         if (!is_ecjia_error($this->error)) {
@@ -117,9 +125,10 @@ class ecjia_cloud extends RC_Object
     /**
      * 设置需要发送的数据
      * @param array $data
-     * @return ecjia_cloud
+     * @return EcjiaCloud
      */
-    public function data($data) {
+    public function data($data)
+    {
         $this->data = $data;
         
         return $this;
@@ -129,9 +138,10 @@ class ecjia_cloud extends RC_Object
     /**
      * 设置API接口
      * @param string $api 例如 xx/xxx
-     * @return ecjia_cloud
+     * @return EcjiaCloud
      */
-    public function api($api) {
+    public function api($api)
+    {
         $this->api = $api;
         
         return $this;
@@ -140,9 +150,10 @@ class ecjia_cloud extends RC_Object
     /**
      * 设置缓存的时间
      * @param integer $time
-     * @return ecjia_cloud
+     * @return EcjiaCloud
      */
-    public function cacheTime($time) {
+    public function cacheTime($time)
+    {
         $this->cache_time = $time;
         
         return $this;
@@ -151,9 +162,10 @@ class ecjia_cloud extends RC_Object
     
     /**
      * 请求
-     * @return ecjia_cloud
+     * @return EcjiaCloud
      */
-    public function run() {        
+    public function run()
+    {
         $cache_key = 'api_request_'.md5($this->api.json_encode($this->data));
         $data = RC_Cache::app_cache_get($cache_key, 'system');
 
@@ -183,17 +195,19 @@ class ecjia_cloud extends RC_Object
     
     /**
      * 获取错误对象
-     * @return ecjia_error
+     * @return EcjiaCloud
      */
-    public function getError() {
+    public function getError()
+    {
         return $this->error;
     }
     
     /**
      * 获取请求状态
-     * @return string | ecjia_cloud::STATUS_ERROR | ecjia_cloud::STATUS_SUCCESS
+     * @return string | EcjiaCloud::STATUS_ERROR | EcjiaCloud::STATUS_SUCCESS
      */
-    public function getStatus() {
+    public function getStatus()
+    {
         return $this->status;
     }
     
@@ -201,7 +215,8 @@ class ecjia_cloud extends RC_Object
      * 获取分页数据
      * @return array
      */
-    public function getPaginated() {
+    public function getPaginated()
+    {
         return $this->paginated;
     }
     
@@ -209,14 +224,16 @@ class ecjia_cloud extends RC_Object
      * 获取正常数据Data
      * @return array
      */
-    public function getReturnData() {
+    public function getReturnData()
+    {
         return $this->return_data;
     }
     
     /**
      * 获取整个请求返回内容
      */
-    public function getResponse() {
+    public function getResponse()
+    {
         return $this->response;
     }
     
@@ -232,9 +249,10 @@ class ecjia_cloud extends RC_Object
     /**
      * 解析服务器返回的数据
      * @param string $data
-     * @return ecjia_cloud
+     * @return EcjiaCloud
      */
-    protected function returnResolve($data) {        
+    protected function returnResolve($data)
+    {
         $data = json_decode($data, true);
         if (!is_array($data) || !array_has($data, 'status') ) {
             $this->status = self::STATUS_ERROR;
