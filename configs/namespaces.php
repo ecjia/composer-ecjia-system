@@ -8,6 +8,7 @@ return array(
     'Ecjia\Component\ApiClient'   => $vendorDir . '/ecjia/api-client/Ecjia/Component/ApiClient',
     'Ecjia\Component\ApiServer'   => $vendorDir . '/ecjia/api-server/Ecjia/Component/ApiServer',
     'Ecjia\Component\AppClient'   => $vendorDir . '/ecjia/app-client/Ecjia/Component/AppClient',
+    'Ecjia\Component\FileHash'   => $vendorDir . '/ecjia/file-hash/Ecjia/Component/FileHash',
     'Ecjia\Component\ShowMessage' => $vendorDir . '/ecjia/show-message/Ecjia/Component/ShowMessage',
     'Ecjia\Component\CleanCache'  => $vendorDir . '/ecjia/clean-cache/Ecjia/Component/CleanCache',
     'Ecjia\Component\EcjiaCloud'  => $vendorDir . '/ecjia/ecjia-cloud/Ecjia/Component/EcjiaCloud',
