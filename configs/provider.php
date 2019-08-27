@@ -8,6 +8,8 @@ return array(
 	'Ecjia\Component\AdminLog\AdminLogServiceProvider',
 	'Ecjia\Component\CleanCache\CleanCacheServiceProvider',
 
+    'Ecjia\System\Providers\EventServiceProvider',
+
 );
 
 //end
