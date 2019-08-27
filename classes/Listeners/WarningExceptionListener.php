@@ -19,6 +19,7 @@ class WarningExceptionListener
     {
         //
     }
+
     /**
      * Handle the event.
      *

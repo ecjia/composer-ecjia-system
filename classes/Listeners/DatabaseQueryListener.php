@@ -18,6 +18,7 @@ class DatabaseQueryListener
     {
         //
     }
+    
     /**
      * Handle the event.
      *
