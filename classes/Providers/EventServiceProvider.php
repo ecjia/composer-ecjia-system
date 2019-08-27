@@ -13,8 +13,8 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        'Ecjia\System\Events\SomeEvent' => [
-            'Ecjia\System\Listeners\EventListener',
+        'royalcms.query' => [
+            'Ecjia\System\Listeners\DatabaseQueryListener',
         ],
     ];
 
