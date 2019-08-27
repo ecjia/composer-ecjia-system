@@ -181,13 +181,13 @@ if (config('system.admin_enable') === true) {
     RC_App::extend('system', $systemBundle);
 }
 
-RC_Event::listen('royalcms.query', function($query, $bindings, $time) {
-    if (config('system.debug')) {
-        $query = str_replace('?', '"'.'%s'.'"', $query);
-        $sql = vsprintf($query, $bindings);
-        RC_Logger::getLogger(RC_Logger::LOG_SQL)->info('sql:'.$sql);
-    }
-});
+//RC_Event::listen('royalcms.query', function($query, $bindings, $time) {
+//    if (config('system.debug')) {
+//        $query = str_replace('?', '"'.'%s'.'"', $query);
+//        $sql = vsprintf($query, $bindings);
+//        RC_Logger::getLogger(RC_Logger::LOG_SQL)->info('sql:'.$sql);
+//    }
+//});
 
 RC_Event::listen('royalcms.warning.exception', function($exception) {
     if (config('system.debug')) {
