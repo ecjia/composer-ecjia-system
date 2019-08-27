@@ -2,7 +2,7 @@
 
 namespace Ecjia\System\Providers;
 
-class HooKerServiceProvider
+class HookerServiceProvider
 {
     /**
      * The hook action listener mappings for the application.
