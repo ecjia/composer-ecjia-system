@@ -16,6 +16,10 @@ class EventServiceProvider extends ServiceProvider
         'royalcms.query' => [
             'Ecjia\System\Listeners\DatabaseQueryListener',
         ],
+
+        'royalcms.warning.exception' => [
+            'Ecjia\System\Listeners\WarningExceptionListener',
+        ],
     ];
 
     /**
@@ -30,4 +34,5 @@ class EventServiceProvider extends ServiceProvider
 
         //
     }
+    
 }

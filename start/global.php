@@ -189,17 +189,17 @@ if (config('system.admin_enable') === true) {
 //    }
 //});
 
-RC_Event::listen('royalcms.warning.exception', function($exception) {
-    if (config('system.debug')) {
-        $err = array(
-		            'file'      => $exception->getFile(),
-		            'line'      => $exception->getLine(),
-		            'code'      => $exception->getPrevious(),
-		            'url'       => RC_Request::fullUrl(),
-	            );
-        RC_Logger::getLogger(RC_Logger::LOG_WARNING)->info($exception->getMessage(), $err);
-    }
-});
+//RC_Event::listen('royalcms.warning.exception', function($exception) {
+//    if (config('system.debug')) {
+//        $err = array(
+//		            'file'      => $exception->getFile(),
+//		            'line'      => $exception->getLine(),
+//		            'code'      => $exception->getPrevious(),
+//		            'url'       => RC_Request::fullUrl(),
+//	            );
+//        RC_Logger::getLogger(RC_Logger::LOG_WARNING)->info($exception->getMessage(), $err);
+//    }
+//});
 
 RC_Hook::add_action('mail_init', function () {
     RC_Mail::macro('send_mail', function ($name, $email, $subject, $content, $type = 0, $notification = false) {
