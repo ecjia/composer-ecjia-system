@@ -80,10 +80,18 @@ class SettingSeeder
             $data = $item->handle();
 
             collect($data)->each(function($item) use ($group) {
-                if (Config::has($item['code'])) {
-                    Config::change($group, $item['code'], null, $item['options']);
+
+                $options = [
+                    'type' => $item['cfg_type'],
+                    'range' => $item['cfg_range'] ?: '',
+                    'store_dir' => $item['cfg_store_dir'] ?: '',
+                    'sort_order' => $item['cfg_sort_order'] ?: '',
+                ];
+
+                if (Config::has($item['cfg_code'])) {
+                    Config::change($group, $item['cfg_code'], null, $options);
                 } else {
-                    Config::add($group, $item['code'], $item['value'], $item['options']);
+                    Config::add($group, $item['cfg_code'], $item['cfg_value'], $options);
                 }
             });
 
