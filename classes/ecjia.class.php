@@ -221,58 +221,6 @@ class ecjia {
     {
         return with(new \Ecjia\System\Frameworks\Component\CharCode)->byText();
     }
-	
-//    /**
-//     * ecjia 初始化
-//     */
-//	public static function init_load() {
-//		/* 初始化设置 */
-//		ini_set('memory_limit',          '128M');
-//		ini_set('display_errors',        1);
-//
-//		RC_Response::header('X-Powered-By', 'ROYALCMS/'.Royalcms::VERSION . ' ' . APPNAME.'/'.VERSION);
-//
-//		/**
-//		 * 加载系统配置
-//		 */
-//		RC_Loader::load_sys_config('constant');
-//
-//		RC_Loader::load_sys_func('global');
-//		RC_Loader::load_sys_func('deprecated');
-//		RC_Loader::load_sys_func('extention');
-//
-//		RC_Hook::add_filter('set_server_timezone', array(__CLASS__, 'current_timezone'));
-//		RC_Hook::add_action('admin_print_main_bottom', array(__CLASS__, 'echo_query_info'), 99);
-//
-//		$rc_script = RC_Script::instance();
-//		$rc_style = RC_Style::instance();
-//		ecjia_loader::default_scripts($rc_script);
-//		ecjia_loader::default_styles($rc_style);
-//
-//		/**
-//		 * This hook is fired once ecjia, all plugins, and the theme are fully loaded and instantiated.
-//		 *
-//		 * @since 1.0.0
-//		 */
-//		RC_Hook::do_action( 'ecjia_loaded' );
-//	}
-	
-//	/**
-//	 * 加载应用模块的语言包
-//	 * @param array $apps
-//	 */
-//	public static function load_lang() {
-//	    $apps = ecjia_app::app_floders();
-//	    foreach ($apps as $app) {
-////	        self::loadTranslationLang($app);
-//	        if (royalcms('config')->get('system.locale') != 'zh_CN') {
-//	            self::loadGettextLang($app);
-//	        }
-//	    }
-//	}
-	
-
-
 
 	public static function loadGlobalPlugins()
     {
@@ -410,8 +358,6 @@ ecjia::manual_load_classes();
 
 // RC_Hook::add_action('init', array('ecjia', 'manual_load_classes'), 0);
 // RC_Hook::add_action('init', array('ecjia', 'autoload_register'), 0);
-//RC_Hook::add_action('init', array('ecjia', 'init_load'), 1);
-//RC_Hook::add_action('init', array('ecjia', 'load_lang'), 3);
 // RC_Hook::add_action('init', array('RC_Cache', 'memory_cache_init'), 1);
 // RC_Hook::add_action('init', array('ecjia_upgrade_db', 'initialization'),1);
 
