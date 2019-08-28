@@ -2,7 +2,10 @@
 
 namespace Ecjia\System\Providers;
 
-class HookerServiceProvider
+use Royalcms\Component\Support\ServiceProvider;
+use Royalcms\Component\Hook\Dispatcher;
+
+class HookerServiceProvider extends ServiceProvider
 {
     /**
      * The hook action listener mappings for the application.
@@ -10,13 +13,10 @@ class HookerServiceProvider
      * @var array
      */
     protected $actions = [
-//        'royalcms.query' => [
-//            'Ecjia\System\Listeners\DatabaseQueryListener',
-//        ],
-//
-//        'royalcms.warning.exception' => [
-//            'Ecjia\System\Listeners\WarningExceptionListener',
-//        ],
+        'mail_init' => [
+            'Ecjia\System\Hookers\AddMacroSendMailAction'
+        ],
+
     ];
 
     /**
@@ -27,27 +27,39 @@ class HookerServiceProvider
     protected $filters = [];
 
     /**
+     * The subscriber classes to register.
+     *
+     * @var array
+     */
+    protected $subscribe = [];
+
+    /**
      * Register any other events for your application.
      *
-     * @param  \Royalcms\Component\Contracts\Events\Dispatcher  $events
+     * @param  \Royalcms\Component\Hook\Dispatcher  $dispatcher
      * @return void
      */
-    public function boot($events)
+    public function boot(Dispatcher $dispatcher)
     {
 
         foreach ($this->actions as $event => $listeners) {
             foreach ($listeners as $listener) {
-                $events->listen($event, $listener);
+                $dispatcher->addAction($event, $listener);
             }
         }
 
         foreach ($this->filters as $event => $listeners) {
             foreach ($listeners as $listener) {
-                $events->listen($event, $listener);
+                $dispatcher->addFilter($event, $listener);
             }
         }
 
+        foreach ($this->subscribe as $subscriber) {
+            $dispatcher->subscribe($subscriber);
+        }
+
     }
+
 
     /**
      * {@inheritdoc}
