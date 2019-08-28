@@ -201,10 +201,10 @@ if (config('system.admin_enable') === true) {
 //    }
 //});
 
-RC_Hook::add_action('mail_init', function () {
-    RC_Mail::macro('send_mail', function ($name, $email, $subject, $content, $type = 0, $notification = false) {
-        return with(new Ecjia\System\Frameworks\Component\Mailer($this))->send_mail($name, $email, $subject, $content, $type, $notification);
-    });
-});
+//RC_Hook::add_action('mail_init', function () {
+//    RC_Mail::macro('send_mail', function ($name, $email, $subject, $content, $type = 0, $notification = false) {
+//        return with(new Ecjia\System\Frameworks\Component\Mailer($this))->send_mail($name, $email, $subject, $content, $type, $notification);
+//    });
+//});
 
 // end
