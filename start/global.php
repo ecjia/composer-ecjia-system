@@ -181,30 +181,4 @@ if (config('system.admin_enable') === true) {
     RC_App::extend('system', $systemBundle);
 }
 
-//RC_Event::listen('royalcms.query', function($query, $bindings, $time) {
-//    if (config('system.debug')) {
-//        $query = str_replace('?', '"'.'%s'.'"', $query);
-//        $sql = vsprintf($query, $bindings);
-//        RC_Logger::getLogger(RC_Logger::LOG_SQL)->info('sql:'.$sql);
-//    }
-//});
-
-//RC_Event::listen('royalcms.warning.exception', function($exception) {
-//    if (config('system.debug')) {
-//        $err = array(
-//		            'file'      => $exception->getFile(),
-//		            'line'      => $exception->getLine(),
-//		            'code'      => $exception->getPrevious(),
-//		            'url'       => RC_Request::fullUrl(),
-//	            );
-//        RC_Logger::getLogger(RC_Logger::LOG_WARNING)->info($exception->getMessage(), $err);
-//    }
-//});
-
-//RC_Hook::add_action('mail_init', function () {
-//    RC_Mail::macro('send_mail', function ($name, $email, $subject, $content, $type = 0, $notification = false) {
-//        return with(new Ecjia\System\Frameworks\Component\Mailer($this))->send_mail($name, $email, $subject, $content, $type, $notification);
-//    });
-//});
-
 // end
