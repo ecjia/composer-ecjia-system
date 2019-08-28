@@ -521,6 +521,14 @@ class DatabaseConfigRepository implements ConfigRepositoryInterface, ArrayAccess
 		return $this->items;
 	}
 
+    /**
+     * Get table database model.
+     */
+	public function getTableModel()
+    {
+        return $this->tableModel;
+    }
+
 	/**
 	 * Determine if the given configuration option exists.
 	 *
