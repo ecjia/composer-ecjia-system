@@ -181,4 +181,11 @@ if (config('system.admin_enable') === true) {
     RC_App::extend('system', $systemBundle);
 }
 
+/**
+ * Fires after Royalcms has finished loading but before any headers are sent.
+ *
+ * @since 1.5.0
+ */
+RC_Hook::do_action('ecjia_loading');
+
 // end

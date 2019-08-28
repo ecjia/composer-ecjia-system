@@ -44,39 +44,38 @@
 //
 //  ---------------------------------------------------------------------------------
 //
-defined('IN_ECJIA') or exit('No permission resources.');
 
-/**
- * 加载ECJia项目主文件
- */
-RC_Package::package('system')->loadClass('ecjia', false);
-if (is_installed_ecjia()) {
-    (new \Ecjia\System\Frameworks\Screens\NotInstallScreen())->loading();
-} else {
-    (new \Ecjia\System\Frameworks\Screens\InstallScreen())->loading();
-}
-
-/**
- * 检测是否安装ecjia
- */
-function is_installed_ecjia()
-{
-    $install_lock = storage_path() . '/data/install.lock';
-
-    if (!file_exists($install_lock) && !defined('NO_CHECK_INSTALL')) {
-
-        if (royalcms('request')->query('m') != 'installer')
-        {
-            $url = RC_Uri::url('installer/index/init');
-            rc_redirect($url);
-            exit();
-        }
-
-        return false;
-    }
-
-    return true;
-}
+///**
+// * 加载ECJia项目主文件
+// */
+//RC_Package::package('system')->loadClass('ecjia', false);
+//if (is_installed_ecjia()) {
+//    (new \Ecjia\System\Frameworks\Screens\NotInstallScreen())->loading();
+//} else {
+//    (new \Ecjia\System\Frameworks\Screens\InstallScreen())->loading();
+//}
+//
+///**
+// * 检测是否安装ecjia
+// */
+//function is_installed_ecjia()
+//{
+//    $install_lock = storage_path() . '/data/install.lock';
+//
+//    if (!file_exists($install_lock) && !defined('NO_CHECK_INSTALL')) {
+//
+//        if (royalcms('request')->query('m') != 'installer')
+//        {
+//            $url = RC_Uri::url('installer/index/init');
+//            rc_redirect($url);
+//            exit();
+//        }
+//
+//        return false;
+//    }
+//
+//    return true;
+//}
 
 //function ecjia_front_access_session() {
 //    if (ecjia_utility::is_spider()) {

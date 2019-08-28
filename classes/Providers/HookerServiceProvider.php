@@ -13,6 +13,10 @@ class HookerServiceProvider extends ServiceProvider
      * @var array
      */
     protected $actions = [
+        'ecjia_loading' => [
+            'Ecjia\System\Hookers\EcjiaLoadingScreenAction'
+        ],
+
         'init' => [
             ['Ecjia\System\Hookers\EcjiaInitLoadAction', 1],
             ['Ecjia\System\Hookers\EcjiaLoadLangAction', 3]
