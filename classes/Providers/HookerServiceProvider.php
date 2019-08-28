@@ -22,6 +22,14 @@ class HookerServiceProvider extends ServiceProvider
             'Ecjia\System\Hookers\AddMacroSendMailAction'
         ],
 
+        'ecjia_compatible_process' => [
+            'Ecjia\System\Hookers\EcjiaFrontCompatibleProcessAction'
+        ],
+
+        'ecjia_front_access_session' => [
+            'Ecjia\System\Hookers\EcjiaFrontAccessSessionAction'
+        ],
+
     ];
 
     /**
@@ -29,7 +37,19 @@ class HookerServiceProvider extends ServiceProvider
      *
      * @var array
      */
-    protected $filters = [];
+    protected $filters = [
+        'set_ecjia_config_filter' => [
+            'Ecjia\System\Hookers\SetEcjiaConfigFilter'
+        ],
+
+        'system_static_url' => [
+            ['Ecjia\System\Hookers\CustomSystemStaticUrlFilter', 10, 2],
+        ],
+
+        'admin_url' => [
+            ['Ecjia\System\Hookers\CustomAdminUrlFilter', 10, 2],
+        ],
+    ];
 
     /**
      * The subscriber classes to register.
