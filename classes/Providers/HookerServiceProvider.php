@@ -34,6 +34,10 @@ class HookerServiceProvider extends ServiceProvider
             'Ecjia\System\Hookers\EcjiaFrontAccessSessionAction'
         ],
 
+        'shop_config_updated_after' => [
+            'Ecjia\System\Hookers\ShopConfigUpdatedAfterAction'
+        ],
+
     ];
 
     /**
