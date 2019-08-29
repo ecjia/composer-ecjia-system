@@ -82,10 +82,17 @@ class SettingSeeder
             $data  = $item->handle();
 
             collect($data)->each(function ($item) use ($group) {
+                $range = $item['cfg_range'];
+                if ($range) {
+                    $range_keys = array_keys($range);
+                    $store_range = implode(',', $range_keys);
+                } else {
+                    $store_range = '';
+                }
 
                 $options = [
                     'type'        => $item['cfg_type'] ?: '',
-                    'store_range' => $item['cfg_range'] ?: '',
+                    'store_range' => $store_range,
                     'store_dir'   => $item['cfg_store_dir'] ?: '',
                     'sort_order'  => $item['cfg_sort_order'] ?: '',
                 ];
