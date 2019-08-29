@@ -45,6 +45,16 @@ class SettingSequence
             $this->updateItemIdWithGroupId($item['id']);
         });
 
+        //移除code为空的配置项
+        $this->removeEmptyCode();
+    }
+
+    /**
+     * 移除code为空的配置项
+     */
+    protected function removeEmptyCode()
+    {
+        ConfigModel::where('code', '')->delete();
     }
 
     /**
