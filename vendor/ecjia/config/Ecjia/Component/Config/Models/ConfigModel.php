@@ -57,6 +57,22 @@ class ConfigModel extends Model implements ConfigModelInterface
     use ComputeLastIdTrait;
 
     protected $table = 'shop_config';
+
+    /**
+     * 可以被批量赋值的属性。
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'id',
+        'parent_id',
+        'code',
+        'type',
+        'store_range',
+        'store_dir',
+        'value',
+        'sort_order',
+    ];
     
     public $timestamps = false;
 
