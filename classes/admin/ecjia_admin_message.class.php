@@ -59,7 +59,6 @@ class ecjia_admin_message
     /**
      *  获取管理员未读消息
      *
-     * @return void
      */
     public static function get_admin_chat($filters = array())
     {
