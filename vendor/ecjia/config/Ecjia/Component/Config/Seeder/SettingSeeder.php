@@ -73,6 +73,7 @@ class SettingSeeder
      */
     public function seeder()
     {
+        Config::clearCache();
 
         $components = with(new ComponentFactory($this->component))->getComponents();
 
