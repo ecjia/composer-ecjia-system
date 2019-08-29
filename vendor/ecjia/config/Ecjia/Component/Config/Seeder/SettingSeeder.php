@@ -51,6 +51,7 @@
  * Date: 2018/9/30
  * Time: 9:50 AM
  */
+
 namespace Ecjia\Component\Config\Seeder;
 
 use Ecjia\Component\Config\Component\ComponentFactory;
@@ -75,17 +76,17 @@ class SettingSeeder
 
         $components = with(new ComponentFactory($this->component))->getComponents();
 
-        collect($components)->each(function($item) {
+        collect($components)->each(function ($item) {
             $group = $item->getCode();
-            $data = $item->handle();
+            $data  = $item->handle();
 
-            collect($data)->each(function($item) use ($group) {
+            collect($data)->each(function ($item) use ($group) {
 
                 $options = [
-                    'type' => $item['cfg_type'],
-                    'range' => $item['cfg_range'] ?: '',
-                    'store_dir' => $item['cfg_store_dir'] ?: '',
-                    'sort_order' => $item['cfg_sort_order'] ?: '',
+                    'type'        => $item['cfg_type'] ?: '',
+                    'store_range' => $item['cfg_range'] ?: '',
+                    'store_dir'   => $item['cfg_store_dir'] ?: '',
+                    'sort_order'  => $item['cfg_sort_order'] ?: '',
                 ];
 
                 if (Config::has($item['cfg_code'])) {

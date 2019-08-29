@@ -5,6 +5,7 @@ namespace Ecjia\Component\Config\Seeder;
 
 use Ecjia\Component\Config\Models\ConfigModel;
 use Royalcms\Component\Database\Eloquent\Builder;
+use Royalcms\Component\Database\Eloquent\Collection;
 
 /**
  * 分组排序
@@ -19,43 +20,84 @@ class SettingSequence
      */
     public function seeder()
     {
+        //更新分组ID
+        $this->updateGroupId();
+
+        //修改Item临时ID
+        $id_start = 1000;
+
         /**
-         * @var $model ConfigModel | Builder
+         * @var $item ConfigModel | Builder
+         * @var $data Collection
          */
-        $model = new ConfigModel();
+        $data = ConfigModel::where('id', '>', $id_start)->get();
+        $data->map(function ($item) {
 
-        $data = $model->where('id', '>', 100)->get();
+            $id = $item->id + 30000000;
 
-        $data->map(function ($item) use ($model) {
-
-            $id = $item['id'] + 30000;
-            $model->where('code', $item['code'])->update(['id' => $id]);
+            $item->id = $id;
+            $item->save();
         });
 
-        $data = $model->where('parent_id', 0)->get();
-
+        //再将Item分配新ID
+        $data = ConfigModel::where('parent_id', 0)->get();
         $data->map(function ($item) {
-            $this->updateGroupId($item['id']);
+            $this->updateItemIdWithGroupId($item['id']);
         });
 
     }
 
-    protected function updateGroupId($group_id)
+    /**
+     * 更新GroupId排序
+     */
+    protected function updateGroupId()
     {
+        $data = ConfigModel::where('type', 'group')->get();
+
+        $data->map(function ($item, $key) {
+            $old_id = $item->id;
+            $id = $key + 1;
+
+            $item->id = $id;
+            $item->save();
+
+            $this->replaceItemIdForParentId($old_id, $id);
+        });
+
+    }
+
+    /**
+     * 更新子配置项的父级ID
+     * @param $old_id
+     * @param $new_id
+     */
+    protected function replaceItemIdForParentId($old_id, $new_id)
+    {
+        ConfigModel::where('parent_id', $old_id)->update(['parent_id' => $new_id]);
+    }
+
+    /**
+     * 更新ItemId排序
+     * @param $group_id
+     */
+    protected function updateItemIdWithGroupId($group_id)
+    {
+        $id_start = 1000;
+
         /**
-         * @var $model ConfigModel | Builder
+         * @var $item ConfigModel | Builder
+         * @var $data Collection
          */
-        $model = new ConfigModel();
+        $data = ConfigModel::where('id', '>', $id_start)->where('parent_id', $group_id)->get();
 
-        $data = $model->where('id', '>', 100)->where('parent_id', $group_id)->get();
-
-        $data->map(function ($item, $key) use ($model) {
+        $data->map(function ($item, $key) use ($id_start) {
 
             $id = $key + 1;
 
-            $id = $item['parent_id'] * 1000 + $id;
+            $id = $item->parent_id * $id_start + $id;
 
-            $model->where('code', $item['code'])->update(['id' => $id]);
+            $item->id = $id;
+            $item->save();
         });
     }
 
