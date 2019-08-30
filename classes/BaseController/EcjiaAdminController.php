@@ -521,7 +521,7 @@ abstract class EcjiaAdminController extends EcjiaController implements EcjiaTemp
                 royalcms('Royalcms\Component\Hook\Dispatcher')->subscribe($class);
             }
         });
-		
+
 	}
 	
 	
