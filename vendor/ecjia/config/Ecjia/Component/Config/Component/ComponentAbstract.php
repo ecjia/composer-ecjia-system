@@ -78,6 +78,12 @@ abstract class ComponentAbstract
      * @var int
      */
     protected $sort = 0;
+
+    /**
+     * 是否显示在配置页面
+     * @var bool
+     */
+    protected $displayed = true;
     
     public function getCode()
     {
@@ -108,6 +114,11 @@ abstract class ComponentAbstract
     {
     	$this->sort = $sort;
     	return $this;
+    }
+
+    public function isDisplayed()
+    {
+        return $this->displayed;
     }
 
     /**
