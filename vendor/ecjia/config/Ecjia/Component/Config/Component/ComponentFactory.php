@@ -66,8 +66,8 @@ class ComponentFactory
 
     /**
      * ComponentFactory constructor.
-     * @param $dir
-     * @param $namespace
+     *
+     * @param ComponentNamespace $component_namespace
      */
     public function __construct(ComponentNamespace $component_namespace)
     {
