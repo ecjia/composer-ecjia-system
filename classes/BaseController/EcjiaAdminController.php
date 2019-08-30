@@ -509,11 +509,19 @@ abstract class EcjiaAdminController extends EcjiaController implements EcjiaTemp
 		}
 		
 		$apps = ecjia_app::installed_app_floders();
-		if (is_array($apps)) {
-			foreach ($apps as $app) {
-				RC_Loader::load_app_class('hooks.admin_' . $app, $app, false);
-			}
-		}
+
+		collect($apps)->map(function ($app) {
+		    //loading hooks
+            RC_Loader::load_app_class('hooks.admin_' . $app, $app, false);
+
+            //loading subscriber
+            $bundle = royalcms('app')->driver($app);
+            $class = $bundle->getNamespace() . '\Subscribers\AdminHookSubscriber';
+            if (class_exists($class)) {
+                royalcms('Royalcms\Component\Hook\Dispatcher')->subscribe($class);
+            }
+        });
+		
 	}
 	
 	

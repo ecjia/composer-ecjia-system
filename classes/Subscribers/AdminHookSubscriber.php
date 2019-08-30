@@ -20,7 +20,7 @@ use RC_DB;
 use RC_Uri;
 use Royalcms\Component\Hook\Dispatcher;
 
-class AdminSystemSubscriber
+class AdminHookSubscriber
 {
 
     /**
@@ -274,57 +274,57 @@ class AdminSystemSubscriber
     {
         $events->addAction(
             'admin_dashboard_left',
-            'Ecjia\System\Subscribers\AdminSystemSubscriber@onAdminDashboardLeftMessageAction'
+            'Ecjia\System\Subscribers\AdminHookSubscriber@onAdminDashboardLeftMessageAction'
         );
 
         $events->addAction(
             'admin_dashboard_right',
-            'Ecjia\System\Subscribers\AdminSystemSubscriber@onAdminDashboardRightLogAction'
+            'Ecjia\System\Subscribers\AdminHookSubscriber@onAdminDashboardRightLogAction'
         );
 
         $events->addAction(
             'admin_dashboard_right',
-            'Ecjia\System\Subscribers\AdminSystemSubscriber@onAdminDashboardRightProductNewsAction'
+            'Ecjia\System\Subscribers\AdminHookSubscriber@onAdminDashboardRightProductNewsAction'
         );
 
         $events->addAction(
             'admin_sidebar_info',
-            'Ecjia\System\Subscribers\AdminSystemSubscriber@onAdminSidebarInfoAction'
+            'Ecjia\System\Subscribers\AdminHookSubscriber@onAdminSidebarInfoAction'
         );
 
         $events->addAction(
             'display_admin_plugin_menus',
-            'Ecjia\System\Subscribers\AdminSystemSubscriber@onDisplayAdminPluginMenusAction'
+            'Ecjia\System\Subscribers\AdminHookSubscriber@onDisplayAdminPluginMenusAction'
         );
 
         $events->addAction(
             'display_admin_privilege_menus',
-            'Ecjia\System\Subscribers\AdminSystemSubscriber@onDisplayAdminPrivilegeMenusAction'
+            'Ecjia\System\Subscribers\AdminHookSubscriber@onDisplayAdminPrivilegeMenusAction'
         );
 
         $events->addAction(
             'ecjia_admin_dashboard_index',
-            'Ecjia\System\Subscribers\AdminSystemSubscriber@onDisplayAdminUpgradeCheckedAction'
+            'Ecjia\System\Subscribers\AdminHookSubscriber@onDisplayAdminUpgradeCheckedAction'
         );
 
         $events->addAction(
             'ecjia_admin_dashboard_index',
-            'Ecjia\System\Subscribers\AdminSystemSubscriber@onDisplayEcjiaLicenseCheckedAction'
+            'Ecjia\System\Subscribers\AdminHookSubscriber@onDisplayEcjiaLicenseCheckedAction'
         );
 
         $events->addAction(
             'ecjia_admin_dashboard_index',
-            'Ecjia\System\Subscribers\AdminSystemSubscriber@onDisplayEcjiaCloudCheckedAction'
+            'Ecjia\System\Subscribers\AdminHookSubscriber@onDisplayEcjiaCloudCheckedAction'
         );
 
         $events->addAction(
             'ecjia_admin_login_after',
-            'Ecjia\System\Subscribers\AdminSystemSubscriber@onRecordAdminSessionLoginsAction'
+            'Ecjia\System\Subscribers\AdminHookSubscriber@onRecordAdminSessionLoginsAction'
         );
 
         $events->addAction(
             'ecjia_admin_logout_before',
-            'Ecjia\System\Subscribers\AdminSystemSubscriber@onAdminSessionLogoutRemoveAction'
+            'Ecjia\System\Subscribers\AdminHookSubscriber@onAdminSessionLogoutRemoveAction'
         );
     }
 

@@ -19,7 +19,7 @@ class EcjiaAdminServiceProvider extends AppParentServiceProvider
 
     public function boot(Dispatcher $dispatcher)
     {
-        $dispatcher->subscribe('Ecjia\System\Subscribers\AdminSystemSubscriber');
+//        $dispatcher->subscribe('Ecjia\System\Subscribers\AdminSystemSubscriber');
     }
 
     /**
