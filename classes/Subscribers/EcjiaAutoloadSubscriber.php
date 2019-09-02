@@ -15,7 +15,7 @@ class EcjiaAutoloadSubscriber
     /**
      * auto laod classes
      */
-    private function auto_load_classes($classname)
+    public function auto_load_classes($classname)
     {
         if (RC_Hook::has_action('class_' . $classname)) {
             return RC_Hook::do_action('class_' . $classname);
@@ -71,12 +71,14 @@ class EcjiaAutoloadSubscriber
     {
         $events->addAction(
             'init',
-            'Ecjia\System\Subscribers\EcjiaAutoloadSubscriber@onAutoloadRegisterAction'
+            'Ecjia\System\Subscribers\EcjiaAutoloadSubscriber@onAutoloadRegisterAction',
+            1
         );
 
         $events->addAction(
             'init',
-            'Ecjia\System\Subscribers\EcjiaAutoloadSubscriber@onManualLoadClassesAction'
+            'Ecjia\System\Subscribers\EcjiaAutoloadSubscriber@onManualLoadClassesAction',
+            1
         );
     }
 }

@@ -18,8 +18,8 @@ class HookerServiceProvider extends ServiceProvider
         ],
 
         'init' => [
-            ['Ecjia\System\Hookers\EcjiaInitLoadAction', 1],
-            ['Ecjia\System\Hookers\EcjiaLoadLangAction', 3]
+            ['Ecjia\System\Hookers\EcjiaInitLoadAction', 2],
+            ['Ecjia\System\Hookers\EcjiaLoadLangAction', 9]
         ],
 
         'mail_init' => [
@@ -100,7 +100,7 @@ class HookerServiceProvider extends ServiceProvider
         foreach ($this->subscribe as $subscriber) {
             $dispatcher->subscribe($subscriber);
         }
-
+        
     }
 
 
