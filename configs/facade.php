@@ -2,6 +2,7 @@
 
 return array(
 
+
     'ecjia_config'       => 'Ecjia\Component\Config\Facades\Config',
     'ecjia_admin_log'    => 'Ecjia\Component\AdminLog\Facades\AdminLog',
     'ecjia_update_cache' => 'Ecjia\Component\CleanCache\Facades\CleanCache',
@@ -14,10 +15,12 @@ return array(
 
 
     //compatible
-    'ecjia_base'         => 'Ecjia\System\BaseController\EcjiaController',
-    'ecjia_admin'        => 'Ecjia\System\BaseController\EcjiaAdminController',
-    'ecjia_front'        => 'Ecjia\System\BaseController\EcjiaFrontController',
-    'ecjia_cloud'        => 'Ecjia\Component\EcjiaCloud\EcjiaCloud',
-    'ecjia_error'        => 'Royalcms\Component\Error\Error',
+    'ecjia'                => 'Ecjia\Component\Framework\Ecjia',
+    'ecjia_base'           => 'Ecjia\System\BaseController\EcjiaController',
+    'ecjia_admin'          => 'Ecjia\System\BaseController\EcjiaAdminController',
+    'ecjia_front'          => 'Ecjia\System\BaseController\EcjiaFrontController',
+    'ecjia_cloud'          => 'Ecjia\Component\EcjiaCloud\EcjiaCloud',
+    'ecjia_error'          => 'Royalcms\Component\Error\Error',
+
 
 );
