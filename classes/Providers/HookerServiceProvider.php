@@ -61,6 +61,10 @@ class HookerServiceProvider extends ServiceProvider
         'upload_default_random_filename' => [
             'Ecjia\System\Hookers\UploadDefaultRandomFilenameFilter',
         ],
+
+        'set_server_timezone' => [
+            'Ecjia\System\Hookers\SetCurrentTimezoneFilter',
+        ],
     ];
 
     /**

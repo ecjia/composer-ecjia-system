@@ -379,6 +379,11 @@ class AdminHookSubscriber
             'admin_about_welcome',
             'Ecjia\System\Hookers\DisplayAdminAboutWelcomeAction'
         );
+        $events->addAction(
+            'admin_print_main_bottom',
+            'Ecjia\System\Hookers\EcjiaEchoQueryInfoAction',
+            99
+        );
 
     }
 
