@@ -46,13 +46,13 @@
 //
 namespace Ecjia\System\Providers;
 
+use Ecjia\Component\Framework\Ecjia;
 use ReflectionClass;
 use Royalcms\Component\App\AppParentServiceProvider;
 use Ecjia\System\Plugin\PluginManager;
 use Ecjia\System\Theme\ThemeManager;
 use Ecjia\System\Frameworks\Site\SiteManager;
 use Ecjia\System\Version\VersionManager;
-use Ecjia\System\Frameworks\CleanCache\CacheManger;
 
 class SystemServiceProvider extends AppParentServiceProvider 
 {
@@ -61,8 +61,11 @@ class SystemServiceProvider extends AppParentServiceProvider
      *
      * @return void
      */
-    public function boot() {
-
+    public function boot()
+    {
+        define('APPNAME', 'ECJIA');
+        define('VERSION', Ecjia::VERSION);
+        define('RELEASE', Ecjia::RELEASE);
     }
 
     /**
@@ -159,6 +162,13 @@ class SystemServiceProvider extends AppParentServiceProvider
                 $loader->alias($key, $item);
             });
 
+        });
+    }
+
+    public function registerEcjiaContainer()
+    {
+        $this->royalcms->bindShared('ecjia', function($royalcms){
+            return new Ecjia();
         });
     }
 	
