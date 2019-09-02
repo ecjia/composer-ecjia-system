@@ -72,7 +72,9 @@ class HookerServiceProvider extends ServiceProvider
      *
      * @var array
      */
-    protected $subscribe = [];
+    protected $subscribe = [
+        'Ecjia\System\Subscribers\EcjiaAutoloadSubscriber',
+    ];
 
     /**
      * Register any other events for your application.

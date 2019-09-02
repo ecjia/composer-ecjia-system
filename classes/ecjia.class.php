@@ -240,53 +240,53 @@ class ecjia {
         return (config('system.debug') === true && config('system.debug_display') === true);
     }
     
-    /**
-     * 加载手动加载的类
-     */
-    public static function manual_load_classes() {
-        $autoload_classes = RC_Package::package('system')->loadConfig('autoload_class');
-        if (!empty($autoload_classes)) {
-            foreach ($autoload_classes as $key => $class) {
-                RC_Hook::add_action($key, function () use ($class) {
-                    RC_Package::package('system')->loadClass($class, false);
-                });
-            }
-        }
-
-        RC_Hook::do_action('ecjia_manual_load_classes');
-    }
+//    /**
+//     * 加载手动加载的类
+//     */
+//    public static function manual_load_classes() {
+//        $autoload_classes = RC_Package::package('system')->loadConfig('autoload_class');
+//        if (!empty($autoload_classes)) {
+//            foreach ($autoload_classes as $key => $class) {
+//                RC_Hook::add_action($key, function () use ($class) {
+//                    RC_Package::package('system')->loadClass($class, false);
+//                });
+//            }
+//        }
+//
+//        RC_Hook::do_action('ecjia_manual_load_classes');
+//    }
     
-    /**
-     * auto laod classes
-     */
-    public static function auto_load_classes($classname) {
-        if (RC_Hook::has_action('class_' . $classname)) {
-            return RC_Hook::do_action('class_' . $classname);
-        } elseif (strpos($classname, 'ecjia') === 0) {
-            return RC_Loader::load_sys_class($classname, false);
-        } 
-        return false;
-    }
+//    /**
+//     * auto laod classes
+//     */
+//    public static function auto_load_classes($classname) {
+//        if (RC_Hook::has_action('class_' . $classname)) {
+//            return RC_Hook::do_action('class_' . $classname);
+//        } elseif (strpos($classname, 'ecjia') === 0) {
+//            return RC_Loader::load_sys_class($classname, false);
+//        }
+//        return false;
+//    }
     
-    /**
-     * 注册自动加载方法
-     */
-    public static function autoload_register() {
-        spl_autoload_register(array(__CLASS__, 'auto_load_classes'), true);
-    }
+//    /**
+//     * 注册自动加载方法
+//     */
+//    public static function autoload_register() {
+//        spl_autoload_register(array(__CLASS__, 'auto_load_classes'), true);
+//    }
     
-    /**
-     * 注销自动加载方法
-     */
-    public static function autoload_unregister() {
-        spl_autoload_unregister(array(__CLASS__, 'auto_load_classes'));
-    }
+//    /**
+//     * 注销自动加载方法
+//     */
+//    public static function autoload_unregister() {
+//        spl_autoload_unregister(array(__CLASS__, 'auto_load_classes'));
+//    }
     
 }
 
 //类的自动加载
-ecjia::autoload_register();
-ecjia::manual_load_classes();
+//ecjia::autoload_register();
+//ecjia::manual_load_classes();
 
 // RC_Hook::add_action('init', array('ecjia', 'manual_load_classes'), 0);
 // RC_Hook::add_action('init', array('ecjia', 'autoload_register'), 0);
