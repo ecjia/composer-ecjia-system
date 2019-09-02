@@ -375,6 +375,10 @@ class AdminHookSubscriber
             'Ecjia\System\Hookers\DisplayAdminSidebarNavAction',
             9
         );
+        $events->addAction(
+            'admin_about_welcome',
+            'Ecjia\System\Hookers\DisplayAdminAboutWelcomeAction'
+        );
 
     }
 

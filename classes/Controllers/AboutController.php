@@ -92,8 +92,6 @@ class AboutController extends ecjia_admin
             '<p>' . __('<a href="https://ecjia.com/wiki/帮助:ECJia智能后台:关于" target="_blank">关于ECJia帮助文档</a>') . '</p>'
         );
 
-        RC_Hook::add_action('admin_about_welcome', array('Ecjia\System\BaseController\EcjiaAdminController', 'display_admin_about_welcome'));
-
         return $this->display('about_us.dwt');
     }
 
@@ -120,8 +118,6 @@ class AboutController extends ecjia_admin
             '<p>' . __('<a href="https://ecjia.com/wiki/帮助:ECJia智能后台:关于" target="_blank">关于ECJia帮助文档</a>') . '</p>'
         );
 
-        RC_Hook::add_action('admin_about_welcome', array('Ecjia\System\BaseController\EcjiaAdminController', 'display_admin_about_welcome'));
-
         return $this->display('about_team.dwt');
     }
 
@@ -145,8 +141,6 @@ class AboutController extends ecjia_admin
             '<p><strong>' . __('更多信息：') . '</strong></p>' .
             '<p>' . __('<a href="https://ecjia.com/wiki/帮助:ECJia智能后台:关于" target="_blank">关于ECJia帮助文档</a>') . '</p>'
         );
-
-        RC_Hook::add_action('admin_about_welcome', array('Ecjia\System\BaseController\EcjiaAdminController', 'display_admin_about_welcome'));
 
         /* 系统信息 */
         $sys_info['os']                 = PHP_OS;
