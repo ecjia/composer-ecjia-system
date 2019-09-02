@@ -475,18 +475,11 @@ abstract class EcjiaAdminController extends EcjiaController implements EcjiaTemp
 	
 	
 	protected function load_hooks() {
-//		RC_Hook::add_action('admin_head', array(__CLASS__, '_ie_support_header'));
 		RC_Hook::add_action('admin_head', array('ecjia_loader', 'admin_enqueue_scripts'), 1 );
 		RC_Hook::add_action('admin_print_scripts', array('ecjia_loader', 'print_head_scripts'), 20 );
 		RC_Hook::add_action('admin_print_footer_scripts', array('ecjia_loader', 'print_admin_footer_scripts') );
 		RC_Hook::add_action('admin_print_styles', array('ecjia_loader', 'print_head_styles'), 20 );
 
-//		RC_Hook::add_action('admin_print_main_bottom', array(__CLASS__, 'display_admin_copyright'));
-//		RC_Hook::add_action('admin_print_header_nav', array(__CLASS__, 'display_admin_header_nav'));
-//		RC_Hook::add_action('admin_sidebar_collapse_search', array(__CLASS__, 'display_admin_sidebar_nav_search'), 9);
-//		RC_Hook::add_action('admin_sidebar_collapse', array(__CLASS__, 'display_admin_sidebar_nav'), 9);
-//		RC_Hook::add_action('admin_dashboard_top', array(__CLASS__, 'display_admin_welcome'), 9);
-//		RC_Hook::add_filter('upload_default_random_filename', array('ecjia_utility', 'random_filename'));
 
 		RC_Hook::add_action('admin_print_footer_scripts', array(ecjia_notification::make(), 'printScript') );
 
@@ -567,27 +560,6 @@ abstract class EcjiaAdminController extends EcjiaController implements EcjiaTemp
 	    }
 	    return false;
 	}
-	
-	
-//	/**
-//	 * 添加IE支持的header信息
-//	 */
-//	public static function _ie_support_header()
-//    {
-//		if (is_ie()) {
-//			echo "\n";
-//			echo '<!--[if lte IE 8]>'. "\n";
-//			echo '<link rel="stylesheet" href="' . RC_Uri::admin_url() . '/statics/lib/ie/ie.css" />'. "\n";
-//			echo '<![endif]-->'. "\n";
-//			echo "\n";
-//			echo '<!--[if lt IE 9]>'. "\n";
-//			echo '<script src="' . RC_Uri::admin_url() . '/statics/lib/ie/html5.js"></script>'. "\n";
-//			echo '<script src="' . RC_Uri::admin_url() . '/statics/lib/ie/respond.min.js"></script>'. "\n";
-//			echo '<script src="' . RC_Uri::admin_url() . '/statics/lib/flot/excanvas.min.js"></script>'. "\n";
-//			echo '<![endif]-->'. "\n";
-//		}
-//	}
-
     
     public static function display_admin_header_nav()
     {
@@ -641,131 +613,7 @@ abstract class EcjiaAdminController extends EcjiaController implements EcjiaTemp
         }
         echo '</ul>' . PHP_EOL;
     }
-    
-    
-//    public static function display_admin_sidebar_nav_search()
-//    {
-//        $menus = ecjia_admin_menu::singleton()->admin_menu();
-//
-//        if (!empty($menus['apps'])) {
-//            foreach ($menus['apps'] as $k => $menu) {
-//                // echo '<div class="accordion-group">';
-//                // echo '<div class="accordion-heading">';
-//                // echo '<a class="accordion-toggle" href="#collapse' . $k . '" data-parent="#side_accordion" data-toggle="collapse">';
-//                // echo '<i class="icon-folder-close"></i> ' . $menu->name;
-//                // echo '</a>';
-//                // echo '</div>';
-//                if ($menu->has_submenus) {
-//                    // echo '<div class="accordion-body collapse" id="collapse' . $k . '">';
-//                    // echo '<div class="accordion-inner">';
-//                    // echo '<ul class="nav nav-list">';
-//                    if ($menu->submenus) {
-//                        foreach ($menu->submenus as $child) {
-//                            if ($child->action == 'divider') {
-//                                echo '<li class="divider"></li>';
-//                            } elseif ($child->action == 'nav-header') {
-//                                echo '<li class="nav-header">' . $child->name . '</li>';
-//                            } else {
-//                                echo '<li><a href="' . $child->link . '">' . $child->name . '</a></li>';
-//                            }
-//                        }
-//                    }
-//                    // echo '</ul>';
-//                    // echo '</div>';
-//                    // echo '</div>';
-//                }
-//                // echo '</div>';
-//            }
-//        }
-//    }
 
-//    public static function display_admin_sidebar_nav()
-//    {
-//        $menus = ecjia_admin_menu::singleton()->admin_menu();
-//
-//        if (!empty($menus['apps'])) {
-//            foreach ($menus['apps'] as $k => $menu) {
-//                echo '<div class="accordion-group">';
-//                echo '<div class="accordion-heading">';
-//                echo '<a class="accordion-toggle" href="#collapse' . $k . '" data-parent="#side_accordion" data-toggle="collapse">';
-//                echo '<i class="icon-folder-close"></i> ' . $menu->name;
-//                echo '</a>';
-//                echo '</div>';
-//                if ($menu->has_submenus) {
-//                    echo '<div class="accordion-body collapse" id="collapse' . $k . '">';
-//                    echo '<div class="accordion-inner">';
-//                    echo '<ul class="nav nav-list">';
-//                    if ($menu->submenus) {
-//                        foreach ($menu->submenus as $child) {
-//                            if ($child->action == 'divider') {
-//                                echo '<li class="divider"></li>';
-//                            } elseif ($child->action == 'nav-header') {
-//                                echo '<li class="nav-header">' . $child->name . '</li>';
-//                            } else {
-//                            	if(RC_Uri::current_url() === $child->link){
-//                            		echo '<li class="active"><a href="' . $child->link . '">' . $child->name . '</a></li>';
-//                            	}else {
-//                            		echo '<li><a href="' . $child->link . '">' . $child->name . '</a></li>';
-//                            	}
-//                            }
-//                        }
-//                    }
-//                    echo '</ul>';
-//                    echo '</div>';
-//                    echo '</div>';
-//                }
-//                echo '</div>';
-//            }
-//        }
-//    }
-    
-//    public static function display_admin_copyright()
-//    {
-//        $ecjia_version = ecjia::version();
-//    	$company_msg   = '版权所有 © 2013-2019 上海商创网络科技有限公司，并保留所有权利。';
-//    	$ecjia_icon    = RC_Uri::admin_url('statics/images/ecjia_icon.png');
-//
-//        echo "<div class='row-fluid footer'>
-//        		<div class='span12'>
-//        			<span class='f_l w35'>
-//        				<img src='{$ecjia_icon}' />
-//        			</span>
-//        			{$company_msg}
-//        			<span class='f_r muted'>
-//        				<i>v{$ecjia_version}</i>
-//        			</span>
-//        		</div>
-//        	</div>";
-//    }
-    
-//    public static function display_admin_welcome()
-//    {
-//        $ecjia_version = VERSION;
-//        $ecjia_welcome_logo = RC_Uri::admin_url('statics/images/ecjiawelcom.png');
-//        $ecjia_about_url = RC_Uri::url('@about/about_us');
-//        $welcome_ecjia 	= __('欢迎使用ECJia');
-//        $description 	= __('ECJia是一款基于PHP+MYSQL开发的多语言移动电商管理框架，推出了灵活的应用+插件机制，软件执行效率高；简洁超炫的UI设计，轻松上手；多国语言支持、后台管理功能方便等诸多优秀特点。凭借ECJia团队不断的创新精神和认真的工作态度，相信能够为您带来全新的使用体验！');
-//        $more 			= __('了解更多 »');
-//        $welcome = <<<WELCOME
-//      <div>
-//        <a class="close m_r10" data-dismiss="alert">×</a>
-//        <div class="hero-unit">
-//            <div class="row-fluid">
-//                <div class="span3">
-//                    <img src="{$ecjia_welcome_logo}" />
-//                </div>
-//                <div class="span9">
-//                    <h1>{$welcome_ecjia} {$ecjia_version}</h1>
-//                    <p>{$description}</p>
-//                    <a class="btn btn-info" href="{$ecjia_about_url}" target="_self">{$more}</a>
-//                </div>
-//            </div>
-//        </div>
-//    </div>
-//WELCOME;
-//        echo $welcome;
-//    }
-    
     
     public static function display_admin_about_welcome()
     {
