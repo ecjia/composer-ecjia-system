@@ -362,6 +362,11 @@ class AdminHookSubscriber
             9
         );
         $events->addAction(
+            'admin_dashboard_top',
+            'Ecjia\System\Hookers\DisplayAdminWelcomeAction',
+            9
+        );
+        $events->addAction(
             'admin_print_header_nav',
             'Ecjia\System\Hookers\DisplayAdminHeaderNavAction'
         );
