@@ -265,6 +265,25 @@ class AdminHookSubscriber
     }
 
     /**
+     * 添加IE支持的header信息
+     */
+    public function onIsSupportHeader()
+    {
+        if (is_ie()) {
+            echo "\n";
+            echo '<!--[if lte IE 8]>'. "\n";
+            echo '<link rel="stylesheet" href="' . RC_Uri::admin_url() . '/statics/lib/ie/ie.css" />'. "\n";
+            echo '<![endif]-->'. "\n";
+            echo "\n";
+            echo '<!--[if lt IE 9]>'. "\n";
+            echo '<script src="' . RC_Uri::admin_url() . '/statics/lib/ie/html5.js"></script>'. "\n";
+            echo '<script src="' . RC_Uri::admin_url() . '/statics/lib/ie/respond.min.js"></script>'. "\n";
+            echo '<script src="' . RC_Uri::admin_url() . '/statics/lib/flot/excanvas.min.js"></script>'. "\n";
+            echo '<![endif]-->'. "\n";
+        }
+    }
+
+    /**
      * Register the listeners for the subscriber.
      *
      * @param \Royalcms\Component\Hook\Dispatcher $events
@@ -326,6 +345,34 @@ class AdminHookSubscriber
             'ecjia_admin_logout_before',
             'Ecjia\System\Subscribers\AdminHookSubscriber@onAdminSessionLogoutRemoveAction'
         );
+
+        $events->addAction(
+            'admin_head',
+            'Ecjia\System\Subscribers\AdminHookSubscriber@onIsSupportHeader'
+        );
+
+        //hookers
+        $events->addAction(
+            'admin_print_main_bottom',
+            'Ecjia\System\Hookers\DisplayAdminCopyrightAction'
+        );
+        $events->addAction(
+            'admin_dashboard_top',
+            'Ecjia\System\Hookers\DisplayAdminWelcomeAction'
+        );
+        $events->addAction(
+            'admin_print_header_nav',
+            'Ecjia\System\Hookers\DisplayAdminHeaderNavAction'
+        );
+        $events->addAction(
+            'admin_sidebar_collapse_search',
+            'Ecjia\System\Hookers\DisplayAdminSidebarNavSearchAction'
+        );
+        $events->addAction(
+            'admin_sidebar_collapse',
+            'Ecjia\System\Hookers\DisplayAdminSidebarNavAction'
+        );
+
     }
 
 }

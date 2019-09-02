@@ -57,6 +57,10 @@ class HookerServiceProvider extends ServiceProvider
         'admin_url' => [
             ['Ecjia\System\Hookers\CustomAdminUrlFilter', 10, 2],
         ],
+
+        'upload_default_random_filename' => [
+            'Ecjia\System\Hookers\UploadDefaultRandomFilenameFilter',
+        ],
     ];
 
     /**
