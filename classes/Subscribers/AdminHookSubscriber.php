@@ -267,7 +267,7 @@ class AdminHookSubscriber
     /**
      * 添加IE支持的header信息
      */
-    public function onIsSupportHeader()
+    public function onIsSupportHeaderAction()
     {
         if (is_ie()) {
             echo "\n";
@@ -348,7 +348,7 @@ class AdminHookSubscriber
 
         $events->addAction(
             'admin_head',
-            'Ecjia\System\Subscribers\AdminHookSubscriber@onIsSupportHeader'
+            'Ecjia\System\Subscribers\AdminHookSubscriber@onIsSupportHeaderAction'
         );
 
         //hookers
