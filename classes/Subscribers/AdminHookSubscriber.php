@@ -358,7 +358,8 @@ class AdminHookSubscriber
         );
         $events->addAction(
             'admin_dashboard_top',
-            'Ecjia\System\Hookers\DisplayAdminWelcomeAction'
+            'Ecjia\System\Hookers\DisplayAdminWelcomeAction',
+            9
         );
         $events->addAction(
             'admin_print_header_nav',
@@ -366,11 +367,13 @@ class AdminHookSubscriber
         );
         $events->addAction(
             'admin_sidebar_collapse_search',
-            'Ecjia\System\Hookers\DisplayAdminSidebarNavSearchAction'
+            'Ecjia\System\Hookers\DisplayAdminSidebarNavSearchAction',
+            9
         );
         $events->addAction(
             'admin_sidebar_collapse',
-            'Ecjia\System\Hookers\DisplayAdminSidebarNavAction'
+            'Ecjia\System\Hookers\DisplayAdminSidebarNavAction',
+            9
         );
 
     }
