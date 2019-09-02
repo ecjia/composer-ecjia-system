@@ -100,7 +100,7 @@ class HookerServiceProvider extends ServiceProvider
         foreach ($this->subscribe as $subscriber) {
             $dispatcher->subscribe($subscriber);
         }
-        
+
     }
 
 

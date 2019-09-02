@@ -55,164 +55,163 @@ define('APPNAME', 'ECJIA');
 define('VERSION', ecjia::VERSION);
 define('RELEASE', ecjia::RELEASE);
 
-class ecjia {
+class ecjia
+{
 
     const VERSION = '1.53';
 
     const RELEASE = '20190703';
-	
-	protected $config;
-	
-	/**
-	 * Config read or wirte
-	 * @var int
-	 */
-	const CONFIG_READ		= 1;
-	const CONFIG_CHECK		= 2;
-	const CONFIG_EXISTS		= 3;
-	
-	
-	/**
-	 * MSG types
-	 */
-	const MSGTYPE_HTML		= 0x00;
-	const MSGTYPE_ALERT		= 0x10;
-	const MSGTYPE_JSON		= 0x20;
-	const MSGTYPE_XML	    = 0x30;
-	
-	/**
-	 * DATA types 
-	 */
-	const DATATYPE_HTML    = 1;
-	const DATATYPE_TEXT    = 2;
-	const DATATYPE_JSON    = 3;
-	const DATATYPE_XML     = 4;
-	
-	
-	/**
-	 * MSG stats
-	 */
-	const MSGSTAT_ERROR		= 0x00;
-	const MSGSTAT_SUCCESS	= 0x01;
-	const MSGSTAT_INFO		= 0x02;
-	const MSGSTAT_CONFIRM	= 0x03;
-	
-	
-	/**
-	 * Addon types
-	 */
-	const TYPE_APP 		= 'app';
-	const TYPE_PLUGIN 	= 'plugin';
-	const TYPE_WIDGET	= 'widget';
-	const TYPE_THEME	= 'theme';
-	
-	
-	/**
-	 * Platform types
-	 */
-	const PLATFORM_WEB     = 'web';
-	const PLATFORM_MOBILE  = 'mobile';
-	const PLATFORM_WAP	   = 'wap';
-	const PLATFORM_WEIXIN  = 'weixin';
-	const PLATFORM_WEIBO   = 'weibo';
-	
-	/**
-	 * Debug modes
-	 * @var int
-	 */
-	const DM_DISABLED       = 0x0;
-	const DM_OUTPUT_ERROR   = 0x1;
-	const DM_DISABLED_CACHE = 0x10;
-	const DM_SHOW_DEBUG     = 0x100;
-	const DM_LOGGING_SQL    = 0x1000;
-	const DM_DISPLAY_SQL    = 0x10000;
-	
-	
-	/**
-	 * 调用站点配置文件
-	 * 
-	 * @param string $name
-	 * @return ArrayObject|string
-	 */
-	public final static function config($name = null, $what = self::CONFIG_READ) {
-		if (is_null($name)) {
-			return ecjia_config::instance()->load_config();
-		}
-		if ($what === ecjia::CONFIG_READ) {
-			return ecjia_config::instance()->read_config($name);
-		} elseif ($what === ecjia::CONFIG_CHECK) {
-			return ecjia_config::instance()->check_config($name);
-		} elseif ($what === ecjia::CONFIG_EXISTS) {
-			return ecjia_config::instance()->check_exists($name);
-		}
-	}
-	
-	public final static function current_platform() {
-	    if (defined('USE_PLATFORM_MOBILE') && USE_PLATFORM_MOBILE === true) {
-	        $platform = self::PLATFORM_MOBILE;
-	    }
-	    elseif (defined('USE_PLATFORM_WAP') && USE_PLATFORM_WAP === true) {
-	        $platform = self::PLATFORM_WAP;
-	    }
-	    elseif (defined('USE_PLATFORM_WEB') && USE_PLATFORM_WEB === true) {
-	        $platform = self::PLATFORM_WEB;
-	    }
-	    elseif (defined('USE_PLATFORM_WEIXIN') && USE_PLATFORM_WEIXIN === true) {
-	        $platform = self::PLATFORM_WEIXIN;
-	    }
-	    elseif (defined('USE_PLATFORM_WEIBO') && USE_PLATFORM_WEIBO === true) {
-	        $platform = self::PLATFORM_WEIBO;
-	    }
-	    else {
-	        $platform = self::PLATFORM_WEB;
-	    }
-	    return $platform;
-	}
-	
-	/**
-	 * Registers plugin to be used in templates
-	 *
-	 * @param  string                       $type       plugin type
-	 * @param  string                       $tag        name of template tag
-	 * @param  callback                     $callback   PHP callback to register
-	 * @param  boolean                      $cacheable  if true (default) this fuction is cachable
-	 * @param  array                        $cache_attr caching attributes if any
-	 * @return Smarty_Internal_Templatebase current Smarty_Internal_Templatebase (or Smarty or Smarty_Internal_Template) instance for chaining
-	 * @throws SmartyException              when the plugin tag is invalid
-	 */
-	public final static function register_view_plugin($type, $tag, $callback, $cacheable = true, $cache_attr = null) {
-		return static::$view_object->registerPlugin($type, $tag, $callback, $cacheable, $cache_attr);
-	}
-	
-	/**
-	 * Unregister Plugin
-	 *
-	 * @param  string                       $type of plugin
-	 * @param  string                       $tag  name of plugin
-	 * @return Smarty_Internal_Templatebase current Smarty_Internal_Templatebase (or Smarty or Smarty_Internal_Template) instance for chaining
-	 */
-	public final static function unregister_view_plugin($type, $tag) {
-		return static::$view_object->unregisterPlugin($type, $tag);
-	}
-	
-	/**
-	 * 获取ECJia版本号
-	 */
-	public static function version() {
-	    return RC_Hook::apply_filters('ecjia_build_version', VERSION);
-	}
-	
-	/**
-	 * 获取ECJia发布日期
-	 */
-	public static function release() {
-	    return RC_Hook::apply_filters('ecjia_build_release', RELEASE);
-	}
+
+    protected $config;
+
+    /**
+     * Config read or wirte
+     * @var int
+     */
+    const CONFIG_READ = 1;
+    const CONFIG_CHECK = 2;
+    const CONFIG_EXISTS = 3;
+
+
+    /**
+     * MSG types
+     */
+    const MSGTYPE_HTML = 0x00;
+    const MSGTYPE_ALERT = 0x10;
+    const MSGTYPE_JSON = 0x20;
+    const MSGTYPE_XML = 0x30;
+
+    /**
+     * DATA types
+     */
+    const DATATYPE_HTML = 1;
+    const DATATYPE_TEXT = 2;
+    const DATATYPE_JSON = 3;
+    const DATATYPE_XML = 4;
+
+
+    /**
+     * MSG stats
+     */
+    const MSGSTAT_ERROR = 0x00;
+    const MSGSTAT_SUCCESS = 0x01;
+    const MSGSTAT_INFO = 0x02;
+    const MSGSTAT_CONFIRM = 0x03;
+
+
+    /**
+     * Addon types
+     */
+    const TYPE_APP = 'app';
+    const TYPE_PLUGIN = 'plugin';
+    const TYPE_WIDGET = 'widget';
+    const TYPE_THEME = 'theme';
+
+
+    /**
+     * Platform types
+     */
+    const PLATFORM_WEB = 'web';
+    const PLATFORM_MOBILE = 'mobile';
+    const PLATFORM_WAP = 'wap';
+    const PLATFORM_WEIXIN = 'weixin';
+    const PLATFORM_WEIBO = 'weibo';
+
+    /**
+     * Debug modes
+     * @var int
+     */
+    const DM_DISABLED = 0x0;
+    const DM_OUTPUT_ERROR = 0x1;
+    const DM_DISABLED_CACHE = 0x10;
+    const DM_SHOW_DEBUG = 0x100;
+    const DM_LOGGING_SQL = 0x1000;
+    const DM_DISPLAY_SQL = 0x10000;
+
+
+    /**
+     * 调用站点配置文件
+     * @param string $name
+     * @return ArrayObject|string
+     */
+    public final static function config($name = null, $what = self::CONFIG_READ)
+    {
+        if (is_null($name)) {
+            return ecjia_config::instance()->load_config();
+        }
+        if ($what === ecjia::CONFIG_READ) {
+            return ecjia_config::instance()->read_config($name);
+        } elseif ($what === ecjia::CONFIG_CHECK) {
+            return ecjia_config::instance()->check_config($name);
+        } elseif ($what === ecjia::CONFIG_EXISTS) {
+            return ecjia_config::instance()->check_exists($name);
+        }
+    }
+
+    public final static function current_platform()
+    {
+        if (defined('USE_PLATFORM_MOBILE') && USE_PLATFORM_MOBILE === true) {
+            $platform = self::PLATFORM_MOBILE;
+        } elseif (defined('USE_PLATFORM_WAP') && USE_PLATFORM_WAP === true) {
+            $platform = self::PLATFORM_WAP;
+        } elseif (defined('USE_PLATFORM_WEB') && USE_PLATFORM_WEB === true) {
+            $platform = self::PLATFORM_WEB;
+        } elseif (defined('USE_PLATFORM_WEIXIN') && USE_PLATFORM_WEIXIN === true) {
+            $platform = self::PLATFORM_WEIXIN;
+        } elseif (defined('USE_PLATFORM_WEIBO') && USE_PLATFORM_WEIBO === true) {
+            $platform = self::PLATFORM_WEIBO;
+        } else {
+            $platform = self::PLATFORM_WEB;
+        }
+        return $platform;
+    }
+
+    /**
+     * Registers plugin to be used in templates
+     * @param string $type plugin type
+     * @param string $tag name of template tag
+     * @param callback $callback PHP callback to register
+     * @param boolean $cacheable if true (default) this fuction is cachable
+     * @param array $cache_attr caching attributes if any
+     * @return Smarty_Internal_Templatebase current Smarty_Internal_Templatebase (or Smarty or Smarty_Internal_Template) instance for chaining
+     * @throws SmartyException              when the plugin tag is invalid
+     */
+    public final static function register_view_plugin($type, $tag, $callback, $cacheable = true, $cache_attr = null)
+    {
+        return static::$view_object->registerPlugin($type, $tag, $callback, $cacheable, $cache_attr);
+    }
+
+    /**
+     * Unregister Plugin
+     * @param string $type of plugin
+     * @param string $tag name of plugin
+     * @return Smarty_Internal_Templatebase current Smarty_Internal_Templatebase (or Smarty or Smarty_Internal_Template) instance for chaining
+     */
+    public final static function unregister_view_plugin($type, $tag)
+    {
+        return static::$view_object->unregisterPlugin($type, $tag);
+    }
+
+    /**
+     * 获取ECJia版本号
+     */
+    public static function version()
+    {
+        return RC_Hook::apply_filters('ecjia_build_version', VERSION);
+    }
+
+    /**
+     * 获取ECJia发布日期
+     */
+    public static function release()
+    {
+        return RC_Hook::apply_filters('ecjia_build_release', RELEASE);
+    }
 
     /**
      * Powered By
      */
-	public static function powerByLink()
+    public static function powerByLink()
     {
         return with(new \Ecjia\System\Frameworks\Component\CharCode)->byLink();
     }
@@ -222,7 +221,7 @@ class ecjia {
         return with(new \Ecjia\System\Frameworks\Component\CharCode)->byText();
     }
 
-	public static function loadGlobalPlugins()
+    public static function loadGlobalPlugins()
     {
         $global_plugins = ecjia_config::instance()->get_addon_config('global_plugins', true);
         if (is_array($global_plugins)) {
@@ -239,57 +238,9 @@ class ecjia {
     {
         return (config('system.debug') === true && config('system.debug_display') === true);
     }
-    
-//    /**
-//     * 加载手动加载的类
-//     */
-//    public static function manual_load_classes() {
-//        $autoload_classes = RC_Package::package('system')->loadConfig('autoload_class');
-//        if (!empty($autoload_classes)) {
-//            foreach ($autoload_classes as $key => $class) {
-//                RC_Hook::add_action($key, function () use ($class) {
-//                    RC_Package::package('system')->loadClass($class, false);
-//                });
-//            }
-//        }
-//
-//        RC_Hook::do_action('ecjia_manual_load_classes');
-//    }
-    
-//    /**
-//     * auto laod classes
-//     */
-//    public static function auto_load_classes($classname) {
-//        if (RC_Hook::has_action('class_' . $classname)) {
-//            return RC_Hook::do_action('class_' . $classname);
-//        } elseif (strpos($classname, 'ecjia') === 0) {
-//            return RC_Loader::load_sys_class($classname, false);
-//        }
-//        return false;
-//    }
-    
-//    /**
-//     * 注册自动加载方法
-//     */
-//    public static function autoload_register() {
-//        spl_autoload_register(array(__CLASS__, 'auto_load_classes'), true);
-//    }
-    
-//    /**
-//     * 注销自动加载方法
-//     */
-//    public static function autoload_unregister() {
-//        spl_autoload_unregister(array(__CLASS__, 'auto_load_classes'));
-//    }
-    
+
 }
 
-//类的自动加载
-//ecjia::autoload_register();
-//ecjia::manual_load_classes();
-
-// RC_Hook::add_action('init', array('ecjia', 'manual_load_classes'), 0);
-// RC_Hook::add_action('init', array('ecjia', 'autoload_register'), 0);
 // RC_Hook::add_action('init', array('RC_Cache', 'memory_cache_init'), 1);
 // RC_Hook::add_action('init', array('ecjia_upgrade_db', 'initialization'),1);
 
