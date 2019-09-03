@@ -4,10 +4,7 @@
 namespace Ecjia\System\Hookers;
 
 
-use RC_Package;
 use RC_Uri;
-use Ecjia\System\Frameworks\Screens\NotInstallScreen;
-use Ecjia\System\Frameworks\Screens\InstallScreen;
 
 class EcjiaLoadingScreenAction
 {
@@ -20,13 +17,11 @@ class EcjiaLoadingScreenAction
     public function handle()
     {
         /**
-         * 加载ECJia项目主文件
+         * 是否已经安装过ECJia
          */
-        RC_Package::package('system')->loadClass('ecjia', false);
         if ($this->is_installed_ecjia()) {
-            (new NotInstallScreen())->loading();
-        } else {
-            (new InstallScreen())->loading();
+            $events = royalcms('Royalcms\Component\Hook\Dispatcher');
+            $events->subscribe('Ecjia\System\Subscribers\InstalledScreenSubscriber');
         }
     }
 

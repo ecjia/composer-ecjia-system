@@ -22,6 +22,10 @@ class HookerServiceProvider extends ServiceProvider
             ['Ecjia\System\Hookers\EcjiaLoadLangAction', 9]
         ],
 
+        'ecjia_loaded' => [
+            'Ecjia\System\Hookers\EcjiaLoadGlobalPluginsAction'
+        ],
+
         'mail_init' => [
             'Ecjia\System\Hookers\AddMacroSendMailAction'
         ],
