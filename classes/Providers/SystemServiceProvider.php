@@ -255,8 +255,6 @@ class SystemServiceProvider extends AppParentServiceProvider
             $dir . "/Frameworks/Contracts/ShopInterface.php",
             $dir . "/Frameworks/ScriptLoader/ScriptLoader.php",
             $dir . "/Frameworks/ScriptLoader/StyleLoader.php",
-            $dir . "/Frameworks/Screens/NotInstallScreen.php",
-            $dir . "/Frameworks/Screens/AllScreen.php",
 
             $dir . "/Frameworks/Model/Model.php",
             $dir . "/Frameworks/Model/InsertOnDuplicateKey.php",
