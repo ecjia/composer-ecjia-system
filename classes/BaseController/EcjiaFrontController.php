@@ -234,11 +234,19 @@ abstract class EcjiaFrontController extends SmartyController
         });
 
 		$apps = ecjia_app::installed_app_floders();
-		if (is_array($apps)) {
-			foreach ($apps as $app) {
-				RC_Loader::load_app_class('hooks.front_' . $app, $app, false);
-			}
-		}
+
+        collect($apps)->map(function ($app) {
+            //loading hooks
+            RC_Loader::load_app_class('hooks.front_' . $app, $app, false);
+
+            //loading subscriber
+            $bundle = royalcms('app')->driver($app);
+            $class = $bundle->getNamespace() . '\Subscribers\FrontHookSubscriber';
+            if (class_exists($class)) {
+                royalcms('Royalcms\Component\Hook\Dispatcher')->subscribe($class);
+            }
+        });
+
 	}
 
 	protected function load_default_script_style()
