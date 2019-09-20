@@ -53,7 +53,7 @@ defined('IN_ECJIA') or exit('No permission resources.');
 class system_service_menu_api extends Component_Event_Api {
 	
 	public function call(&$options) {	
-		$menus = ecjia_admin::make_admin_menu('ecjia_appstore', __('应用市场'), 'https://appstore.ecjia.com', 1);
+		$menus = ecjia_admin::make_admin_menu('ecjia_appstore', __('应用市场'), 'https://appstore.ecjia.com', 1, '_blank');
 		return $menus;
 	}
 }

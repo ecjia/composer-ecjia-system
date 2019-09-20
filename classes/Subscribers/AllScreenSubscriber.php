@@ -218,10 +218,7 @@ class AllScreenSubscriber
         );
 
         //hook
-        $events->addAction(
-            'reset_mail_config',
-            'Ecjia\System\Hookers\ResetEcjiaMailConfigAction'
-        );
+        RC_Hook::add_action('reset_mail_config', ['Ecjia\System\Frameworks\Component\Mailer', 'ecjia_mail_config']);
 
     }
 

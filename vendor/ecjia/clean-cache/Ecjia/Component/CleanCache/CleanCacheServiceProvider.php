@@ -75,7 +75,7 @@ class CleanCacheServiceProvider extends ServiceProvider
      */
     public function registerCleanCache()
     {
-        $this->royalcms->bindShared('ecjia.clean-cache', function($royalcms)
+        $this->royalcms->singleton('ecjia.clean-cache', function($royalcms)
         {
             return new CacheManger();
         });

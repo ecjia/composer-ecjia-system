@@ -5,7 +5,7 @@ namespace Ecjia\Component\Config\Models;
 
 
 use RC_Cache;
-use Royalcms\Component\Support\Collection;
+use Illuminate\Database\Eloquent\Collection;
 
 trait CacheTrait
 {

@@ -22,12 +22,7 @@
 					<li class="dropdown">
 						<a class="dropdown-toggle" href="#" data-toggle="dropdown"><img src="{RC_Uri::admin_url('statics/images/user_avatar.png')}" alt="" class="user_avatar" />{$smarty.session.admin_name|escape}<b class="caret"></b></a>
 						<ul class="dropdown-menu">
-							<li><a href="{url path='@privilege/modif'}">{t}个人设置{/t}</a></li>
-							<!-- {if $admin_message_is_show} -->
-							<li><a href="{url path='@admin_message/init'}">{t}管理员留言{/t}</a></li>
-							<!-- {/if} -->
-							<li class="divider"></li>
-							<li><a href="{url path='@privilege/logout'}">{t}退出{/t}</a></li>
+                            <!-- {ecjia:hook id=admin_header_profile_links} -->
 						</ul>
 					</li>
 				</ul>

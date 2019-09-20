@@ -58,18 +58,18 @@ RC_Locale::loadDefaultTextdomain();
 //加载项目函数库
 RC_Loader::load_sys_func('functions');
 
-/*
-|--------------------------------------------------------------------------
-| Application Error Logger
-|--------------------------------------------------------------------------
-|
-| Here we will configure the error logger setup for the application which
-| is built on top of the wonderful Monolog library. By default we will
-| build a basic log file setup which creates a single file for logs.
-|
-*/
-
-RC_Log::useDailyFiles(SITE_CACHE_PATH . 'logs/royalcms.log', 30);
+///*
+//|--------------------------------------------------------------------------
+//| Application Error Logger
+//|--------------------------------------------------------------------------
+//|
+//| Here we will configure the error logger setup for the application which
+//| is built on top of the wonderful Monolog library. By default we will
+//| build a basic log file setup which creates a single file for logs.
+//|
+//*/
+//
+//RC_Log::useDailyFiles(SITE_CACHE_PATH . 'logs/royalcms.log', 30);
 
 /*
 |--------------------------------------------------------------------------

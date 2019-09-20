@@ -23,22 +23,7 @@ use Royalcms\Component\Hook\Dispatcher;
 class AdminHookSubscriber
 {
 
-    /**
-     * Handle admin message display dashboard events.
-     */
-    public function onAdminDashboardLeftMessageAction()
-    {
-        $title = __('管理员留言');
 
-        $chat_list = RC_Cache::app_cache_get('admin_dashboard_admin_message', 'system');
-        if (! $chat_list) {
-            $chat_list = ecjia_admin_message::get_admin_chat(array('page_size' => 5));
-            RC_Cache::app_cache_set('admin_dashboard_admin_message', $chat_list, 'system', 15);
-        }
-        ecjia_admin::$controller->assign('title'			, $title);
-        ecjia_admin::$controller->assign('msg_lists'		, $chat_list['item']);
-        echo ecjia_admin::$controller->fetch('library/widget_admin_dashboard_messagelist.lbi');
-    }
 
 
     /**
@@ -292,11 +277,6 @@ class AdminHookSubscriber
     public function subscribe(Dispatcher $events)
     {
         $events->addAction(
-            'admin_dashboard_left',
-            'Ecjia\System\Subscribers\AdminHookSubscriber@onAdminDashboardLeftMessageAction'
-        );
-
-        $events->addAction(
             'admin_dashboard_right',
             'Ecjia\System\Subscribers\AdminHookSubscriber@onAdminDashboardRightLogAction'
         );
@@ -352,6 +332,10 @@ class AdminHookSubscriber
         );
 
         //hookers
+        $events->addAction(
+            'admin_header_profile_links',
+            'Ecjia\System\Hookers\AdminHeaderProfileLinksAction'
+        );
         $events->addAction(
             'admin_print_main_bottom',
             'Ecjia\System\Hookers\DisplayAdminCopyrightAction'

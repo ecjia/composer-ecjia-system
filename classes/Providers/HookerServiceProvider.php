@@ -78,7 +78,6 @@ class HookerServiceProvider extends ServiceProvider
      */
     protected $subscribe = [
         'Ecjia\System\Subscribers\EcjiaAutoloadSubscriber',
-        'Ecjia\System\Subscribers\AllScreenSubscriber',
     ];
 
     /**

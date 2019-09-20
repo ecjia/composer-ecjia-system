@@ -91,14 +91,6 @@ class SystemServiceProvider extends AppParentServiceProvider
 	{
         $this->package('ecjia/system');
 
-	    $this->registerPluginManager();
-	    
-	    $this->registerThemeManager();
-	    
-	    $this->registerSiteManager();
-	    
-	    $this->registerVersionManager();
-
         $this->registerNamespaces();
 
         $this->registerProviders();
@@ -108,6 +100,14 @@ class SystemServiceProvider extends AppParentServiceProvider
         $this->registerFacades();
 
         $this->registerCommands();
+
+        $this->registerPluginManager();
+
+        $this->registerThemeManager();
+
+        $this->registerSiteManager();
+
+        $this->registerVersionManager();
 	}
 
     /**
@@ -167,7 +167,7 @@ class SystemServiceProvider extends AppParentServiceProvider
 
     public function registerEcjiaContainer()
     {
-        $this->royalcms->bindShared('ecjia', function($royalcms){
+        $this->royalcms->singleton('ecjia', function($royalcms){
             return new Ecjia();
         });
     }
@@ -178,7 +178,7 @@ class SystemServiceProvider extends AppParentServiceProvider
 	 */
 	public function registerPluginManager() 
 	{
-	    $this->royalcms->bindShared('ecjia.plugin.manager', function($royalcms){
+	    $this->royalcms->singleton('ecjia.plugin.manager', function($royalcms){
 	    	return new PluginManager($royalcms);
 	    });
 	}
@@ -189,7 +189,7 @@ class SystemServiceProvider extends AppParentServiceProvider
 	 */
 	public function registerThemeManager()
 	{
-	    $this->royalcms->bindShared('ecjia.theme.manager', function($royalcms){
+	    $this->royalcms->singleton('ecjia.theme.manager', function($royalcms){
 	        return new ThemeManager($royalcms);
 	    });
 	}
@@ -200,7 +200,7 @@ class SystemServiceProvider extends AppParentServiceProvider
 	 */
 	public function registerSiteManager()
 	{
-	    $this->royalcms->bindShared('ecjia.site.manager', function($royalcms){
+	    $this->royalcms->singleton('ecjia.site.manager', function($royalcms){
 	        return new SiteManager($royalcms);
 	    });
 	}
@@ -211,7 +211,7 @@ class SystemServiceProvider extends AppParentServiceProvider
 	 */
 	public function registerVersionManager()
 	{
-	    $this->royalcms->bindShared('ecjia.version.manager', function($royalcms){
+	    $this->royalcms->singleton('ecjia.version.manager', function($royalcms){
 	        return new VersionManager($royalcms);
 	    });
 	}

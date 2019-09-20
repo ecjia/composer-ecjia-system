@@ -94,7 +94,7 @@ class ConfigServiceProvider extends ServiceProvider
      */
     protected function registerConfig()
     {
-        $this->royalcms->bindShared('ecjia.config', function($royalcms)
+        $this->royalcms->singleton('ecjia.config', function($royalcms)
         {
             $repository = $royalcms['ecjia.config.repository'];
 
@@ -109,7 +109,7 @@ class ConfigServiceProvider extends ServiceProvider
      */
     protected function registerConfigRepository()
     {
-        $this->royalcms->bindShared('ecjia.config.repository', function($royalcms)
+        $this->royalcms->singleton('ecjia.config.repository', function($royalcms)
         {
             return new DatabaseConfigRepository(new ConfigModel());
         });
@@ -120,7 +120,7 @@ class ConfigServiceProvider extends ServiceProvider
      */
     protected function registerComponentNamespace()
     {
-        $this->royalcms->bindShared('ecjia.config.component.namespace', function($royalcms)
+        $this->royalcms->singleton('ecjia.config.component.namespace', function($royalcms)
         {
             return new ComponentNamespace();
         });
@@ -131,7 +131,7 @@ class ConfigServiceProvider extends ServiceProvider
      */
     protected function registerComponentFactory()
     {
-        $this->royalcms->bindShared('ecjia.config.component.factory', function($royalcms)
+        $this->royalcms->singleton('ecjia.config.component.factory', function($royalcms)
         {
             return new ComponentFactory($royalcms['ecjia.config.component.namespace']);
         });

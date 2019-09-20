@@ -4,7 +4,7 @@ defined('IN_ECJIA') or exit('No permission resources.');
 
 return array(
 
-	'Royalcms\Component\Readme\ReadmeServiceProvider',
+//	'Royalcms\Component\Readme\ReadmeServiceProvider',
 
 );
 

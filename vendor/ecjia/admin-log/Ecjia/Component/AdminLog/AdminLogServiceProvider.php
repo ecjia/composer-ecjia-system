@@ -28,7 +28,7 @@ class AdminLogServiceProvider extends ServiceProvider
 
     public function registerAdminLog()
     {
-        $this->royalcms->bindShared('ecjia.admin.log', function($royalcms) {
+        $this->royalcms->singleton('ecjia.admin.log', function($royalcms) {
             return AdminLog::instance();
         });
     }

@@ -20,6 +20,10 @@ class EventServiceProvider extends ServiceProvider
         'royalcms.warning.exception' => [
             'Ecjia\System\Listeners\WarningExceptionListener',
         ],
+        
+        'exception.pretty_page_table_data' => [
+            'Ecjia\System\Listeners\ExceptionPrettyPageTableDataListener',
+        ]
     ];
 
     /**

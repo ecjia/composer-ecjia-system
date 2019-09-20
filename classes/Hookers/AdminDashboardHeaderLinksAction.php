@@ -4,7 +4,7 @@
 namespace Ecjia\System\Hookers;
 
 
-class AdminDashboardHeaderLinks
+class AdminDashboardHeaderLinksAction
 {
 
     /**
