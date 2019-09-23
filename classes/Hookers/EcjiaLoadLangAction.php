@@ -23,8 +23,11 @@ class EcjiaLoadLangAction
     public function handle()
     {
         $apps = ecjia_app::app_floders();
+
         foreach ($apps as $app) {
-//	        self::loadTranslationLang($app);
+
+	        self::loadTranslationLang($app);
+
             if (royalcms('config')->get('system.locale') != 'zh_CN') {
                 self::loadGettextLang($app);
             }
