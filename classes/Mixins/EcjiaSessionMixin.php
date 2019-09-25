@@ -19,9 +19,9 @@ class EcjiaSessionMixin
         /**
          * 注册Session驱动
          *
-         * @royalcms 5.0.0
+         * @royalcms 6.0.0
          *
-         * @return
+         * @return \SessionHandlerInterface
          */
         return function ($royalcms) {
             $getDatabaseConnection = function ($royalcms)
@@ -60,9 +60,9 @@ class EcjiaSessionMixin
         /**
          * 注册Session驱动
          *
-         * @royalcms 5.0.0
+         * @royalcms 6.0.0
          *
-         * @return
+         * @return \SessionHandlerInterface
          */
         return function ($royalcms) {
             $getPrefix = function () {
@@ -96,9 +96,9 @@ class EcjiaSessionMixin
         /**
          * 注册Session驱动
          *
-         * @royalcms 5.0.0
+         * @royalcms 6.0.0
          *
-         * @return
+         * @return \SessionHandlerInterface
          */
         return function ($royalcms) {
             $getPrefix = function () {
