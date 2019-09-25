@@ -84,9 +84,9 @@ class ComponentFactory
             $platforms = royalcms('files')->files($this->component_namespace->getDir());
 
             $factories = [];
-    
+            
             foreach ($platforms as $key => $value) {
-                $value = str_replace($this->component_namespace->getDir() . '/', '', $value);
+                $value = str_replace($this->component_namespace->getDir() . DIRECTORY_SEPARATOR, '', $value);
                 $value = str_replace('.php', '', $value);
                 $className = $this->component_namespace->getNamespace() . '\\' . $value;
                 

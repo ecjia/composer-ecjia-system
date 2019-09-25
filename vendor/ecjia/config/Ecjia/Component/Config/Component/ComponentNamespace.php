@@ -37,7 +37,7 @@ class ComponentNamespace
      */
     public function getDir()
     {
-        return $this->dir;
+        return str_replace('/', DIRECTORY_SEPARATOR, $this->dir);
     }
 
     /**
