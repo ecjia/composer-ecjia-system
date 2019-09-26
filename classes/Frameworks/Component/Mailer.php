@@ -58,7 +58,6 @@ use Closure;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Mail\Mailer as RoyalcmsMailer;
-use Illuminate\Mail\Message;
 use RC_Error;
 use RC_Logger;
 use RC_Hook;
@@ -68,8 +67,6 @@ use Swift_Mailer;
 class Mailer extends RoyalcmsMailer
 {
 
-    protected $royalcms_mailer;
-
     /**
      * @var \Swift_Mailer
      */
@@ -77,9 +74,7 @@ class Mailer extends RoyalcmsMailer
 
     public function __construct(Factory $views, Swift_Mailer $swift, Dispatcher $events = null)
     {
-
         parent::__construct($views, $swift, $events);
-//        $this->royalcms_mailer = $mailer;
 
         if (is_null(self::$swift_mailer)) {
             if (config('mail.driver') == 'smtp') {
@@ -92,59 +87,6 @@ class Mailer extends RoyalcmsMailer
         }
 
     }
-
-//    /**
-//     * Create a new message instance.
-//     *
-//     * @return \Illuminate\Mail\Message
-//     */
-//    protected function createMessage()
-//    {
-//        $message = new Message(self::$swift_mailer->createMessage('message'));
-//
-//        // If a global from address has been specified we will set it on every message
-//        // instance so the developer does not have to repeat themselves every time
-//        // they create a new message. We'll just go ahead and push this address.
-//        if (! empty($this->from['address'])) {
-//            $message->from($this->from['address'], $this->from['name']);
-//        }
-//
-//        // When a global reply address was specified we will set this on every message
-//        // instance so the developer does not have to repeat themselves every time
-//        // they create a new message. We will just go ahead and push this address.
-//        if (! empty($this->replyTo['address'])) {
-//            $message->replyTo($this->replyTo['address'], $this->replyTo['name']);
-//        }
-//
-//        return $message;
-//    }
-
-//    /**
-//     * Send a Swift Message instance.
-//     *
-//     * @param  \Swift_Message  $message
-//     * @return int|null
-//     */
-//    protected function sendSwiftMessage($message)
-//    {
-//        try {
-//            return self::$swift_mailer->send($message, $this->failedRecipients);
-//        } finally {
-//            $this->forceReconnection();
-//        }
-//    }
-
-//    /**
-//     * Force the transport to re-connect.
-//     *
-//     * This will prevent errors in daemon queue situations.
-//     *
-//     * @return void
-//     */
-//    protected function forceReconnection()
-//    {
-//        self::$swift_mailer->getTransport()->stop();
-//    }
 
     /**
      * Send a new message using a callback.
