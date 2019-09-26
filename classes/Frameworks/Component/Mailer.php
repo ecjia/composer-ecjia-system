@@ -55,23 +55,31 @@
 namespace Ecjia\System\Frameworks\Component;
 
 use Closure;
-use Royalcms\Component\Mail\Mailer as RoyalcmsMailer;
-use Royalcms\Component\Mail\TransportManager;
+use Illuminate\Contracts\Events\Dispatcher;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Mail\Mailer as RoyalcmsMailer;
+use Illuminate\Mail\Message;
 use RC_Error;
 use RC_Logger;
 use RC_Hook;
 use ecjia;
+use Swift_Mailer;
 
-class Mailer
+class Mailer extends RoyalcmsMailer
 {
 
     protected $royalcms_mailer;
 
+    /**
+     * @var \Swift_Mailer
+     */
     protected static $swift_mailer;
 
-    public function __construct(RoyalcmsMailer $mailer)
+    public function __construct(Factory $views, Swift_Mailer $swift, Dispatcher $events = null)
     {
-        $this->royalcms_mailer = $mailer;
+
+        parent::__construct($views, $swift, $events);
+//        $this->royalcms_mailer = $mailer;
 
         if (is_null(self::$swift_mailer)) {
             if (config('mail.driver') == 'smtp') {
@@ -79,10 +87,64 @@ class Mailer
             } else {
                 $driver = 'sendmail';
             }
+
             $this->registerSwiftMailer($driver);
         }
 
     }
+
+//    /**
+//     * Create a new message instance.
+//     *
+//     * @return \Illuminate\Mail\Message
+//     */
+//    protected function createMessage()
+//    {
+//        $message = new Message(self::$swift_mailer->createMessage('message'));
+//
+//        // If a global from address has been specified we will set it on every message
+//        // instance so the developer does not have to repeat themselves every time
+//        // they create a new message. We'll just go ahead and push this address.
+//        if (! empty($this->from['address'])) {
+//            $message->from($this->from['address'], $this->from['name']);
+//        }
+//
+//        // When a global reply address was specified we will set this on every message
+//        // instance so the developer does not have to repeat themselves every time
+//        // they create a new message. We will just go ahead and push this address.
+//        if (! empty($this->replyTo['address'])) {
+//            $message->replyTo($this->replyTo['address'], $this->replyTo['name']);
+//        }
+//
+//        return $message;
+//    }
+
+//    /**
+//     * Send a Swift Message instance.
+//     *
+//     * @param  \Swift_Message  $message
+//     * @return int|null
+//     */
+//    protected function sendSwiftMessage($message)
+//    {
+//        try {
+//            return self::$swift_mailer->send($message, $this->failedRecipients);
+//        } finally {
+//            $this->forceReconnection();
+//        }
+//    }
+
+//    /**
+//     * Force the transport to re-connect.
+//     *
+//     * This will prevent errors in daemon queue situations.
+//     *
+//     * @return void
+//     */
+//    protected function forceReconnection()
+//    {
+//        self::$swift_mailer->getTransport()->stop();
+//    }
 
     /**
      * Send a new message using a callback.
@@ -91,14 +153,15 @@ class Mailer
      * @param  Closure|string  $callback
      * @return int
      */
-    public function sendMessage($callback) {
-        $message = $this->royalcms_mailer->createMessage();
+    public function sendMessage($callback)
+    {
+        $message = $this->createMessage();
 
         $this->callMessageBuilder($callback, $message);
 
         $message = $message->getSwiftMessage();
 
-        return $this->royalcms_mailer->sendSwiftMessage($message);
+        return $this->sendSwiftMessage($message);
     }
 
 
@@ -106,7 +169,7 @@ class Mailer
      * Call the provided message builder.
      *
      * @param  Closure|string  $callback
-     * @param  \Royalcms\Component\Mail\Message  $message
+     * @param  \Illuminate\Mail\Message  $message
      * @return mixed
      *
      * @throws \InvalidArgumentException
@@ -126,7 +189,7 @@ class Mailer
      * @param int       $type           0 普通邮件， 1 HTML邮件
      * @param bool      $notification   true 要求回执， false 不用回执
      *
-     * @return boolean
+     * @return boolean|RC_Error
      */
     public function send_mail($name, $email, $subject, $content, $type = 0, $notification = false) {
 
@@ -134,13 +197,16 @@ class Mailer
 
         try {
             $recipients = $this->sendMessage(function($message) use ($config, $email, $name, $subject, $content, $type, $notification) {
+                /**
+                 * @var \Illuminate\Mail\Message $message
+                 */
                 $message->from($config->get('mail.from.address'), $config->get('mail.from.name'));
                 $message->sender($config->get('mail.from.address'), $config->get('mail.from.name'));
                 $message->to($email, $name);
                 $message->subject($subject);
 
                 if ($config->has('mail.charset')) {
-                    $message->charset($config->get('mail.charset'));
+                    $message->setCharset($config->get('mail.charset'));
                 }
 
                 // Set email format to HTML
@@ -153,6 +219,7 @@ class Mailer
                 if ($notification) {
                     $message->setReadReceiptTo($config->get('mail.from.address'));
                 }
+
             });
 
             if ($recipients) {
@@ -183,7 +250,11 @@ class Mailer
         }
     }
 
-
+    /**
+     * 重设mail配置项
+     *
+     * @param array $config
+     */
     public static function ecjia_mail_config($config = [])
     {
 
@@ -238,13 +309,17 @@ class Mailer
 
         $royalcms = royalcms();
 
-        $royalcms['swift.transport']->resetDriver($driver);
+        if ($driver == 'smtp') {
+            $royalcms['swift.transport']->extend('smtp', function ($royalcms) {
+                return $this->createSmtpDriver();
+            });
 
-        $royalcms->bindShared('swift.mailer', function ($royalcms) {
-            return \Swift_Mailer::newInstance($royalcms['swift.transport']->driver());
-        });
+            $royalcms->singleton('swift.mailer', function ($royalcms) {
+                return new \Swift_Mailer($royalcms['swift.transport']->driver());
+            });
 
-        $this->royalcms_mailer->setSwiftMailer($royalcms['swift.mailer']);
+            $this->setSwiftMailer($royalcms['swift.mailer']);
+        }
 
         self::$swift_mailer = $royalcms['swift.mailer'];
     }

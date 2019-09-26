@@ -217,9 +217,6 @@ class AllScreenSubscriber
             'Ecjia\System\Subscribers\AdminHookSubscriber@onSetEcjiaFilterRequestGetAction'
         );
 
-        //hook
-        RC_Hook::add_action('reset_mail_config', ['Ecjia\System\Frameworks\Component\Mailer', 'ecjia_mail_config']);
-
     }
 
 }
