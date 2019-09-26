@@ -63,7 +63,6 @@ use RC_Logger;
 use RC_Hook;
 use ecjia;
 use Swift_Mailer;
-use Swift_SmtpTransport as SmtpTransport;
 
 class Mailer extends RoyalcmsMailer
 {
@@ -139,8 +138,8 @@ class Mailer extends RoyalcmsMailer
         $config = royalcms('config');
 
         try {
-            $recipients = $this->sendMessage(function($message) use ($config, $email, $name, $subject, $content, $type, $notification) {
-//                dd($config->get('mail'));
+            $recipients = $this->sendMessage(function($message) use ($config, $email, $name, $subject, $content, $type, $notification)
+            {
                 /**
                  * @var \Illuminate\Mail\Message $message
                  */
