@@ -63,6 +63,7 @@ use RC_Logger;
 use RC_Hook;
 use ecjia;
 use Swift_Mailer;
+use Swift_SmtpTransport as SmtpTransport;
 
 class Mailer extends RoyalcmsMailer
 {
@@ -139,6 +140,7 @@ class Mailer extends RoyalcmsMailer
 
         try {
             $recipients = $this->sendMessage(function($message) use ($config, $email, $name, $subject, $content, $type, $notification) {
+//                dd($config->get('mail'));
                 /**
                  * @var \Illuminate\Mail\Message $message
                  */
@@ -252,9 +254,7 @@ class Mailer extends RoyalcmsMailer
         $royalcms = royalcms();
 
         if ($driver == 'smtp') {
-            $royalcms['swift.transport']->extend('smtp', function ($royalcms) {
-                return $this->createSmtpDriver();
-            });
+            $royalcms['swift.transport']->resetDriver($driver);
 
             $royalcms->singleton('swift.mailer', function ($royalcms) {
                 return new \Swift_Mailer($royalcms['swift.transport']->driver());
