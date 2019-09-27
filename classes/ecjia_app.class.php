@@ -136,7 +136,7 @@ class ecjia_app {
             'alias' => RC_Config::get('system.admin_entrance')
         );
         
-        $core_apps = RC_Hook::apply_filters('ecjia_builtin_app_bundles', RC_Config::get('app'));
+        $core_apps = RC_Hook::apply_filters('ecjia_builtin_app_bundles', RC_Config::get('bundles'));
         $all_dirs = array_values($core_apps);
         
         $applications = RC_App::get_apps();
