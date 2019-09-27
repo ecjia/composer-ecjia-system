@@ -8,7 +8,7 @@
 
 namespace Ecjia\System\Subscribers;
 
-use ecjia_controller;
+use Ecjia\System\BaseController\EcjiaDefaultController;
 use ecjia_license;
 use ecjia_app;
 use ecjia;
@@ -19,7 +19,7 @@ class InstalledScreenSubscriber
 
     public function onRoyalcmsDefaultControllerAction($arg)
     {
-        return new ecjia_controller();
+        return new EcjiaDefaultController();
     }
 
     public function onAppScanBundlesFilter()
