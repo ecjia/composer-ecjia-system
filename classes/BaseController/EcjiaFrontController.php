@@ -239,12 +239,18 @@ abstract class EcjiaFrontController extends SmartyController
             //loading hooks
             RC_Loader::load_app_class('hooks.front_' . $app, $app, false);
 
-            //loading subscriber
-            $bundle = royalcms('app')->driver($app);
-            $class = $bundle->getNamespace() . '\Subscribers\FrontHookSubscriber';
-            if (class_exists($class)) {
-                royalcms('Royalcms\Component\Hook\Dispatcher')->subscribe($class);
+            try {
+                //loading subscriber
+                $bundle = royalcms('app')->driver($app);
+                $class = $bundle->getNamespace() . '\Subscribers\FrontHookSubscriber';
+                if (class_exists($class)) {
+                    royalcms('Royalcms\Component\Hook\Dispatcher')->subscribe($class);
+                }
             }
+            catch (\InvalidArgumentException $e) {
+                ecjia_log_error($e->getMessage());
+            }
+
         });
 
 	}
