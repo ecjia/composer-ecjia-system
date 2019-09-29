@@ -232,6 +232,39 @@ class AppManager extends Facade {
         return str_replace('/', DS, $tpl_path);
     }
 
+    /**
+     * 获取已经安装的应用
+     *
+     * @return array
+     */
+    public static function active_applications()
+    {
+        $active_applications = ecjia_config::instance()->get_addon_config('active_applications', true);
+
+        $bundles = self::core_applications();
+
+        $applications = royalcms('app')->getApplicationLoader()->loadAppsWithAlias();
+
+        collect($bundles)->each(function ($directory, $alias) use (& $active_applications, $applications) {
+            $bundle = $applications->get($alias);
+
+            if ($bundle) {
+                $active_applications[] = $bundle->getIdentifier();
+            }
+        });
+
+        return $active_applications;
+    }
+
+    /**
+     * 获取已经安装的核心应用
+     */
+    public static function core_applications()
+    {
+        $bundles = config('bundles');
+
+        return $bundles;
+    }
 
     /**
      * Validate the application path.
