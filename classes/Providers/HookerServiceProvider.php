@@ -23,7 +23,8 @@ class HookerServiceProvider extends ServiceProvider
         ],
 
         'ecjia_loaded' => [
-            'Ecjia\System\Hookers\EcjiaLoadGlobalPluginsAction'
+            'Ecjia\System\Hookers\EcjiaLoadGlobalPluginsAction',
+            'Ecjia\System\Hookers\EcjiaInstallApplicationLoadAction'
         ],
 
         'ecjia_compatible_process' => [
