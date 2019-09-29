@@ -90,8 +90,14 @@ class AppManager extends Facade {
         $app_folders = collect($applications)->map(function ($app) {
                 return $app->getDirectory();
             })
-            ->values()
-            ->unique(function ($item) {
+            ->values();
+
+        //如果项目中含有system，将system移入第一个元素，优先加载
+        if (isset($applications['system'])) {
+            $app_folders = $app_folders->prepend('system');
+        }
+
+        $app_folders = $app_folders->unique(function ($item) {
                 return $item;
             })
             ->all();
