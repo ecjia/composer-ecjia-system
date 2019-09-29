@@ -22,15 +22,15 @@ class InstalledScreenSubscriber
         return new EcjiaDefaultController();
     }
 
-    public function onAppScanBundlesFilter()
-    {
-        $builtin_bundles = ecjia_app::builtin_bundles();
-        if (defined('ROUTE_M') && ROUTE_M != 'installer') {
-            $extend_bundles = ecjia_app::extend_bundles();
-            return array_merge($builtin_bundles, $extend_bundles);
-        }
-        return $builtin_bundles;
-    }
+//    public function onAppScanBundlesFilter()
+//    {
+//        $builtin_bundles = ecjia_app::builtin_bundles();
+//        if (defined('ROUTE_M') && ROUTE_M != 'installer') {
+//            $extend_bundles = ecjia_app::extend_bundles();
+//            return array_merge($builtin_bundles, $extend_bundles);
+//        }
+//        return $builtin_bundles;
+//    }
 
     /**
      * 自定义商店关闭后输出
@@ -98,10 +98,10 @@ class InstalledScreenSubscriber
             'page_title_suffix',
             'Ecjia\System\Subscribers\InstalledScreenSubscriber@onPageTitleSuffixFilter'
         );
-        $events->addFilter(
-            'app_scan_bundles',
-            'Ecjia\System\Subscribers\InstalledScreenSubscriber@onAppScanBundlesFilter'
-        );
+//        $events->addFilter(
+//            'app_scan_bundles',
+//            'Ecjia\System\Subscribers\InstalledScreenSubscriber@onAppScanBundlesFilter'
+//        );
 
     }
 

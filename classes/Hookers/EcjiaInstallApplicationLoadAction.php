@@ -24,6 +24,8 @@ class EcjiaInstallApplicationLoadAction
         // 只获取已经安装的扩展应用
         $currents = ecjia_config::getAddonConfig('active_applications', true);
 
+        array_unshift($currents, 'ecjia.system');
+
         $app = royalcms('app');
 
         $applications = $app->getApplicationLoader()->loadAppsWithIdentifier();

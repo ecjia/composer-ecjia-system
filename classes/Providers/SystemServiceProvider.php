@@ -46,6 +46,7 @@
 //
 namespace Ecjia\System\Providers;
 
+use Ecjia\Component\App\AppManager;
 use Ecjia\Component\Framework\Ecjia;
 use ReflectionClass;
 use Royalcms\Component\App\AppParentServiceProvider;
@@ -100,6 +101,8 @@ class SystemServiceProvider extends AppParentServiceProvider
         $this->registerFacades();
 
         $this->registerCommands();
+
+        $this->registerAppManager();
 
         $this->registerPluginManager();
 
@@ -171,6 +174,17 @@ class SystemServiceProvider extends AppParentServiceProvider
             return new Ecjia();
         });
     }
+
+    /**
+     * Register the App manager
+     * @return \Ecjia\System\Plugin\PluginManager
+     */
+    public function registerAppManager()
+    {
+        $this->royalcms->singleton('ecjia.app.manager', function($royalcms) {
+            return new AppManager();
+        });
+    }
 	
 	/**
 	 * Register the Plugin manager
@@ -178,7 +192,7 @@ class SystemServiceProvider extends AppParentServiceProvider
 	 */
 	public function registerPluginManager() 
 	{
-	    $this->royalcms->singleton('ecjia.plugin.manager', function($royalcms){
+	    $this->royalcms->singleton('ecjia.plugin.manager', function($royalcms) {
 	    	return new PluginManager($royalcms);
 	    });
 	}
@@ -189,7 +203,7 @@ class SystemServiceProvider extends AppParentServiceProvider
 	 */
 	public function registerThemeManager()
 	{
-	    $this->royalcms->singleton('ecjia.theme.manager', function($royalcms){
+	    $this->royalcms->singleton('ecjia.theme.manager', function($royalcms) {
 	        return new ThemeManager($royalcms);
 	    });
 	}
@@ -200,7 +214,7 @@ class SystemServiceProvider extends AppParentServiceProvider
 	 */
 	public function registerSiteManager()
 	{
-	    $this->royalcms->singleton('ecjia.site.manager', function($royalcms){
+	    $this->royalcms->singleton('ecjia.site.manager', function($royalcms) {
 	        return new SiteManager($royalcms);
 	    });
 	}
@@ -211,21 +225,9 @@ class SystemServiceProvider extends AppParentServiceProvider
 	 */
 	public function registerVersionManager()
 	{
-	    $this->royalcms->singleton('ecjia.version.manager', function($royalcms){
+	    $this->royalcms->singleton('ecjia.version.manager', function($royalcms) {
 	        return new VersionManager($royalcms);
 	    });
-	}
-	
-	/**
-	 * Get the services provided by the provider.
-	 *
-	 * @return array
-	 */
-	public function provides()
-	{
-	    return array(
-
-	    );
 	}
 
     /**

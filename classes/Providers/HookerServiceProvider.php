@@ -39,6 +39,10 @@ class HookerServiceProvider extends ServiceProvider
             'Ecjia\System\Hookers\ShopConfigUpdatedAfterAction'
         ],
 
+        'app_scan_bundles_filter' => [
+            'Ecjia\System\Hookers\EcjiaLoadSystemApplicationFilter',
+        ],
+
     ];
 
     /**
