@@ -5,7 +5,6 @@ namespace Ecjia\System\Hookers;
 
 
 use ecjia_config;
-use RC_App;
 
 /**
  * ECJia 安装应用注册进AppManager
