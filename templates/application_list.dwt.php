@@ -31,22 +31,29 @@
 				</tr>
 			</thead>
 			<tbody>
-				<!-- {foreach from=$applications.extend_list item=application} -->
+				<!-- {foreach from=$applications item=application} -->
 				<tr {if $application.install eq 1}class="info left_border"{/if}>
 					<td>
-						<!-- {$application.format_name} -->
+						<!-- {$application.package.format_name} -->
+                        <!-- {if ! $application.is_core} -->
 						<br />
 						<span class="hide-edit-area">
-							<!-- {if $application.install eq 1} -->
+							<!-- {if $application.installed eq 1} -->
 							<a class="ecjiafc-red" href='{url path="@admin_application/uninstall" args="id={$application.identifier}"}' data-msg="{t}您确定要卸载该应用吗？{/t}" data-toggle="ajaxremove">{t}卸载{/t}</a>
 							<!-- {else} -->
 							<a class="data-pjax application-install" href='{url path="@admin_application/detail" args="step=install&id={$application.identifier}"}'>{t}安装{/t}</a>
 							<a class="ecjiafc-red application-delete" href='{url path="@admin_application/uninstall" args="id={$application.identifier}"}' data-msg="{t}您确定要删除该应用吗？{/t}" data-toggle="ajaxremove">{t}删除{/t}</a>
 							<!-- {/if} -->
 						</span>
+                        <!-- {/if} -->
 					</td>
 					<td>
-						<!-- {$application.format_description|nl2br} --><br /><!-- {$application.version} {t}| 作者：{/t} --><a href="{$application.website}"><!-- {$application.author} --></a> | <a class="data-pjax" href='{url path="@admin_application/detail" args="id={$application.identifier}"}'><!-- {t}查看详情{/t} --></a>
+						<!-- {$application.package.format_description|nl2br} -->
+                        <br />
+                        <!-- {if $application.is_core} -->
+                        <span class="badge badge-default">内置</span>
+                        <!-- {/if} -->
+                        <!-- {$application.package.version} {t}| 作者：{/t} --><a href="{$application.package.website}"><!-- {$application.package.author} --></a> | <a class="data-pjax" href='{url path="@admin_application/detail" args="id={$application.identifier}"}'><!-- {t}查看详情{/t} --></a>
 					</td>
 				</tr>
 				<!-- {/foreach} -->
@@ -55,41 +62,4 @@
 	</div>
 </div>
 <!-- {/if} -->
-<div class="row-fluid">
-	<div class="span12">
-		<h3 class="heading">
-		  <!-- {t}系统应用管理{/t} --><span class="badge"><!-- {$application_core_num} --></span>
-		  <!-- {if !$application_num} -->
-		  <a class="btn f_r data-pjax" href="{url path='@admin_application/init' args='reload=1'}"><!-- {t}刷新列表{/t} --></a>
-		  <!-- {/if} -->
-		</h3>
-		<div class="row-fluid sepH_c">
-			<div class="span8" style="width: 100%;">
-				<table class="table table-striped" data-rowlink="a" id="plugin-table2">
-					<thead>
-						<tr>
-							<th class="w100"><!-- {t}名称{/t} --></th>
-							<th><!-- {t}描述{/t} --></th>
-						</tr>
-					</thead>
-					<tbody>
-						<!-- {foreach from=$applications.core_list item=application} -->
-						<tr>
-							<td>
-								<!-- {$application.format_name} --><br />
-								<span class="plugin-operate hide">
-									<a href='{url path="@admin_application/setting" args="id={$application.identifier}"}'><!-- {t}配置{/t} --></a>
-								</span>
-							</td>
-							<td>
-								<!-- {$application.format_description|nl2br} --><br /><!-- {$application.version} --> <!-- {t}| 作者：{/t} --><a href="{$application.website}" target="_blank"><!-- {$application.author} --></a> | <a class="data-pjax" href='{url path="@admin_application/detail" args="id={$application.identifier}"}'><!-- {t}查看详情{/t} --></a>
-							</td>
-						</tr>
-						<!-- {/foreach} -->
-					</tbody>
-				</table>
-			</div>
-		</div>
-	</div>
-</div>
 <!-- {/block} -->

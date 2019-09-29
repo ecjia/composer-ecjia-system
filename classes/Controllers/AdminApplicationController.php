@@ -120,54 +120,92 @@ class AdminApplicationController extends ecjia_admin
             '<p>' . __('<a href="https://ecjia.com/wiki/帮助:ECJia智能后台:应用管理" target="_blank">关于应用管理帮助文档</a>') . '</p>'
         );
 
-        $active_applications = ecjia_config::instance()->get_addon_config('active_applications', true);
-        $apps_list = $apps = ecjia_app::builtin_app_floders();
+//        $active_applications = ecjia_config::instance()->get_addon_config('active_applications', true);
+//        $apps_list = $apps = ecjia_app::builtin_app_floders();
 
-        /* 取得所有应用列表 */
+        $active_applications = ecjia_app::active_applications();
+        $croe_applications = ecjia_app::core_applications();
+        $croe_applications = array_keys($croe_applications);
+
+            /* 取得所有应用列表 */
         $applications = RC_App::get_apps();
-        $core_list = $extend_list = array();
 
-        $application_num = 0;
+//        $core_list = $extend_list = array();
+
+        $application_num = count($applications);
         $use_application_num = 0;
         $unuse_application_num = 0;
-        $application_core_num = 0;
-
-        foreach ($applications as $_key => $_value) {
-            if (in_array($_value['directory'], $apps_list) ) {
-                $core_list[$_key] = RC_App::get_app_package($_value['directory']);
-                $application_core_num++;
-            } else {
-                if (!in_array($_value['directory'], $apps_list)) {
-                    $application_num++;
-                    $true = in_array($_key, $active_applications);
-                    $true ? $use_application_num++ : $unuse_application_num++;
-
-                    if (isset($_GET['useapplicationnum']) && (($true && $_GET['useapplicationnum'] == 2) || (!$true && $_GET['useapplicationnum'] == 1))) {
-                        unset($applications[$_key]);
-                        continue;
-                    }
-                }
-
-                $extend_list[$_key] = RC_App::get_app_package($_value['directory']);
-
-                $extend_list[$_key]['install'] 			= $true ? 1 : 0;
+//        dd($applications);
+        $applications = collect($applications)->map(function ($app, $key) use ($active_applications, $croe_applications, & $use_application_num, & $unuse_application_num) {
+            if (in_array($key, $active_applications)) {
+                $use_application_num++;
+                $app['installed'] = true;
             }
-        }
+            else {
+                $use_application_num++;
+                $app['installed'] = false;
+            }
 
-        unset($applications);
+            if (in_array($app['alias'], $croe_applications)) {
+                $app['is_core'] = true;
+            }
+            else {
+                $app['is_core'] = false;
+            }
 
-        $applications = array(
-            'core_list' 	=> $core_list,
-            'extend_list' 	=> $extend_list,
-        );
+            return $app;
+        })->all();
+
+//        dd($applications);
+
+
+
+//        $application_core_num = 0;
+
+//        foreach ($applications as $_key => $_value) {
+//            if (in_array($_value['directory'], $apps_list) ) {
+//                $core_list[$_key] = RC_App::get_app_package($_value['directory']);
+//                $application_core_num++;
+//            } else {
+//                if (!in_array($_value['directory'], $apps_list)) {
+//                    $application_num++;
+//                    $true = in_array($_key, $active_applications);
+//                    $true ? $use_application_num++ : $unuse_application_num++;
+//
+//                    if (isset($_GET['useapplicationnum']) && (($true && $_GET['useapplicationnum'] == 2) || (!$true && $_GET['useapplicationnum'] == 1))) {
+//                        unset($applications[$_key]);
+//                        continue;
+//                    }
+//                }
+//
+//                $extend_list[$_key] = RC_App::get_app_package($_value['directory']);
+//
+//                $extend_list[$_key]['install'] 			= $true ? 1 : 0;
+//            }
+//        }
+
+//        unset($applications);
+
+//        $applications = array(
+//            'core_list' 	=> $core_list,
+//            'extend_list' 	=> $extend_list,
+//        );
 
         $this->assign('application_num',			$application_num);
         $this->assign('use_application_num',		$use_application_num);
         $this->assign('unuse_application_num',		$unuse_application_num);
-        $this->assign('application_core_num',		$application_core_num);
+//        $this->assign('application_core_num',		$application_core_num);
         $this->assign('applications',	$applications);
 
         return $this->display('application_list.dwt');
+    }
+
+
+    public function clear_cache()
+    {
+        RC_App::clean_applications_cache();
+
+
     }
 
 
