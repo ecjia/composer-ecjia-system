@@ -10,7 +10,6 @@ namespace Ecjia\System\Subscribers;
 
 use Ecjia\System\BaseController\EcjiaDefaultController;
 use ecjia_license;
-use ecjia_app;
 use ecjia;
 use Royalcms\Component\Hook\Dispatcher;
 
