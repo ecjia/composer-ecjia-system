@@ -297,11 +297,7 @@ class SystemServiceProvider extends AppParentServiceProvider
 
             $dir . "/Subscribers/AdminHookSubscriber.php",
             $dir . "/Subscribers/EcjiaAutoloadSubscriber.php",
-
-            $dir . "/ecjia_view.class.php",
-            $dir . "/ecjia_notification.class.php",
-            $dir . "/ecjia_loader.class.php",
-            $dir . "/ecjia_screen.class.php",
+            
         ];
     }
 
