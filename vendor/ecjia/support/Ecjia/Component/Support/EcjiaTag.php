@@ -44,14 +44,16 @@
 //
 //  ---------------------------------------------------------------------------------
 //
-defined('IN_ECJIA') or exit('No permission resources.');
+namespace Ecjia\Component\Support;
+
 /**
  * 模版标签接口类
  * @author royalwang
  *
  */
-interface ecjia_tag {
-    public function run(&$options);
+interface EcjiaTag
+{
+    public function run( & $options );
 }
 
 // end
