@@ -27,6 +27,7 @@ return array(
     'Ecjia\\Component\\Editor\\'       => $vendorDir . '/ecjia/editor/Ecjia/Component/Editor',
     'Ecjia\\Component\\Screen\\'       => $vendorDir . '/ecjia/screen/Ecjia/Component/Screen',
     'Ecjia\\Component\\Purview\\'      => $vendorDir . '/ecjia/purview/Ecjia/Component/Purview',
+    'Ecjia\\Component\\Support\\'      => $vendorDir . '/ecjia/support/Ecjia/Component/Support',
 
 
 );

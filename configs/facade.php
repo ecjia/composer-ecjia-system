@@ -34,7 +34,8 @@ return array(
     'ecjia_open'           => 'Ecjia\Component\EcjiaOpen\EcjiaOpen',
     'ecjia_editor'         => 'Ecjia\Component\Editor\Facades\Editor',
     'ecjia_screen'         => 'Ecjia\Component\Screen\EcjiaScreen',
-    'ecjia_purview'         => 'Ecjia\Component\Purview\EcjiaPurview',
+    'ecjia_purview'        => 'Ecjia\Component\Purview\EcjiaPurview',
+    'ecjia_utility'        => 'Ecjia\Component\Support\EcjiaUtility',
 
 
 );
