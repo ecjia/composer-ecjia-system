@@ -44,12 +44,20 @@
 //
 //  ---------------------------------------------------------------------------------
 //
+namespace Ecjia\Component\Purview;
+
+use ecjia_app;
+use InvalidArgumentException;
+use RC_Api;
+use RC_App;
+use RC_Object;
+
 /**
  * ECJia 权限管理类
  * @author royalwang
- *
  */
-class ecjia_purview extends RC_Object {
+class EcjiaPurview extends RC_Object
+{
     /**
      * 所有权限的数组
      * 
