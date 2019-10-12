@@ -22,6 +22,7 @@ return array(
     'ecjia_admin'          => 'Ecjia\System\BaseController\EcjiaAdminController',
     'ecjia_front'          => 'Ecjia\System\BaseController\EcjiaFrontController',
     'ecjia_cloud'          => 'Ecjia\Component\EcjiaCloud\EcjiaCloud',
+    'ecjia_license'        => 'Ecjia\Component\EcjiaLicense\EcjiaLicense',
     'ecjia_error'          => 'Royalcms\Component\Error\Error',
     'ecjia_app'            => 'Ecjia\Component\App\Facades\AppManager',
     'ecjia_plugin'         => 'Ecjia\Component\Plugin\Facades\PluginManager',

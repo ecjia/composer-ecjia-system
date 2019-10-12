@@ -13,6 +13,7 @@ return array(
     'Ecjia\\Component\\ShowMessage\\'  => $vendorDir . '/ecjia/show-message/Ecjia/Component/ShowMessage',
     'Ecjia\\Component\\CleanCache\\'   => $vendorDir . '/ecjia/clean-cache/Ecjia/Component/CleanCache',
     'Ecjia\\Component\\EcjiaCloud\\'   => $vendorDir . '/ecjia/ecjia-cloud/Ecjia/Component/EcjiaCloud',
+    'Ecjia\\Component\\EcjiaLicense\\' => $vendorDir . '/ecjia/ecjia-license/Ecjia/Component/EcjiaLicense',
     'Ecjia\\Component\\EcjiaOpen\\'    => $vendorDir . '/ecjia/ecjia-open/Ecjia/Component/EcjiaOpen',
     'Ecjia\\Component\\OpenType\\'     => $vendorDir . '/ecjia/open-type/Ecjia/Component/OpenType',
     'Ecjia\\Component\\Theme\\'        => $vendorDir . '/ecjia/theme/Ecjia/Component/Theme',
