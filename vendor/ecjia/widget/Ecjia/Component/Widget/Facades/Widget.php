@@ -44,10 +44,17 @@
 //
 //  ---------------------------------------------------------------------------------
 //
+namespace Ecjia\Component\Widget\Facades;
 
-use Royalcms\Component\Widget\Widget;
+use ecjia_config;
+use ecjia_form;
+use RC_Format;
+use RC_Hook;
+use RC_Loader;
+use RC_Uri;
+use RC_Widget;
 
-class ecjia_widget
+class Widget
 {
 
     
@@ -92,7 +99,8 @@ class ecjia_widget
      *
      * @since 1.0.0
      */
-    public static function get_list_widgets() {
+    public static function get_list_widgets()
+    {
         $sort = RC_Widget::getRegisteredWidgets();
         usort( $sort, array(__CLASS__, '_sort_name_callback') );
 
@@ -134,7 +142,8 @@ class ecjia_widget
      * @since 1.0.0
      * @access private
      */
-    public static function _sort_name_callback( $a, $b ) {
+    public static function _sort_name_callback( $a, $b )
+    {
         return strnatcasecmp( $a['name'], $b['name'] );
     }
     
@@ -184,7 +193,8 @@ class ecjia_widget
      * @param array $params
      * @return array
      */
-    public static function list_widget_controls_dynamic_sidebar( $params ) {
+    public static function list_widget_controls_dynamic_sidebar( $params )
+    {
     	global $wp_registered_widgets;
     	static $i = 0;
     	$i++;
@@ -205,7 +215,8 @@ class ecjia_widget
     	return $params;
     }
     
-    public static function next_widget_id_number($id_base) {
+    public static function next_widget_id_number($id_base)
+    {
 //     	global $wp_registered_widgets;
     	$number = 1;
     
@@ -228,7 +239,8 @@ class ecjia_widget
      * @param array $sidebar_args
      * @return array
      */
-    public static function widget_control( $sidebar_args ) {
+    public static function widget_control( $sidebar_args )
+    {
     	$widget_id = $sidebar_args['widget_id'];
     	$sidebar_id = isset($sidebar_args['id']) ? $sidebar_args['id'] : false;
     	$key = $sidebar_id ? array_search( $widget_id, self::$sidebars_widgets[$sidebar_id] ) : '-1'; // position of widget in sidebar
@@ -320,9 +332,6 @@ class ecjia_widget
     
     	return $sidebar_args;
     }
-     
-    
-    
 
     
     public static $sidebars_widgets = array();
@@ -339,7 +348,8 @@ class ecjia_widget
      * @param bool $deprecated Not used (deprecated).
      * @return array Upgraded list of widgets to version 3 array format when called from the admin.
      */
-    public static function get_sidebars_widgets() {
+    public static function get_sidebars_widgets()
+    {
         
         self::$sidebars_widgets = ecjia_config::instance()->get_addon_config('sidebars_widgets', true);
     
@@ -356,8 +366,6 @@ class ecjia_widget
         self::$sidebars_widgets = RC_Hook::apply_filters( 'sidebars_widgets', self::$sidebars_widgets );
         return self::$sidebars_widgets;
     }
-    
-    
 
 }
 
