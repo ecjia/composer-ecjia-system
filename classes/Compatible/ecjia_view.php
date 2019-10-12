@@ -45,7 +45,7 @@
 //  ---------------------------------------------------------------------------------
 //
 
-class ecjia_app extends Ecjia\Component\View\Facades\View
+class ecjia_view extends Ecjia\Component\View\Facades\View
 {
 
 }
