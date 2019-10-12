@@ -8,8 +8,8 @@ return array(
     'ecjia_update_cache' => 'Ecjia\Component\CleanCache\Facades\CleanCache',
 
 
-    'Ecjia_AppManager'     => 'Ecjia\Component\App\Facades\AppManager',
-    'Ecjia_PluginManager'  => 'Ecjia\Component\Plugin\Facades\PluginManager',
+    'Ecjia_AppManager'    => 'Ecjia\Component\App\Facades\AppManager',
+    'Ecjia_PluginManager' => 'Ecjia\Component\Plugin\Facades\PluginManager',
 
     'Ecjia_ThemeManager'   => 'Ecjia\System\Facades\ThemeManager',
     'Ecjia_SiteManager'    => 'Ecjia\System\Facades\SiteManager',
@@ -31,6 +31,7 @@ return array(
     'ecjia_metadata'       => 'Ecjia\Component\Metadata\Facades\Metadata',
     'ecjia_notification'   => 'Ecjia\Component\Notification\Facades\Notification',
     'ecjia_open'           => 'Ecjia\Component\EcjiaOpen\EcjiaOpen',
+    'ecjia_editor'         => 'Ecjia\Component\Editor\Facades\Editor',
 
 
 );

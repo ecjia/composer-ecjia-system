@@ -23,6 +23,7 @@ return array(
     'Ecjia\\Component\\Option\\'       => $vendorDir . '/ecjia/option/Ecjia/Component/Option',
     'Ecjia\\Component\\Metadata\\'     => $vendorDir . '/ecjia/metadata/Ecjia/Component/Metadata',
     'Ecjia\\Component\\Notification\\' => $vendorDir . '/ecjia/notification/Ecjia/Component/Notification',
+    'Ecjia\\Component\\Editor\\'       => $vendorDir . '/ecjia/editor/Ecjia/Component/Editor',
 
 
 );
