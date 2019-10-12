@@ -44,10 +44,11 @@
 //
 //  ---------------------------------------------------------------------------------
 //
+namespace Ecjia\Component\Editor\Facades;
+
+use RC_Hook;
 use Royalcms\Component\Editor\Quicktags;
 use Royalcms\Component\Editor\Tinymce;
-
-defined('IN_ECJIA') or exit('No permission resources.');
 
 /**
  * Facilitates adding of the ecjia editor as used on the Write and Edit screens.
@@ -57,7 +58,8 @@ defined('IN_ECJIA') or exit('No permission resources.');
  *
  */
 
-class ecjia_editor {
+class Editor
+{
 
 	private static $this_tinymce = null;
 	private static $this_quicktags = null;
@@ -179,7 +181,8 @@ class ecjia_editor {
 	 * @param string $editor_id ID for the textarea and TinyMCE and Quicktags instances (can contain only ASCII letters and numbers).
 	 * @param array $settings See the _parse_settings() method for description.
 	 */
-	public static function editor( $content, $editor_id, $settings = array() ) {
+	public static function editor( $content, $editor_id, $settings = array() )
+    {
 	
 		$set = self::parse_settings( $editor_id, $settings );
 		$editor_class = ' class="' . trim( $set['editor_class'] . ' admin-editor-area' ) . '"';
@@ -287,7 +290,8 @@ class ecjia_editor {
 	 *
 	 * @return string Either 'tinymce', or 'html', or 'test'
 	 */
-	public static function default_editor() {
+	public static function default_editor()
+    {
 		
 		$r = 'tinymce';
 	
