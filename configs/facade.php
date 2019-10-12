@@ -36,10 +36,11 @@ return array(
     'ecjia_screen'         => 'Ecjia\Component\Screen\EcjiaScreen',
     'ecjia_purview'        => 'Ecjia\Component\Purview\EcjiaPurview',
 
-    'ecjia_utility' => 'Ecjia\Component\Support\EcjiaUtility',
-    'ecjia_sort'    => 'Ecjia\Component\Support\EcjiaSort',
-    'ecjia_tag'     => 'Ecjia\Component\Support\EcjiaTag',
-    'ecjia_form'    => 'Ecjia\Component\Support\EcjiaForm',
+    'ecjia_utility'   => 'Ecjia\Component\Support\EcjiaUtility',
+    'ecjia_sort'      => 'Ecjia\Component\Support\EcjiaSort',
+    'ecjia_tag'       => 'Ecjia\Component\Support\EcjiaTag',
+    'ecjia_form'      => 'Ecjia\Component\Support\EcjiaForm',
+    'ecjia_interface' => 'Ecjia\Component\Support\EcjiaInterface',
 
 
 );
