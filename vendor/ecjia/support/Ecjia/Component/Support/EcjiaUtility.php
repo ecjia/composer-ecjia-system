@@ -44,12 +44,24 @@
 //
 //  ---------------------------------------------------------------------------------
 //
+namespace Ecjia\Component\Support;
+
+use admin_menu;
+use ecjia;
+use ecjia_cloud;
+use ecjia_region;
+use RC_Api;
+use RC_Config;
+use RC_Ip;
+use RC_Model;
+use RC_Time;
+use RC_Uri;
+
 /**
  * ECJIA 管理中心公用函数库
  */
-defined('IN_ECJIA') or exit('No permission resources.');
-
-class ecjia_utility {
+class EcjiaUtility
+{
     
     /**
      * 获得系统是否启用了 gzip
