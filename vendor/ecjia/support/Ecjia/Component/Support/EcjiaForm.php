@@ -44,9 +44,12 @@
 //
 //  ---------------------------------------------------------------------------------
 //
-defined('IN_ECJIA') or exit('No permission resources.');
+namespace Ecjia\Component\Support;
 
-class ecjia_form {
+use RC_Format;
+
+class EcjiaForm
+{
     
     /**
      * Echoes a submit button, with provided text and appropriate class(es).
