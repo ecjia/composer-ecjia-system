@@ -44,9 +44,15 @@
 //
 //  ---------------------------------------------------------------------------------
 //
-defined('IN_ECJIA') or exit('No permission resources.');
+namespace Ecjia\Component\EcjiaLicense;
 
-class ecjia_license {
+use ecjia;
+use ecjia_cloud;
+use ecjia_config;
+use RC_Upload;
+
+class EcjiaLicense
+{
     /**
      * 证书文件
      * @var string
