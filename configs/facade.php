@@ -36,6 +36,7 @@ return array(
     'ecjia_screen'         => 'Ecjia\Component\Screen\EcjiaScreen',
     'ecjia_purview'        => 'Ecjia\Component\Purview\EcjiaPurview',
     'ecjia_utility'        => 'Ecjia\Component\Support\EcjiaUtility',
+    'ecjia_sort'           => 'Ecjia\Component\Support\EcjiaSort',
 
 
 );
