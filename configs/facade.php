@@ -28,6 +28,7 @@ return array(
     'ecjia_option'         => 'Ecjia\Component\Option\Facades\Option',
     'ecjia_metadata'       => 'Ecjia\Component\Metadata\Facades\Metadata',
     'ecjia_notification'   => 'Ecjia\Component\Notification\Facades\Notification',
+    'ecjia_open'           => 'Ecjia\Component\EcjiaOpen\EcjiaOpen',
 
 
 );
