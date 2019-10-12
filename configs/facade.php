@@ -43,6 +43,7 @@ return array(
     'ecjia_interface' => 'Ecjia\Component\Support\EcjiaInterface',
     'ecjia_page'      => 'Ecjia\Component\Support\EcjiaPage',
     'ecjia_loader'    => 'Ecjia\Component\Support\EcjiaLoader',
+    'ecjia_installer' => 'Ecjia\Component\Support\EcjiaInstaller',
 
 
 );
