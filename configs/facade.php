@@ -33,6 +33,7 @@ return array(
     'ecjia_notification'   => 'Ecjia\Component\Notification\Facades\Notification',
     'ecjia_open'           => 'Ecjia\Component\EcjiaOpen\EcjiaOpen',
     'ecjia_editor'         => 'Ecjia\Component\Editor\Facades\Editor',
+    'ecjia_screen'         => 'Ecjia\Component\Screen\EcjiaScreen',
 
 
 );

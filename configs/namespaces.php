@@ -25,6 +25,7 @@ return array(
     'Ecjia\\Component\\Metadata\\'     => $vendorDir . '/ecjia/metadata/Ecjia/Component/Metadata',
     'Ecjia\\Component\\Notification\\' => $vendorDir . '/ecjia/notification/Ecjia/Component/Notification',
     'Ecjia\\Component\\Editor\\'       => $vendorDir . '/ecjia/editor/Ecjia/Component/Editor',
+    'Ecjia\\Component\\Screen\\'       => $vendorDir . '/ecjia/screen/Ecjia/Component/Screen',
 
 
 );
