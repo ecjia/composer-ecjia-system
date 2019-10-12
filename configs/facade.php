@@ -35,8 +35,10 @@ return array(
     'ecjia_editor'         => 'Ecjia\Component\Editor\Facades\Editor',
     'ecjia_screen'         => 'Ecjia\Component\Screen\EcjiaScreen',
     'ecjia_purview'        => 'Ecjia\Component\Purview\EcjiaPurview',
-    'ecjia_utility'        => 'Ecjia\Component\Support\EcjiaUtility',
-    'ecjia_sort'           => 'Ecjia\Component\Support\EcjiaSort',
+
+    'ecjia_utility' => 'Ecjia\Component\Support\EcjiaUtility',
+    'ecjia_sort'    => 'Ecjia\Component\Support\EcjiaSort',
+    'ecjia_tag'     => 'Ecjia\Component\Support\EcjiaTag',
 
 
 );
