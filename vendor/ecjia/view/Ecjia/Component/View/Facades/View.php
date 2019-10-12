@@ -44,18 +44,25 @@
 //
 //  ---------------------------------------------------------------------------------
 //
+
+namespace Ecjia\Component\View\Facades;
+
+use Ecjia\System\Frameworks\Contracts\EcjiaTemplateFileLoader;
+use RC_Hook;
+use RC_Loader;
+
 /**
  * ecjia 模板视图类
  * @author royalwang
  *
  */
-class ecjia_view
+class View
 {
     
     /**
      * 模板视图对象
      *
-     * @var view
+     * @var \Smarty
      * @access private
      */
     protected $smarty;
@@ -64,7 +71,8 @@ class ecjia_view
     
     protected $fileloader;
     
-    public function __construct(\Ecjia\System\Frameworks\Contracts\EcjiaTemplateFileLoader $fileloader) {
+    public function __construct(EcjiaTemplateFileLoader $fileloader)
+    {
         $this->fileloader = $fileloader;
         
         $this->smarty = royalcms('view')->getSmarty();
@@ -83,16 +91,22 @@ class ecjia_view
             $this->smarty->registerDefaultPluginHandler('smarty_plugin_handler');
         }
     }
-    
+
     /**
      * 获取视图对象
-     * @return view
+     *
+     * @return \Smarty
      */
-    public function getSmarty() {
+    public function getSmarty()
+    {
         return $this->smarty;
     }
-    
-    public function getFileloader() {
+
+    /**
+     * @return EcjiaTemplateFileLoader
+     */
+    public function getFileloader()
+    {
         return $this->fileloader;
     }
  
@@ -182,7 +196,8 @@ class ecjia_view
      * @param array    $options
      * @return mixed
      */
-    public function fetch_string($tpl_string = null, $cache_id = null, $options = array()) {
+    public function fetch_string($tpl_string = null, $cache_id = null, $options = array())
+    {
         $tpl_file = null;
     
         if ($tpl_string) {
@@ -252,7 +267,8 @@ class ecjia_view
     /**
      * 重新向模版注册语言包
      */
-    public function assign_lang($lang = array()) {
+    public function assign_lang($lang = array())
+    {
         if (!empty($lang)) {
             // 载入语言包
             $this->smarty->assign('lang', $lang);
@@ -269,7 +285,8 @@ class ecjia_view
      * @access  public
      * @return  void
      */
-    public function clear_compiled_files() {
+    public function clear_compiled_files()
+    {
         if (royalcms('files')->isDirectory(TEMPLATE_COMPILE_PATH)) {
             // 清除整个编译目录的文件
             $this->smarty->clearCompiledTemplate();
@@ -283,7 +300,8 @@ class ecjia_view
      * @access  public
      * @return  void
      */
-    public function clear_cache_files() {
+    public function clear_cache_files()
+    {
         if (royalcms('files')->isDirectory(TEMPLATE_CACHE_PATH)) {
             // 清除全部缓存
             $this->smarty->clearAllCache();
@@ -314,8 +332,7 @@ class ecjia_view
     {
         unset($this->smarty->$name);
     }
-    
-    
+
 }
 
 // end
