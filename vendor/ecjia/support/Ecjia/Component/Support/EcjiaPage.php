@@ -44,15 +44,16 @@
 //
 //  ---------------------------------------------------------------------------------
 //
+namespace Ecjia\Component\Support;
 
 use Ecjia\System\Frameworks\Component\Paginator\EcjiaPageRenderStyle2;
-use \Royalcms\Component\Page\Page;
+use Royalcms\Component\Page\Page;
 
 /**
  * 分页处理类
  * @package     Core
  */
-class ecjia_page extends Page
+class EcjiaPage extends Page
 {
 
     /**
