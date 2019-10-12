@@ -44,12 +44,17 @@
 //
 //  ---------------------------------------------------------------------------------
 //
+
+namespace Ecjia\Component\Notification\Facades;
+
+use admin_notification;
+
 /**
  * 消息通知提示
  * @author royalwang
- *
  */
-class ecjia_notification {
+class Notification
+{
     
     protected static $instance;
     
@@ -87,7 +92,8 @@ class ecjia_notification {
      * @param admin_notification $notification
      * @return boolean
      */
-    public function register($handle, admin_notification $notification) {
+    public function register($handle, admin_notification $notification)
+    {
         if (isset($this->registered[$handle]))
             return false;
         $this->registered[$handle] = $notification;
@@ -108,11 +114,13 @@ class ecjia_notification {
             unset($this->registered[$handle]);
     }
     
-    public function allNotification() {
+    public function allNotification()
+    {
         return $this->registered;
     }
     
-    public function printScript() {
+    public function printScript()
+    {
         if (! empty($this->registered)) {
             $script = '<script type="text/javascript">' . PHP_EOL;
             foreach ($this->registered as $notification) {
