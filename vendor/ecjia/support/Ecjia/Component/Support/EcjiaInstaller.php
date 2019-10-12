@@ -44,20 +44,26 @@
 //
 //  ---------------------------------------------------------------------------------
 //
-defined('IN_ECJIA') or exit('No permission resources.');
+namespace Ecjia\Component\Support;
 
-abstract class ecjia_installer {
+use ecjia_app;
+use RC_App;
+
+abstract class EcjiaInstaller
+{
 
 	protected $dependent = array();
 	
-	public function __construct($id) {
+	public function __construct($id)
+    {
 		$this->id	 	= $id;
 		$this->dir 		= ecjia_app::get_app_dir($id);
 		$this->info 	= RC_App::get_app_package($this->dir);
 	}
 	
 	
-	public function package() {
+	public function package()
+    {
 		return $this->info;
 	}
 	
@@ -65,7 +71,8 @@ abstract class ecjia_installer {
 	/**
 	 * 应用安装依赖提示
 	 */
-	public function dependent() {
+	public function dependent()
+    {
 		return true;
 	}
 	
@@ -82,7 +89,8 @@ abstract class ecjia_installer {
 	/**
 	 * 应用升级控制器
 	 */
-	public function upgrade() {
+	public function upgrade()
+    {
 		
 	}
 	
