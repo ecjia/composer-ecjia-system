@@ -44,18 +44,24 @@
 //
 //  ---------------------------------------------------------------------------------
 //
-/**
+
+namespace Ecjia\Component\Metadata\Facades;
+
+use ecjia_error;
+use RC_Cache;
+use RC_Format;
+use RC_Hook;
+use RC_Loader;/**
  * Metadata API
- *
  * Functions for retrieving and manipulating metadata of various WordPress object types. Metadata
  * for an object is a represented by a simple key-value pair. Objects may contain multiple
  * metadata entries that share the same key and differ only in their value.
- *
  * @package ECJIA
  * @subpackage Meta
  * @since 1.2.0
  */
-class ecjia_metadata {
+class Metadata
+{
     
     private $meta_type;
     private $meta_app;
@@ -64,7 +70,8 @@ class ecjia_metadata {
     
     private $meta_db;
     
-    public static function make() {
+    public static function make()
+    {
         return new static();
     }
     
