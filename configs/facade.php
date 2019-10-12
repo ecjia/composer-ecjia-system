@@ -39,6 +39,7 @@ return array(
     'ecjia_utility' => 'Ecjia\Component\Support\EcjiaUtility',
     'ecjia_sort'    => 'Ecjia\Component\Support\EcjiaSort',
     'ecjia_tag'     => 'Ecjia\Component\Support\EcjiaTag',
+    'ecjia_form'    => 'Ecjia\Component\Support\EcjiaForm',
 
 
 );
