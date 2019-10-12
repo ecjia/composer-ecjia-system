@@ -27,6 +27,7 @@ return array(
     'ecjia_widget'         => 'Ecjia\Component\Widget\Facades\Widget',
     'ecjia_option'         => 'Ecjia\Component\Option\Facades\Option',
     'ecjia_metadata'       => 'Ecjia\Component\Metadata\Facades\Metadata',
+    'ecjia_notification'   => 'Ecjia\Component\Notification\Facades\Notification',
 
 
 );
