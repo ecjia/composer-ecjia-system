@@ -24,6 +24,7 @@ return array(
     'ecjia_error'          => 'Royalcms\Component\Error\Error',
     'ecjia_app'            => 'Ecjia\Component\App\Facades\AppManager',
     'ecjia_view'           => 'Ecjia\Component\View\Facades\View',
+    'ecjia_widget'         => 'Ecjia\Component\Widget\Facades\Widget',
 
 
 );

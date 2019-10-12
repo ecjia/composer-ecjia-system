@@ -18,6 +18,7 @@ return array(
     'Ecjia\\Component\\Theme\\'       => $vendorDir . '/ecjia/theme/Ecjia/Component/Theme',
     'Ecjia\\Component\\App\\'         => $vendorDir . '/ecjia/app/Ecjia/Component/App',
     'Ecjia\\Component\\View\\'        => $vendorDir . '/ecjia/view/Ecjia/Component/View',
+    'Ecjia\\Component\\Widget\\'      => $vendorDir . '/ecjia/widget/Ecjia/Component/Widget',
 
 
 );
