@@ -44,13 +44,16 @@
 //
 //  ---------------------------------------------------------------------------------
 //
-defined('IN_ECJIA') or exit('No permission resources.');
+namespace Ecjia\Component\Support;
+
+use ecjia_api;
+
 /**
  * API接口类
  * @author royalwang
- *
  */
-interface ecjia_interface {
+interface EcjiaInterface
+{
     // API执行方法
     public function run(ecjia_api & $api);
 }
