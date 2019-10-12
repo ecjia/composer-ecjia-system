@@ -9,7 +9,8 @@ return array(
 
 
     'Ecjia_AppManager'     => 'Ecjia\Component\App\Facades\AppManager',
-    'Ecjia_PluginManager'  => 'Ecjia\System\Facades\PluginManager',
+    'Ecjia_PluginManager'  => 'Ecjia\Component\Plugin\Facades\PluginManager',
+
     'Ecjia_ThemeManager'   => 'Ecjia\System\Facades\ThemeManager',
     'Ecjia_SiteManager'    => 'Ecjia\System\Facades\SiteManager',
     'Ecjia_VersionManager' => 'Ecjia\System\Facades\VersionManager',
@@ -23,6 +24,7 @@ return array(
     'ecjia_cloud'          => 'Ecjia\Component\EcjiaCloud\EcjiaCloud',
     'ecjia_error'          => 'Royalcms\Component\Error\Error',
     'ecjia_app'            => 'Ecjia\Component\App\Facades\AppManager',
+    'ecjia_plugin'         => 'Ecjia\Component\Plugin\Facades\PluginManager',
     'ecjia_view'           => 'Ecjia\Component\View\Facades\View',
     'ecjia_widget'         => 'Ecjia\Component\Widget\Facades\Widget',
     'ecjia_option'         => 'Ecjia\Component\Option\Facades\Option',

@@ -17,6 +17,7 @@ return array(
     'Ecjia\\Component\\OpenType\\'     => $vendorDir . '/ecjia/open-type/Ecjia/Component/OpenType',
     'Ecjia\\Component\\Theme\\'        => $vendorDir . '/ecjia/theme/Ecjia/Component/Theme',
     'Ecjia\\Component\\App\\'          => $vendorDir . '/ecjia/app/Ecjia/Component/App',
+    'Ecjia\\Component\\Plugin\\'       => $vendorDir . '/ecjia/plugin/Ecjia/Component/Plugin',
     'Ecjia\\Component\\View\\'         => $vendorDir . '/ecjia/view/Ecjia/Component/View',
     'Ecjia\\Component\\Widget\\'       => $vendorDir . '/ecjia/widget/Ecjia/Component/Widget',
     'Ecjia\\Component\\Option\\'       => $vendorDir . '/ecjia/option/Ecjia/Component/Option',
