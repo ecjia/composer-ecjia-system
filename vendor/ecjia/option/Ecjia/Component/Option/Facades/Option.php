@@ -44,8 +44,10 @@
 //
 //  ---------------------------------------------------------------------------------
 //
-defined('IN_ECJIA') or exit('No permission resources.');
+namespace Ecjia\Component\Option\Facades;
 
+use RC_Cache;
+use RC_DB;
 use RC_Hook;
 use Royalcms\Component\Support\Format as RC_Format;
 
@@ -74,7 +76,7 @@ use Royalcms\Component\Support\Format as RC_Format;
  * @param mixed  $default Optional. Default value to return if the option does not exist.
  * @return mixed Value set for the option.
  */
-class ecjia_option
+class Option
 {
     
     public static function get_option( $option, $default = false ) {
