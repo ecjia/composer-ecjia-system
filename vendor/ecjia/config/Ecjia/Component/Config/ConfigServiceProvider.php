@@ -49,10 +49,11 @@ namespace Ecjia\Component\Config;
 use Ecjia\Component\Config\Component\ComponentFactory;
 use Ecjia\Component\Config\Component\ComponentNamespace;
 use Ecjia\Component\Config\Models\ConfigModel;
+use Illuminate\Contracts\Support\DeferrableProvider;
 use ReflectionClass;
 use Royalcms\Component\Support\ServiceProvider;
 
-class ConfigServiceProvider extends ServiceProvider
+class ConfigServiceProvider extends ServiceProvider implements DeferrableProvider
 {
     /**
      * Indicates if loading of the provider is deferred.
@@ -172,12 +173,23 @@ class ConfigServiceProvider extends ServiceProvider
     {
         $dir = __DIR__ . '';
         return [
-            $dir . "/DatabaseConfigRepository.php",
-            $dir . "/Config.php",
-            $dir . "/Contracts/ConfigRepositoryInterface.php",
             $dir . "/Contracts/ConfigModelInterface.php",
-            $dir . "/Models/ConfigModel.php",
+            $dir . "/Contracts/ConfigRepositoryInterface.php",
             $dir . "/Compatible/CompatibleTrait.php",
+            $dir . "/Models/CacheTrait.php",
+            $dir . "/Models/ComputeLastIdTrait.php",
+            $dir . "/Models/ConfigModel.php",
+            $dir . "/DatabaseConfigRepository.php",
+            $dir . "/Component/ComponentAbstract.php",
+            $dir . "/Component/ComponentFactory.php",
+            $dir . "/Component/ComponentNamespace.php",
+            $dir . "/Manager/AbstractManager.php",
+            $dir . "/Manager/AddonConfigManager.php",
+            $dir . "/Manager/GroupManager.php",
+            $dir . "/Manager/ItemManager.php",
+            $dir . "/Models/ConfigModel.php",
+            $dir . "/Facades/Config.php",
+            $dir . "/Config.php",
         ];
     }
 	
