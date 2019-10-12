@@ -44,11 +44,17 @@
 //
 //  ---------------------------------------------------------------------------------
 //
-defined('IN_ECJIA') or exit('No permission resources.');
+namespace Ecjia\Component\Screen;
+
+use admin_nav_here;
+use admin_notice;
+use ecjia_form;
+use RC_Format;
+use RC_Hook;
+use RC_Uri;
 
 /**
  * ECJia Administration Screen API.
- *
  * @package ECJia
  * @subpackage Administration
  */
@@ -59,7 +65,8 @@ defined('IN_ECJIA') or exit('No permission resources.');
  * @since 1.0.0
  * @access public
  */
-class ecjia_screen {
+class EcjiaScreen
+{
 	/**
 	 * Any action associated with the screen. 'add' for *-add.php and *-new.php screens. Empty otherwise.
 	 *
