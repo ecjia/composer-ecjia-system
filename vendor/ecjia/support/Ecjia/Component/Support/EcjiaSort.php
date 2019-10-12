@@ -44,12 +44,14 @@
 //
 //  ---------------------------------------------------------------------------------
 //
+namespace Ecjia\Component\Support;
+
 /**
  * ecjia 排序类
  * @author royalwang
  *
  */
-class ecjia_sort
+class EcjiaSort
 {
     /**
      * 地区排序
