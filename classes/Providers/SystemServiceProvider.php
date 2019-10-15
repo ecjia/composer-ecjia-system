@@ -295,8 +295,16 @@ class SystemServiceProvider extends AppParentServiceProvider
             $dir . "/Hookers/ShopConfigUpdatedAfterAction.php",
             $dir . "/Hookers/UploadDefaultRandomFilenameFilter.php",
 
+            $dir . "/Listeners/DatabaseQueryListener.php",
+            $dir . "/Listeners/WarningExceptionListener.php",
+
             $dir . "/Subscribers/AdminHookSubscriber.php",
+            $dir . "/Subscribers/AllScreenSubscriber.php",
             $dir . "/Subscribers/EcjiaAutoloadSubscriber.php",
+            $dir . "/Subscribers/InstalledScreenSubscriber.php",
+
+            $dir . "/Mixins/EcjiaMailMixin.php",
+            $dir . "/Mixins/EcjiaSessionMixin.php",
 
         ];
     }
