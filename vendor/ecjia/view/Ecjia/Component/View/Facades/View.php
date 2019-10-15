@@ -49,6 +49,7 @@ namespace Ecjia\Component\View\Facades;
 
 use Ecjia\System\Frameworks\Contracts\EcjiaTemplateFileLoader;
 use RC_Hook;
+use RC_Lang;
 use RC_Loader;
 
 /**
