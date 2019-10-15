@@ -200,7 +200,7 @@ class AdminHookSubscriber
      */
     public function onDisplayAdminUpgradeCheckedAction()
     {
-        $new_version = (new \Ecjia\System\Admins\UpgradeCheck\CloudCheck)->checkUpgrade();
+        $new_version = (new \Ecjia\Component\UpgradeCheck\CloudCheck)->checkUpgrade();
         if ($new_version) {
             $upgrade_url = RC_Uri::url('@upgrade/init');
             $warning = sprintf(__('ECJia到家 v%s 现已经可用！ 请现在下载更新，前往<a href="%s">更新检测</a>。'), $new_version['version'], $upgrade_url);

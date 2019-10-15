@@ -93,10 +93,10 @@ class UpgradeController extends ecjia_admin
 
         $current_version = $this->request->query('version');
 
-        $result = (new \Ecjia\System\Admins\UpgradeCheck\CloudCheck)->checkCurrentVersion();
+        $result = (new \Ecjia\Component\UpgradeCheck\CloudCheck)->checkCurrentVersion();
         if (! is_ecjia_error($result)) {
 
-            $formatter = (new \Ecjia\System\Admins\UpgradeCheck\ResultManager($result))->formatter();
+            $formatter = (new \Ecjia\Component\UpgradeCheck\ResultManager($result))->formatter();
             if (! empty($formatter)) {
                 if (empty($current_version)) {
                     $current_version = head($formatter)->getVersion();
@@ -127,7 +127,7 @@ class UpgradeController extends ecjia_admin
     {
         $this->admin_priv('admin_upgrade', ecjia::MSGTYPE_JSON);
 
-        $result = (new \Ecjia\System\Admins\UpgradeCheck\CloudCheck)->checkCurrentVersion();
+        $result = (new \Ecjia\Component\UpgradeCheck\CloudCheck)->checkCurrentVersion();
         if (is_ecjia_error($result)) {
             return $this->showmessage($result->get_error_message(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
         }
