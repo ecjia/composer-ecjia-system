@@ -195,7 +195,7 @@ class EcjiaCloud extends RC_Object
     
     /**
      * 获取错误对象
-     * @return EcjiaCloud
+     * @return \ecjia_error
      */
     public function getError()
     {
