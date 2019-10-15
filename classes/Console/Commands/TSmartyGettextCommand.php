@@ -48,9 +48,9 @@ namespace Ecjia\System\Console\Commands;
 
 use Royalcms\Component\Console\Command;
 use Royalcms\Component\Support\Facades\File;
-use Ecjia\System\Admins\Gettext\Smarty\SmartyGettextCompiler;
-use Ecjia\System\Admins\Gettext\Smarty\CompileDirectory;
-use Ecjia\System\Admins\Gettext\Smarty\CompileFile;
+use Ecjia\Component\Gettext\Smarty\SmartyGettextCompiler;
+use Ecjia\Component\Gettext\Smarty\CompileDirectory;
+use Ecjia\Component\Gettext\Smarty\CompileFile;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 

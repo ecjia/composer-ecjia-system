@@ -10,7 +10,7 @@ namespace Ecjia\System\Console\Commands;
 
 use Symfony\Component\Console\Input\InputArgument;
 use Royalcms\Component\Console\Command;
-use Ecjia\System\Admins\Gettext\Console\NotGettexted;
+use Ecjia\Component\Gettext\Console\NotGettexted;
 
 // run the CLI only if the file
 // wasn't included

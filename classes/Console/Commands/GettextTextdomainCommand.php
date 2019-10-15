@@ -13,7 +13,7 @@ use RecursiveIteratorIterator;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Royalcms\Component\Console\Command;
-use Ecjia\System\Admins\Gettext\Console\AddTextdomain;
+use Ecjia\Component\Gettext\Console\AddTextdomain;
 
 // Run the CLI only if the file wasn't included.
 class GettextTextdomainCommand extends Command

@@ -11,7 +11,7 @@ namespace Ecjia\System\Console\Commands;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Royalcms\Component\Console\Command;
-use Ecjia\System\Admins\Gettext\Console\PotExtMeta;
+use Ecjia\Component\Gettext\Console\PotExtMeta;
 
 // Run the CLI only if the file wasn't included.
 class GettextMetadataCommand extends Command

@@ -11,7 +11,7 @@ namespace Ecjia\System\Console\Commands;
 use Royalcms\Component\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
-use Ecjia\System\Admins\Gettext\Console\MakePOT;
+use Ecjia\Component\Gettext\Console\MakePOT;
 
 // run the CLI only if the file
 // wasn't included
