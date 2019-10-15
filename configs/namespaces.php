@@ -12,6 +12,7 @@ return array(
     'Ecjia\\Component\\FileHash\\'     => $vendorDir . '/ecjia/file-hash/Ecjia/Component/FileHash',
     'Ecjia\\Component\\ShowMessage\\'  => $vendorDir . '/ecjia/show-message/Ecjia/Component/ShowMessage',
     'Ecjia\\Component\\CleanCache\\'   => $vendorDir . '/ecjia/clean-cache/Ecjia/Component/CleanCache',
+    'Ecjia\\Component\\Database\\'     => $vendorDir . '/ecjia/database/Ecjia/Component/Database',
     'Ecjia\\Component\\EcjiaCloud\\'   => $vendorDir . '/ecjia/ecjia-cloud/Ecjia/Component/EcjiaCloud',
     'Ecjia\\Component\\EcjiaLicense\\' => $vendorDir . '/ecjia/ecjia-license/Ecjia/Component/EcjiaLicense',
     'Ecjia\\Component\\EcjiaOpen\\'    => $vendorDir . '/ecjia/ecjia-open/Ecjia/Component/EcjiaOpen',
