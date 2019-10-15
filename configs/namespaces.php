@@ -28,6 +28,7 @@ return array(
     'Ecjia\\Component\\Screen\\'       => $vendorDir . '/ecjia/screen/Ecjia/Component/Screen',
     'Ecjia\\Component\\Purview\\'      => $vendorDir . '/ecjia/purview/Ecjia/Component/Purview',
     'Ecjia\\Component\\Support\\'      => $vendorDir . '/ecjia/support/Ecjia/Component/Support',
+    'Ecjia\\Component\\UpgradeCheck\\' => $vendorDir . '/ecjia/upgrade-check/Ecjia/Component/UpgradeCheck',
 
 
 );
