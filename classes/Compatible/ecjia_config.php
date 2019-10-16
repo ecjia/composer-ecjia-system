@@ -51,6 +51,10 @@ defined('IN_ECJIA') or exit('No permission resources.');
 class ecjia_config extends Ecjia\System\Facades\Config
 {
 
+    /**
+     * @return ecjia_config
+     */
+    public static function instance() {}
 
 }
 
