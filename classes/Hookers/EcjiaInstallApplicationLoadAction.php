@@ -29,7 +29,7 @@ class EcjiaInstallApplicationLoadAction
         $app = royalcms('app');
 
         $applications = $app->getApplicationLoader()->loadAppsWithIdentifier();
-
+        
         collect($currents)->each(function ($app_id) use ($app, $applications) {
 
             if (isset($applications[$app_id])) {
@@ -47,12 +47,8 @@ class EcjiaInstallApplicationLoadAction
                             return $bundle;
                         });
                     }
-
                 }
-
             }
-
-
         });
     }
 
