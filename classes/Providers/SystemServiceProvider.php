@@ -237,7 +237,9 @@ class SystemServiceProvider extends AppParentServiceProvider
      */
     public static function compiles()
     {
-        $dir = __DIR__ . '/..';
+        $dir = __DIR__ . '/../';
+        $ecjia_vendor_dir = $dir . '/../vendor';
+
         return [
             $dir . "/Http/Kernel.php",
             $dir . "/Exceptions/Handler.php",
@@ -311,6 +313,30 @@ class SystemServiceProvider extends AppParentServiceProvider
 
             $dir . "/Mixins/EcjiaMailMixin.php",
             $dir . "/Mixins/EcjiaSessionMixin.php",
+
+            $dir . "/Providers/AuthServiceProvider.php",
+            $dir . "/Providers/EcjiaAdminServiceProvider.php",
+            $dir . "/Providers/EventServiceProvider.php",
+            $dir . "/Providers/HookerServiceProvider.php",
+            $dir . "/Providers/RouteServiceProvider.php",
+
+            $dir . "/Frameworks/Model/InsertOnDuplicateKey.php",
+
+            $ecjia_vendor_dir . '/ecjia/config/Ecjia/Component/Config/ConfigServiceProvider.php',
+            $ecjia_vendor_dir . '/ecjia/admin-log/Ecjia/Component/AdminLog/AdminLogServiceProvider.php',
+            $ecjia_vendor_dir . '/ecjia/clean-cache/Ecjia/Component/CleanCache/CleanCacheServiceProvider.php',
+            $ecjia_vendor_dir . '/ecjia/framework/Ecjia/Component/Framework/Ecjia.php',
+            $ecjia_vendor_dir . '/ecjia/support/Ecjia/Component/Support/EcjiaLoader.php',
+            $ecjia_vendor_dir . '/ecjia/app/Ecjia/Component/App/Facades/AppManager.php',
+            $ecjia_vendor_dir . '/ecjia/view/Ecjia/Component/View/Facades/View.php',
+            $ecjia_vendor_dir . '/ecjia/notification/Ecjia/Component/Notification/Facades/Notification.php',
+            $ecjia_vendor_dir . '/ecjia/screen/Ecjia/Component/Screen/EcjiaScreen.php',
+            $ecjia_vendor_dir . '/ecjia/admin-log/Ecjia/Component/AdminLog/CompatibleTrait.php',
+            $ecjia_vendor_dir . '/ecjia/admin-log/Ecjia/Component/AdminLog/AdminLogObject.php',
+            $ecjia_vendor_dir . '/ecjia/admin-log/Ecjia/Component/AdminLog/AdminLogAction.php',
+            $ecjia_vendor_dir . '/ecjia/admin-log/Ecjia/Component/AdminLog/CompatibleTrait.php',
+            $ecjia_vendor_dir . '/ecjia/admin-log/Ecjia/Component/AdminLog/AdminLog.php',
+            $ecjia_vendor_dir . '/ecjia/admin-log/Ecjia/Component/AdminLog/Facades/AdminLog.php',
 
         ];
     }
