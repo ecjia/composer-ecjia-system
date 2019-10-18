@@ -322,22 +322,6 @@ class SystemServiceProvider extends AppParentServiceProvider
 
             $dir . "/Frameworks/Model/InsertOnDuplicateKey.php",
 
-            $ecjia_vendor_dir . '/ecjia/config/Ecjia/Component/Config/ConfigServiceProvider.php',
-            $ecjia_vendor_dir . '/ecjia/admin-log/Ecjia/Component/AdminLog/AdminLogServiceProvider.php',
-            $ecjia_vendor_dir . '/ecjia/clean-cache/Ecjia/Component/CleanCache/CleanCacheServiceProvider.php',
-            $ecjia_vendor_dir . '/ecjia/framework/Ecjia/Component/Framework/Ecjia.php',
-            $ecjia_vendor_dir . '/ecjia/support/Ecjia/Component/Support/EcjiaLoader.php',
-            $ecjia_vendor_dir . '/ecjia/app/Ecjia/Component/App/Facades/AppManager.php',
-            $ecjia_vendor_dir . '/ecjia/view/Ecjia/Component/View/Facades/View.php',
-            $ecjia_vendor_dir . '/ecjia/notification/Ecjia/Component/Notification/Facades/Notification.php',
-            $ecjia_vendor_dir . '/ecjia/screen/Ecjia/Component/Screen/EcjiaScreen.php',
-            $ecjia_vendor_dir . '/ecjia/admin-log/Ecjia/Component/AdminLog/CompatibleTrait.php',
-            $ecjia_vendor_dir . '/ecjia/admin-log/Ecjia/Component/AdminLog/AdminLogObject.php',
-            $ecjia_vendor_dir . '/ecjia/admin-log/Ecjia/Component/AdminLog/AdminLogAction.php',
-            $ecjia_vendor_dir . '/ecjia/admin-log/Ecjia/Component/AdminLog/CompatibleTrait.php',
-            $ecjia_vendor_dir . '/ecjia/admin-log/Ecjia/Component/AdminLog/AdminLog.php',
-            $ecjia_vendor_dir . '/ecjia/admin-log/Ecjia/Component/AdminLog/Facades/AdminLog.php',
-
         ];
     }
 
