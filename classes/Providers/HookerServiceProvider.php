@@ -43,6 +43,10 @@ class HookerServiceProvider extends ServiceProvider
             'Ecjia\System\Hookers\EcjiaLoadSystemApplicationFilter',
         ],
 
+        'app_activation_bundles' => [
+            'Ecjia\System\Hookers\EcjiaInstallApplicationBundleFilter',
+        ],
+
     ];
 
     /**
