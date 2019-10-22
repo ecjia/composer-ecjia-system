@@ -282,11 +282,6 @@ class AdminHookSubscriber
         );
 
         $events->addAction(
-            'admin_dashboard_right',
-            'Ecjia\System\Subscribers\AdminHookSubscriber@onAdminDashboardRightProductNewsAction'
-        );
-
-        $events->addAction(
             'admin_sidebar_info',
             'Ecjia\System\Subscribers\AdminHookSubscriber@onAdminSidebarInfoAction'
         );
@@ -368,6 +363,14 @@ class AdminHookSubscriber
             'Ecjia\System\Hookers\EcjiaEchoQueryInfoAction',
             99
         );
+
+        //cityo2o
+        if (config('site.shop_type') == 'cityo2o') {
+            $events->addAction(
+                'admin_dashboard_right',
+                'Ecjia\System\Subscribers\AdminHookSubscriber@onAdminDashboardRightProductNewsAction'
+            );
+        }
 
     }
 
