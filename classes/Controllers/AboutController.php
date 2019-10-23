@@ -46,6 +46,7 @@
 //
 namespace Ecjia\System\Controllers;
 
+use Ecjia\System\Admins\System\SystemChecker;
 use ecjia_admin;
 use RC_ENV;
 use RC_Hook;
@@ -141,66 +142,13 @@ class AboutController extends ecjia_admin
             '<p><strong>' . __('更多信息：') . '</strong></p>' .
             '<p>' . __('<a href="https://ecjia.com/wiki/帮助:ECJia智能后台:关于" target="_blank">关于ECJia帮助文档</a>') . '</p>'
         );
-
+        
         /* 系统信息 */
-        $sys_info['os']                 = PHP_OS;
-        $sys_info['ip']                 = $_SERVER['SERVER_ADDR'];
-        $sys_info['web_server']         = $_SERVER['SERVER_SOFTWARE'];
-        $sys_info['php_ver']            = PHP_VERSION;
-        $sys_info['mysql_ver']          = RC_Model::make()->database_version();
-        $sys_info['zlib']               = function_exists('gzclose') ? __('是'):__('否');
-        $sys_info['safe_mode']          = (boolean) ini_get('safe_mode') ?  __('是'):__('否');
-        $sys_info['safe_mode_gid']      = (boolean) ini_get('safe_mode_gid') ? __('是'):__('否');
-        $sys_info['timezone']           = function_exists("date_default_timezone_get") ? date_default_timezone_get() : __('无需设置');
-        $sys_info['socket']             = function_exists('fsockopen') ? __('是'):__('否');
-        $sys_info['gd']                 = $this->formatGDVersionDisplay();
-        /* 允许上传的最大文件大小 */
-        $sys_info['max_filesize']       = ini_get('upload_max_filesize');
+        $sys_info = (new SystemChecker())->getSystem();
 
-        $sys_info['royalcms_version']   = \Royalcms\Component\Foundation\Royalcms::VERSION;
-        $sys_info['royalcms_release']   =\Royalcms\Component\Foundation\Royalcms::RELEASE;
-
-        $this->assign('ecjia_version', VERSION);
-        $this->assign('ecjia_release', RELEASE);
         $this->assign('sys_info',      $sys_info);
-        $this->assign('install_date',  date(ecjia::config('date_format'), ecjia::config('install_date')));
 
         return $this->display('about_system.dwt');
-    }
-
-    /**
-     * 格式化GD版本显示
-     */
-    private function formatGDVersionDisplay()
-    {
-        $gd = RC_ENV::gd_version();
-        if ($gd == 0) {
-            return 'N/A';
-        }
-
-        if ($gd == 1) {
-            $label = 'GD1';
-        } else {
-            $label = 'GD2';
-        }
-
-        $support = [];
-        /* 检查系统支持的图片类型 */
-        if ((imagetypes() & IMG_JPG) > 0) {
-            $support[] = 'JPEG';
-        }
-
-        if ((imagetypes() & IMG_GIF) > 0) {
-            $support[] = 'GIF';
-        }
-
-        if ((imagetypes() & IMG_PNG) > 0) {
-            $support[] = 'PNG';
-        }
-
-        $display = sprintf("%s (%s)", $label, implode(' ', $support));
-
-        return $display;
     }
 
 }

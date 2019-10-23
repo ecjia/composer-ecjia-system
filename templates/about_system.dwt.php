@@ -16,11 +16,11 @@
 				</li>
 				<li>
 					<span class="item-key">{t}ECJia 版本:{/t}</span>
-					<div class="vcard-item">v{$ecjia_version} - {$ecjia_release}</div>
+					<div class="vcard-item">v{$sys_info.ecjia_version} - {$sys_info.ecjia_release}</div>
 				</li>
 				<li>
 					<span class="item-key">{t}安装日期:{/t}</span>
-					<div class="vcard-item">{$install_date}</div>
+					<div class="vcard-item">{$sys_info.install_date}</div>
 				</li>
 				<li>
 					<span class="item-key">{t}服务器操作系统:{/t}</span>
