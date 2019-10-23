@@ -142,7 +142,7 @@ class AboutController extends ecjia_admin
             '<p><strong>' . __('更多信息：') . '</strong></p>' .
             '<p>' . __('<a href="https://ecjia.com/wiki/帮助:ECJia智能后台:关于" target="_blank">关于ECJia帮助文档</a>') . '</p>'
         );
-        
+
         /* 系统信息 */
         $sys_info = (new SystemChecker())->getSystem();
 
