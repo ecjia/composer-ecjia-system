@@ -7,6 +7,7 @@ use admin_notice;
 use ecjia;
 use Ecjia\System\Admins\Plugin\ConfigMenu;
 use Ecjia\System\Admins\Privilege\PrivilegeMenu;
+use Ecjia\System\Admins\System\SystemChecker;
 use ecjia_admin;
 use ecjia_admin_message;
 use ecjia_app;
@@ -23,7 +24,20 @@ use Royalcms\Component\Hook\Dispatcher;
 class AdminHookSubscriber
 {
 
+    /**
+     * Handle admin log display dashboard events.
+     */
+    public function onAdminDashboardLeftAboutSystemAction()
+    {
+        $title = __('系统信息');
 
+        /* 系统信息 */
+        $sys_info = (new SystemChecker())->getSystem();
+
+        ecjia_admin::$controller->assign('title', $title);
+        ecjia_admin::$controller->assign('sys_info', $sys_info);
+        echo ecjia_admin::$controller->fetch('library/widget_admin_dashboard_about_system.lbi');
+    }
 
 
     /**
@@ -276,6 +290,12 @@ class AdminHookSubscriber
      */
     public function subscribe(Dispatcher $events)
     {
+
+        $events->addAction(
+            'admin_dashboard_left',
+            'Ecjia\System\Subscribers\AdminHookSubscriber@onAdminDashboardLeftAboutSystemAction'
+        );
+
         $events->addAction(
             'admin_dashboard_right',
             'Ecjia\System\Subscribers\AdminHookSubscriber@onAdminDashboardRightLogAction'
