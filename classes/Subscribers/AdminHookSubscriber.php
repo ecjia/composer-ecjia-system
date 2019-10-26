@@ -260,7 +260,7 @@ class AdminHookSubscriber
     {
         $session_id = session()->getId();
 
-        (new \Ecjia\System\Admins\SessionLogins\AdminSessionLogins($session_id, session('session_user_id')))->removeBySessionId();
+        (new \Ecjia\Component\SessionLogins\AdminSessionLogins($session_id, session('session_user_id')))->removeBySessionId();
     }
 
     /**

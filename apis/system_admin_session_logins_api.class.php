@@ -70,7 +70,7 @@ class system_admin_session_logins_api extends Component_Event_Api
             return new ecjia_error('invalid_parameter', __('参数无效'));
         }
 
-        (new \Ecjia\System\Admins\SessionLogins\AdminSessionLogins($session_id, $user_id))->record($from_type, $from_value);
+        (new \Ecjia\Component\SessionLogins\AdminSessionLogins($session_id, $user_id))->record($from_type, $from_value);
 
         return true;
     }

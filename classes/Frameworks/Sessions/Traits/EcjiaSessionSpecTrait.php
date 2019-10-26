@@ -8,9 +8,9 @@
 
 namespace Ecjia\System\Frameworks\Sessions\Traits;
 
-use Ecjia\System\Admins\SessionLogins\AdminSessionLogins;
-use Ecjia\System\Admins\SessionLogins\MerchantSessionLogins;
-use Ecjia\System\Admins\SessionLogins\UserSessionLogins;
+use Ecjia\Component\SessionLogins\AdminSessionLogins;
+use Ecjia\Component\SessionLogins\MerchantSessionLogins;
+use Ecjia\Component\SessionLogins\UserSessionLogins;
 use Royalcms\Component\NativeSession\Serialize;
 
 /**
