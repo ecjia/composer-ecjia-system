@@ -5,11 +5,13 @@ namespace Ecjia\System\Admins\System;
 
 
 use ecjia;
+use Illuminate\Support\Traits\Macroable;
 use RC_ENV;
 use RC_Model;
 
 class SystemChecker
 {
+    use Macroable;
 
     protected $system = [];
 
