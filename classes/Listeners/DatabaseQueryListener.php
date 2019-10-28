@@ -1,10 +1,9 @@
 <?php
 
-
 namespace Ecjia\System\Listeners;
 
 
-use RC_Logger;
+use Illuminate\Database\Events\QueryExecuted;
 
 class DatabaseQueryListener
 {
@@ -25,12 +24,17 @@ class DatabaseQueryListener
      * @param $event
      * @return void
      */
-    public function handle($query, $bindings, $time)
+    public function handle(QueryExecuted $event)
     {
         if (config('system.debug')) {
+
+            $query = $event->sql;
+            $bindings = $event->bindings;
+            $time = $event->time;
+
             $query = str_replace('?', '"'.'%s'.'"', $query);
             $sql = vsprintf($query, $bindings);
-            RC_Logger::getLogger(RC_Logger::LOG_SQL)->info('sql:'.$sql);
+            ecjia_log_info('sql:'.$sql, [], 'sql');
         }
 
     }
