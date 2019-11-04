@@ -45,6 +45,11 @@
 //  ---------------------------------------------------------------------------------
 //
 
+/**
+ * Class ecjia_screen
+ *
+ * @property-read \Ecjia\Component\Screen\EcjiaScreen static $current_screen
+ */
 class ecjia_screen extends Ecjia\Component\Screen\EcjiaScreen
 {
 
