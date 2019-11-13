@@ -52,8 +52,14 @@ defined('IN_ECJIA') or exit('No permission resources.');
  */
 class system_service_menu_api extends Component_Event_Api {
 	
-	public function call(&$options) {	
-		$menus = ecjia_admin::make_admin_menu('ecjia_appstore', __('应用市场'), 'https://appstore.ecjia.com', 1, '_blank');
+	public function call(&$options) {
+
+        if (config('site.shop_type') == 'cityo2o') {
+            $menus = ecjia_admin::make_admin_menu('ecjia_appstore', __('应用市场'), 'https://appstore.ecjia.com', 1, '_blank');
+        } else {
+            $menus = null;
+        }
+
 		return $menus;
 	}
 }
