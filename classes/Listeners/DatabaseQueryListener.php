@@ -4,6 +4,7 @@ namespace Ecjia\System\Listeners;
 
 
 use Illuminate\Database\Events\QueryExecuted;
+use RC_Logger;
 
 class DatabaseQueryListener
 {
@@ -34,7 +35,7 @@ class DatabaseQueryListener
 
             $query = str_replace('?', '"'.'%s'.'"', $query);
             $sql = vsprintf($query, $bindings);
-            ecjia_log_info('sql:'.$sql, [], 'sql');
+            RC_Logger::getLogger('sql')->info('sql:'.$sql);
         }
 
     }
