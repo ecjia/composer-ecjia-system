@@ -64,6 +64,11 @@ class InstalledScreenSubscriber
 
         //hookers
         $events->addAction(
+            'ecjia_loading_after',
+            'Ecjia\System\Hookers\EcjiaLoadGlobalPluginsAction'
+        );
+
+        $events->addAction(
             'init',
             'Ecjia\System\Hookers\LoadThemeFunctionAction'
         );
