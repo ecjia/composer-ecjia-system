@@ -13,6 +13,9 @@
                 <td>{t}ROYALCMS 版本{/t} <span class="ecjiaf-fr">v{$sys_info.royalcms_version} release {$sys_info.royalcms_release}</span></td>
             </tr>
             <tr>
+                <td>{t}Laravel 版本{/t} <span class="ecjiaf-fr">v{$sys_info.laravel_version}</span></td>
+            </tr>
+            <tr>
                 <td>{t}安装日期{/t} <span class="ecjiaf-fr">{$sys_info.install_date}</span></td>
             </tr>
             <tr>

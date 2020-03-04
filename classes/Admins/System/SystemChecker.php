@@ -52,8 +52,13 @@ class SystemChecker
 
     protected function checkRoyalcmsVersion()
     {
-        $this->system['royalcms_version']   = \Royalcms\Component\Foundation\Royalcms::VERSION;
-        $this->system['royalcms_release']   = \Royalcms\Component\Foundation\Royalcms::RELEASE;
+        $this->system['royalcms_version']   = royalcms()->version();
+        $this->system['royalcms_release']   = royalcms()->release();
+    }
+
+    protected function checkLaravelVersion()
+    {
+        $this->system['laravel_version']   = royalcms()->laravelVersion();
     }
 
     protected function checkEcjiaVersion()
@@ -80,6 +85,7 @@ class SystemChecker
         $this->checkPHPINI();
         $this->checkFunction();
         $this->checkRoyalcmsVersion();
+        $this->checkLaravelVersion();
         $this->checkEcjiaVersion();
         $this->checkEcjiaFrameworkVersion();
         $this->checkInstallDate();
