@@ -352,6 +352,14 @@ class AdminHookSubscriber
             'Ecjia\System\Hookers\AdminHeaderProfileLinksAction'
         );
         $events->addAction(
+            'admin_header_extend_links',
+            'Ecjia\System\Hookers\AdminHeaderMultiSitesLinksAction'
+        );
+        $events->addAction(
+            'admin_header_extend_links',
+            'Ecjia\System\Hookers\AdminHeaderLanguageLinksAction'
+        );
+        $events->addAction(
             'admin_print_main_bottom',
             'Ecjia\System\Hookers\DisplayAdminCopyrightAction'
         );

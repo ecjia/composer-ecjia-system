@@ -10,14 +10,8 @@
 							<!-- {ecjia:hook id=admin_dashboard_header_links} -->
 						</div>
 					</li>
-					<li class="divider-vertical hidden-phone hidden-tablet"></li>
-					<li class="dropdown">
-						<a class="dropdown-toggle nav_condensed" href="#" data-toggle="dropdown"><i class="flag-cn"></i> <b class="caret"></b></a>
-						<ul class="dropdown-menu">
-							<li><a href="javascript:void(0)"><i class="flag-cn"></i> {t}简体中文{/t}</a></li>
-							<!-- <li><a href="javascript:void(0)"><i class="flag-us"></i> {t}English{/t}</a></li> -->
-						</ul>
-					</li>
+                    <!-- {ecjia:hook id=admin_header_extend_links} -->
+
 					<li class="divider-vertical hidden-phone hidden-tablet"></li>
 					<li class="dropdown">
 						<a class="dropdown-toggle" href="#" data-toggle="dropdown"><img src="{RC_Uri::admin_url('statics/images/user_avatar.png')}" alt="" class="user_avatar" />{$smarty.session.admin_name|escape}<b class="caret"></b></a>
