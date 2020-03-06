@@ -23,6 +23,7 @@ class EcjiaInstallApplicationLoadAction
     {
         // 只获取已经安装的扩展应用
         $currents = ecjia_config::getAddonConfig('active_applications', true);
+        $currents = $currents ?: [];
 
         array_unshift($currents, 'ecjia.system');
 
