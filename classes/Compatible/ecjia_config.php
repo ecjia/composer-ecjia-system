@@ -47,14 +47,21 @@
 
 defined('IN_ECJIA') or exit('No permission resources.');
 
-
+/**
+ * Class ecjia_config
+ *
+ * @method static all() array
+ * @method static instance() ecjia_config
+ * @method static get($key, $default = null) string
+ * @method static set($key, $value) bool
+ * @method static write($key, $value) bool
+ * @method static has($key) bool
+ * @method static add($group, $key, $value, $options = []) bool
+ * @method static change($group, $key, $value, $options = []) bool
+ * @method static delete($key) bool
+ */
 class ecjia_config extends Ecjia\Component\Config\Facades\Config
 {
-
-    /**
-     * @return ecjia_config
-     */
-    public static function instance() {}
 
 }
 

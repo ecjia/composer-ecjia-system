@@ -49,6 +49,8 @@ defined('IN_ECJIA') or exit('No permission resources.');
 
 /**
  * ECJIA容器类
+ *
+ * @method static config($name = null, $what = 1) string
  */
 class ecjia extends Ecjia\Component\Framework\Ecjia
 {
