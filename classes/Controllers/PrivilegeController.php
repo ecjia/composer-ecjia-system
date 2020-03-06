@@ -79,7 +79,7 @@ class PrivilegeController extends ecjia_admin
     {
         parent::__construct();
 
-        $this->middleware('verify_csrf_token')->only(['signin']);
+//        $this->middleware('verify_csrf_token')->only(['signin']);
 
         RC_Style::enqueue_style('chosen');
         RC_Style::enqueue_style('uniform-aristo');
