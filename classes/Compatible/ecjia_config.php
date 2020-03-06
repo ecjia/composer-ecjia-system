@@ -48,7 +48,7 @@
 defined('IN_ECJIA') or exit('No permission resources.');
 
 
-class ecjia_config extends Ecjia\System\Facades\Config
+class ecjia_config extends Ecjia\Component\Config\Facades\Config
 {
 
     /**
