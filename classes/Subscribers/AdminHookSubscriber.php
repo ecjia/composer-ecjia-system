@@ -301,10 +301,13 @@ class AdminHookSubscriber
             'Ecjia\System\Subscribers\AdminHookSubscriber@onAdminDashboardRightLogAction'
         );
 
+        /*
+         * 暂时废弃
         $events->addAction(
             'admin_sidebar_info',
             'Ecjia\System\Subscribers\AdminHookSubscriber@onAdminSidebarInfoAction'
         );
+        */
 
         $events->addAction(
             'display_admin_plugin_menus',
