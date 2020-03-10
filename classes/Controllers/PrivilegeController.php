@@ -309,8 +309,6 @@ class PrivilegeController extends ecjia_admin
             ]);
             return $this->showmessage(__('您不能对此管理员的权限进行任何操作！'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
         }
-        $modules = RC_Loader::load_sys_config("menu");
-        //$purview = RC_Loader::load_sys_config("priv");
 
         RC_Script::enqueue_script('jquery-complexify', RC_Uri::admin_url() . '/statics/lib/complexify/jquery.complexify.min.js', array('jquery'), false, true);
 
@@ -330,30 +328,12 @@ class PrivilegeController extends ecjia_admin
 
         $user_info = AdminUserModel::find($_SESSION['admin_id'])->toArray();
 
-        /* 获取导航条 */
-        $nav_list = [];
-        if (!empty($user_info)) {
-            foreach (explode(',', $user_info['nav_list']) as $nav) {
-                $tmp = explode('|', $nav);
-                if (isset($tmp[0], $tmp[1])) {
-                    $nav_list[$tmp[1]] = $tmp[0];
-                }
-            }
-        }
-
-        $menus_list = ecjia_admin_menu::singleton()->admin_menu();
-
         /* 模板赋值 */
         $this->assign('ur_here', __('编辑个人资料'));
         $this->assign('action_link', array('text' => __('管理员列表'), 'href' => RC_Uri::url('@admin_user/init')));
-        $this->assign('form_link', RC_Uri::url('@privilege/update_self'));
-        $this->assign('user', $user_info);
-        $this->assign('modules', $modules);
-        $this->assign('menus_list', $menus_list);
-        $this->assign('nav_arr', $nav_list);
-        $this->assign('action', 'modif');
-        $this->assign('_FILE_STATIC', RC_Uri::admin_url('statics/'));
         $this->assign('form_action', RC_Uri::url('@privilege/update_self'));
+
+        $this->assign('user', $user_info);
 
         return $this->display('privilege_info.dwt');
     }
@@ -382,11 +362,8 @@ class PrivilegeController extends ecjia_admin
         }
 
         $new_password = remove_xss($this->request->input('new_password'));
-        $nav_list = join(',', array_map('remove_xss', $this->request->input('nav_list', [])));
-
 
         $model->email = $admin_email;
-        $model->nav_list = $nav_list;
 
         if (empty($new_password)) {
             $msg = __('修改个人资料成功！');
@@ -420,10 +397,76 @@ class PrivilegeController extends ecjia_admin
         /* 清除用户缓存 */
         RC_Cache::userdata_cache_delete('admin_navlist', $admin_id, true);
 
-//        return $this->showmessage($msg, ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, ['pjaxurl' => RC_Uri::url('@privilege/modif')]);
-
         return $this->showmessage($msg, ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS,
             (new PjaxShowMessageOption())->setPjaxurl(RC_Uri::url('@privilege/modif'))
         );
     }
+
+    /**
+     * 个人快捷导航菜单修改
+     */
+    public function quick_nav()
+    {
+        $admin_id = intval($_SESSION['admin_id']);
+        if (empty($admin_id)) {
+            return $this->showmessage(__('非法操作！'), ecjia::MSGTYPE_HTML | ecjia::MSGSTAT_ERROR);
+        }
+
+        ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here(__('设置个人导航菜单')));
+
+        $user_info = AdminUserModel::find($admin_id)->toArray();
+
+        /* 获取导航条 */
+        $nav_list = [];
+        if (!empty($user_info)) {
+            foreach (explode(',', $user_info['nav_list']) as $nav) {
+                $tmp = explode('|', $nav);
+                if (isset($tmp[0], $tmp[1])) {
+                    $nav_list[$tmp[1]] = $tmp[0];
+                }
+            }
+        }
+
+        $menus_list = ecjia_admin_menu::singleton()->admin_menu();
+
+        $this->assign('menus_list', $menus_list);
+        $this->assign('nav_arr', $nav_list);
+        $this->assign('ur_here', __('设置个人导航菜单'));
+        $this->assign('form_link', RC_Uri::url('@privilege/quick_nav_save'));
+
+        return $this->display('privilege_quick_nav.dwt');
+    }
+
+    /**
+     * 个人快捷导航菜单修改 - 保存
+     */
+    public function quick_nav_save()
+    {
+        $admin_id = intval($_SESSION['admin_id']);
+        if (empty($admin_id)) {
+            return $this->showmessage(__('非法操作！'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+        }
+
+        $model = AdminUserModel::find($admin_id);
+
+        if (empty($model)) {
+            return $this->showmessage(__('非法操作！'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+        }
+
+        $nav_list = join(',', array_map('remove_xss', $this->request->input('nav_list', [])));
+        $model->nav_list = $nav_list;
+        $model->save();
+
+        /* 记录管理员操作 */
+        ecjia_admin_log::instance()->add_object('admin_quick_nav', __('个人导航'));
+        ecjia_admin::admin_log($_SESSION['admin_name'], 'edit', 'admin_quick_nav');
+
+        /* 清除用户缓存 */
+        RC_Cache::userdata_cache_delete('admin_navlist', $admin_id, true);
+
+        return $this->showmessage('更新成功！', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS,
+            (new PjaxShowMessageOption())->setPjaxurl(RC_Uri::url('@privilege/quick_nav'))
+        );
+    }
+
 }
