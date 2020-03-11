@@ -6,7 +6,7 @@ namespace Ecjia\System\Hookers;
 
 use RC_Config;
 
-class CustomAdminUrlFilter
+class CustomAssetUrlFilter
 {
 
     /**
@@ -17,8 +17,8 @@ class CustomAdminUrlFilter
      */
     public function handle($url, $path)
     {
-        if (RC_Config::get('site.custom_admin_url')) {
-            $admin_url = RC_Config::get('site.custom_admin_url');
+        if (RC_Config::get('site.custom_asset_url')) {
+            $admin_url = RC_Config::get('site.custom_asset_url');
             $url = $admin_url . '/' . $path;
         }
         return rtrim($url, '/');

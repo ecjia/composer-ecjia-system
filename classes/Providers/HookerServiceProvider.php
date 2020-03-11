@@ -66,6 +66,34 @@ class HookerServiceProvider extends ServiceProvider
             ['Ecjia\System\Hookers\CustomAdminUrlFilter', 10, 2],
         ],
 
+        'asset_url' => [
+            ['Ecjia\System\Hookers\CustomAssetUrlFilter', 10, 2],
+        ],
+
+        'home_url' => [
+            ['Ecjia\System\Hookers\CustomHomeUrlFilter', 10, 3],
+        ],
+
+        'original_home_url' => [
+            ['Ecjia\System\Hookers\CustomOriginalHomeUrlFilter', 10, 3],
+        ],
+
+        'site_url' => [
+            ['Ecjia\System\Hookers\CustomSiteUrlFilter', 10, 3],
+        ],
+
+        'original_site_url' => [
+            ['Ecjia\System\Hookers\CustomOriginalSiteUrlFilter', 10, 3],
+        ],
+
+        'upload_url' => [
+            ['Ecjia\System\Hookers\CustomUploadUrlFilter', 10, 2],
+        ],
+
+        'upload_path' => [
+            ['Ecjia\System\Hookers\CustomUploadPathFilter', 10, 2],
+        ],
+
         'upload_default_random_filename' => [
             'Ecjia\System\Hookers\UploadDefaultRandomFilenameFilter',
         ],

@@ -61,73 +61,6 @@ class AllScreenSubscriber
         }
     }
 
-    /**
-     * 自定义上传目录路径
-     * @param string $url
-     * @param string $path
-     * @return string
-     */
-    public function onCustomUploadPathFilter($url, $path)
-    {
-        if (RC_Config::has('site.custom_upload_path')) {
-            $upload_path = RC_Config::get('site.custom_upload_path');
-        } else {
-            $upload_path = SITE_UPLOAD_PATH;
-        }
-
-        $upload_path = $upload_path . ltrim($path, '/');
-
-        return $upload_path;
-    }
-
-    /**
-     * 自定义上传目录访问URL
-     * @param string $url
-     * @param string $path
-     * @return string
-     */
-    public function onCustomUploadUrlFilter($url, $path)
-    {
-        if (RC_Config::has('site.custom_upload_url')) {
-            $home_url = RC_Config::get('site.custom_upload_url');
-            $url = $home_url . '/' . $path;
-        }
-
-        $upload_url = rtrim($url, '/');
-
-        return $upload_url;
-    }
-
-    /**
-     * 自定义项目访问URL
-     * @param string $url
-     * @param string $path
-     * @return string
-     */
-    public function onCustomHomeUrlFilter($url, $path, $scheme)
-    {
-        if (RC_Config::has('site.custom_home_url')) {
-            $home_url = RC_Config::get('site.custom_home_url');
-            $url = $home_url . '/' . $path;
-        }
-        return rtrim($url, '/');
-    }
-
-    /**
-     * 自定义项目访问URL
-     * @param string $url
-     * @param string $path
-     * @return string
-     */
-    public function onCustomSiteUrlFilter($url, $path, $scheme)
-    {
-        if (RC_Config::has('site.custom_site_url')) {
-            $home_url = RC_Config::get('site.custom_site_url');
-            $url = $home_url . '/' . $path;
-        }
-        return rtrim($url, '/');
-    }
-
     public function onSetEcjiaFilterRequestGetAction()
     {
         ecjia_filter_request_input($_GET);
@@ -156,30 +89,6 @@ class AllScreenSubscriber
         $events->addFilter(
             'pretty_page_table_data',
             'Ecjia\System\Subscribers\AllScreenSubscriber@onRemoveEnvPrettyPageTableDataFilter'
-        );
-        $events->addFilter(
-            'upload_path',
-            'Ecjia\System\Subscribers\AllScreenSubscriber@onCustomUploadPathFilter',
-            10,
-            2
-        );
-        $events->addFilter(
-            'upload_url',
-            'Ecjia\System\Subscribers\AllScreenSubscriber@onCustomUploadUrlFilter',
-            10,
-            2
-        );
-        $events->addFilter(
-            'home_url',
-            'Ecjia\System\Subscribers\AllScreenSubscriber@onCustomHomeUrlFilter',
-            10,
-            3
-        );
-        $events->addFilter(
-            'site_url',
-            'Ecjia\System\Subscribers\AllScreenSubscriber@onCustomSiteUrlFilter',
-            10,
-            3
         );
 
         //action
