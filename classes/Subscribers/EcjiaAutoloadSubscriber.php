@@ -72,10 +72,8 @@ class EcjiaAutoloadSubscriber
             RC_Config::set('storage.disks.local.root', RC_Upload::custom_upload_path());
         }
 
-        if (RC_Config::get('site.custom_upload_url')) {
-            RC_Config::set('storage.disks.direct.url', RC_Upload::custom_upload_url());
-            RC_Config::set('storage.disks.local.url', RC_Upload::custom_upload_url());
-        }
+        RC_Config::set('storage.disks.direct.url', RC_Upload::custom_upload_url());
+        RC_Config::set('storage.disks.local.url', RC_Upload::custom_upload_url());
     }
 
 
