@@ -16,8 +16,8 @@ class CustomOriginalHomeUrlFilter
      */
     public function handle($url)
     {
-        if (RC_Config::get('site.custom_original_home_url')) {
-            $url = RC_Config::get('site.custom_original_home_url');
+        if (config('site.custom_original_home_url')) {
+            $url = config('site.custom_original_home_url');
         }
         return rtrim($url, '/');
     }
