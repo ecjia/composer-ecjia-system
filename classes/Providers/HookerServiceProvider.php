@@ -90,6 +90,10 @@ class HookerServiceProvider extends ServiceProvider
             ['Ecjia\System\Hookers\CustomUploadUrlFilter', 10, 2],
         ],
 
+        'original_upload_url' => [
+            ['Ecjia\System\Hookers\CustomOriginalUploadUrlFilter', 10, 2],
+        ],
+
         'upload_path' => [
             ['Ecjia\System\Hookers\CustomUploadPathFilter', 10, 2],
         ],
