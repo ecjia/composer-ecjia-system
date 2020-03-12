@@ -45,22 +45,6 @@ class AllScreenSubscriber
         return $tables;
     }
 
-    /**
-     * 更新上传路径动态更新
-     */
-    public function onUpdateCustomStoragePathAction()
-    {
-        if (RC_Config::has('site.custom_upload_path')) {
-            RC_Config::set('storage.disks.direct.root', RC_Upload::custom_upload_path());
-            RC_Config::set('storage.disks.local.root', RC_Upload::custom_upload_path());
-        }
-
-        if (RC_Config::has('site.custom_upload_url')) {
-            RC_Config::set('storage.disks.direct.url', RC_Upload::custom_upload_url());
-            RC_Config::set('storage.disks.local.url', RC_Upload::custom_upload_url());
-        }
-    }
-
     public function onSetEcjiaFilterRequestGetAction()
     {
         ecjia_filter_request_input($_GET);
@@ -85,45 +69,42 @@ class AllScreenSubscriber
      */
     public function subscribe(Dispatcher $events)
     {
+
         //filter
         $events->addFilter(
             'pretty_page_table_data',
-            'Ecjia\System\Subscribers\AllScreenSubscriber@onRemoveEnvPrettyPageTableDataFilter'
+            sprintf('%s@%s', __CLASS__, 'onRemoveEnvPrettyPageTableDataFilter')
         );
 
         //action
         $events->addAction(
-            'init',
-            'Ecjia\System\Subscribers\AdminHookSubscriber@onUpdateCustomStoragePathAction'
-        );
-        $events->addAction(
             'ecjia_admin_finish_launching',
-            'Ecjia\System\Subscribers\AdminHookSubscriber@onEcjiaSetHeaderAction'
+            sprintf('%s@%s', __CLASS__, 'onEcjiaSetHeaderAction')
         );
         $events->addAction(
             'ecjia_front_finish_launching',
-            'Ecjia\System\Subscribers\AdminHookSubscriber@onEcjiaSetHeaderAction'
+            sprintf('%s@%s', __CLASS__, 'onEcjiaSetHeaderAction')
         );
 
         $events->addAction(
             'ecjia_admin_finish_launching',
-            'Ecjia\System\Subscribers\AdminHookSubscriber@onSetEcjiaFilterRequestGetAction'
+            sprintf('%s@%s', __CLASS__, 'onSetEcjiaFilterRequestGetAction')
         );
         $events->addAction(
             'ecjia_front_finish_launching',
-            'Ecjia\System\Subscribers\AdminHookSubscriber@onSetEcjiaFilterRequestGetAction'
+            sprintf('%s@%s', __CLASS__, 'onSetEcjiaFilterRequestGetAction')
         );
         $events->addAction(
             'ecjia_api_finish_launching',
-            'Ecjia\System\Subscribers\AdminHookSubscriber@onSetEcjiaFilterRequestGetAction'
+            sprintf('%s@%s', __CLASS__, 'onSetEcjiaFilterRequestGetAction')
         );
         $events->addAction(
             'ecjia_merchant_finish_launching',
-            'Ecjia\System\Subscribers\AdminHookSubscriber@onSetEcjiaFilterRequestGetAction'
+            sprintf('%s@%s', __CLASS__, 'onSetEcjiaFilterRequestGetAction')
         );
         $events->addAction(
             'ecjia_platform_finish_launching',
-            'Ecjia\System\Subscribers\AdminHookSubscriber@onSetEcjiaFilterRequestGetAction'
+            sprintf('%s@%s', __CLASS__, 'onSetEcjiaFilterRequestGetAction')
         );
 
     }

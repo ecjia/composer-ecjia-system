@@ -4,9 +4,11 @@
 namespace Ecjia\System\Subscribers;
 
 
+use RC_Config;
 use RC_Hook;
 use RC_Loader;
 use RC_Package;
+use RC_Upload;
 use Royalcms\Component\Hook\Dispatcher;
 
 class EcjiaAutoloadSubscriber
@@ -60,6 +62,22 @@ class EcjiaAutoloadSubscriber
         spl_autoload_unregister(array($this, 'auto_load_classes'));
     }
 
+    /**
+     * 更新上传路径动态更新
+     */
+    public function onUpdateCustomStoragePathAction()
+    {
+        if (RC_Config::get('site.custom_upload_path')) {
+            RC_Config::set('storage.disks.direct.root', RC_Upload::custom_upload_path());
+            RC_Config::set('storage.disks.local.root', RC_Upload::custom_upload_path());
+        }
+
+        if (RC_Config::get('site.custom_upload_url')) {
+            RC_Config::set('storage.disks.direct.url', RC_Upload::custom_upload_url());
+            RC_Config::set('storage.disks.local.url', RC_Upload::custom_upload_url());
+        }
+    }
+
 
     /**
      * Register the listeners for the subscriber.
@@ -71,14 +89,19 @@ class EcjiaAutoloadSubscriber
     {
         $events->addAction(
             'init',
-            'Ecjia\System\Subscribers\EcjiaAutoloadSubscriber@onAutoloadRegisterAction',
+            sprintf('%s@%s', __CLASS__, 'onAutoloadRegisterAction'),
             1
         );
 
         $events->addAction(
             'init',
-            'Ecjia\System\Subscribers\EcjiaAutoloadSubscriber@onManualLoadClassesAction',
+            sprintf('%s@%s', __CLASS__, 'onManualLoadClassesAction'),
             1
+        );
+
+        $events->addAction(
+            'init',
+            sprintf('%s@%s', __CLASS__, 'onUpdateCustomStoragePathAction')
         );
     }
 }
