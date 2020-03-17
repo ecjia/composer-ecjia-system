@@ -48,6 +48,7 @@ namespace Ecjia\System\Providers;
 
 use Ecjia\Component\App\AppManager;
 use Ecjia\Component\Framework\Ecjia;
+use RC_Service;
 use ReflectionClass;
 use Royalcms\Component\App\AppParentServiceProvider;
 use Ecjia\System\Plugin\PluginManager;
@@ -111,6 +112,8 @@ class SystemServiceProvider extends AppParentServiceProvider
         $this->registerSiteManager();
 
         $this->registerVersionManager();
+
+        $this->registerAppService();
 	}
 
     /**
@@ -177,7 +180,9 @@ class SystemServiceProvider extends AppParentServiceProvider
 
     /**
      * Register the App manager
-     * @return \Ecjia\System\Plugin\PluginManager
+     * \Ecjia\System\Plugin\PluginManager
+     *
+     * @return void
      */
     public function registerAppManager()
     {
@@ -188,7 +193,9 @@ class SystemServiceProvider extends AppParentServiceProvider
 	
 	/**
 	 * Register the Plugin manager
-	 * @return \Ecjia\System\Plugin\PluginManager
+     * \Ecjia\System\Plugin\PluginManager
+     *
+	 * @return void
 	 */
 	public function registerPluginManager() 
 	{
@@ -199,7 +206,9 @@ class SystemServiceProvider extends AppParentServiceProvider
 	
 	/**
 	 * Register the Theme manager
-	 * @return \Ecjia\System\Theme\ThemeManager
+     * \Ecjia\System\Theme\ThemeManager
+     *
+	 * @return void
 	 */
 	public function registerThemeManager()
 	{
@@ -210,7 +219,9 @@ class SystemServiceProvider extends AppParentServiceProvider
 	
 	/**
 	 * Register the Site manager
-	 * @return \Ecjia\System\Site\SiteManager
+     * \Ecjia\System\Site\SiteManager
+     *
+	 * @return void
 	 */
 	public function registerSiteManager()
 	{
@@ -221,14 +232,22 @@ class SystemServiceProvider extends AppParentServiceProvider
 	
 	/**
 	 * Register the Site manager
-	 * @return \Ecjia\System\Version\VersionManager
-	 */
+	 * \Ecjia\System\Version\VersionManager
+     *
+     * @return void
+     */
 	public function registerVersionManager()
 	{
 	    $this->royalcms->singleton('ecjia.version.manager', function($royalcms) {
 	        return new VersionManager($royalcms);
 	    });
 	}
+
+    protected function registerAppService()
+    {
+        RC_Service::addService('system_purview', 'system', 'Ecjia\System\Services\SystemPurviewService');
+        RC_Service::addService('system_menu', 'system', 'Ecjia\System\Services\SystemMenuService');
+    }
 
     /**
      * Get a list of files that should be compiled for the package.
