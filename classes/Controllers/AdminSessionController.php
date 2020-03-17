@@ -50,6 +50,7 @@ namespace Ecjia\System\Controllers;
 
 use admin_nav_here;
 use ecjia;
+use Ecjia\System\Admins\Sessions\SessionManager;
 use Ecjia\System\Models\AdminLogModel;
 use ecjia_admin;
 use ecjia_page;
@@ -79,7 +80,7 @@ class AdminSessionController extends ecjia_admin
 
     public function init()
     {
-        $this->admin_priv('logs_manage');
+        $this->admin_priv('session_manage');
 
         ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here(__('会话管理')));
 
@@ -87,51 +88,48 @@ class AdminSessionController extends ecjia_admin
             'id' => 'overview',
             'title' => __('概述'),
             'content' =>
-                '<p>' . __('欢迎访问ECJia智能后台管理员日志页面，可以在此查看管理员操作的一些记录信息。') . '</p>'
+                '<p>' . __('欢迎访问ECJia智能后台会员管理页面，可以在此查看用户登录操作的一些会话记录信息。') . '</p>'
         ));
 
-        ecjia_screen::get_current_screen()->set_help_sidebar(
-            '<p><strong>' . __('更多信息：') . '</strong></p>' .
-            '<p>' . __('<a href="https://ecjia.com/wiki/帮助:ECJia智能后台:系统设置#.E7.AE.A1.E7.90.86.E5.91.98.E6.97.A5.E5.BF.97" target="_blank">关于管理员日志帮助文档</a>') . '</p>'
-        );
+        $keys = (new SessionManager)->getKeys();
+//        dd($keys);
+//        $logs = $this->get_admin_logs(array_map('remove_xss', $_REQUEST));
 
-        $logs = $this->get_admin_logs(array_map('remove_xss', $_REQUEST));
-
-        //查询IP地址列表
-        $ip_list = [];
-        $ipdata = AdminLogModel::select('ip_address')->distinct()->get();
-        if (!empty($ipdata)){
-            $ip_list = $ipdata->map(function ($model) {
-                return $model->ip_address;
-            })->toArray();
-        }
+//        //查询IP地址列表
+//        $ip_list = [];
+//        $ipdata = AdminLogModel::select('ip_address')->distinct()->get();
+//        if (!empty($ipdata)){
+//            $ip_list = $ipdata->map(function ($model) {
+//                return $model->ip_address;
+//            })->toArray();
+//        }
 
 
-        // 查询管理员列表
-        $user_list = [];
-        $userdata = AdminLogModel::with(['admin_user_model' => function ($query) {
-            $query->select('user_id', 'user_name');
-        }])->select('user_id')->distinct()->get();
-
-        if (!empty($userdata)) {
-            $user_list = $userdata->mapWithKeys(function ($model) {
-                if (!empty($model->admin_user_model)) {
-                    $model->user_name = $model->admin_user_model->user_name;
-                } else {
-                    $model->user_name = __('佚名') . $model->user_id;
-                }
-
-                return [$model->user_id => $model->user_name];
-            });
-        }
+//        // 查询管理员列表
+//        $user_list = [];
+//        $userdata = AdminLogModel::with(['admin_user_model' => function ($query) {
+//            $query->select('user_id', 'user_name');
+//        }])->select('user_id')->distinct()->get();
+//
+//        if (!empty($userdata)) {
+//            $user_list = $userdata->mapWithKeys(function ($model) {
+//                if (!empty($model->admin_user_model)) {
+//                    $model->user_name = $model->admin_user_model->user_name;
+//                } else {
+//                    $model->user_name = __('佚名') . $model->user_id;
+//                }
+//
+//                return [$model->user_id => $model->user_name];
+//            });
+//        }
 
         $log_date = $this->buildDropLogDate();
 
-        $this->assign('ur_here', __('管理员日志'));
-        $this->assign('ip_list', $ip_list);
-        $this->assign('user_list', $user_list);
-        $this->assign('log_date', $log_date);
-        $this->assign('logs', $logs);
+        $this->assign('ur_here', __('会话管理'));
+//        $this->assign('ip_list', $keys);
+//        $this->assign('user_list', $user_list);
+//        $this->assign('log_date', $log_date);
+        $this->assign('logs', $keys);
 
         return $this->display('admin_logs.dwt');
     }
