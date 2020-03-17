@@ -53,4 +53,13 @@ class SessionManager
         return $this->connection->keys('*');
     }
 
+    public function getKeysWithValue()
+    {
+        $keys = $this->getKeys();
+
+        return collect($keys)->map(function ($item) {
+            return $this->connection->get($item);
+        })->all();
+    }
+
 }

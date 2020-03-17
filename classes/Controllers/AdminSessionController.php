@@ -91,8 +91,11 @@ class AdminSessionController extends ecjia_admin
                 '<p>' . __('欢迎访问ECJia智能后台会员管理页面，可以在此查看用户登录操作的一些会话记录信息。') . '</p>'
         ));
 
-        $keys = (new SessionManager)->getKeys();
-//        dd($keys);
+        $logs = (new SessionManager)->getKeys();
+
+
+
+//        dd($logs);
 //        $logs = $this->get_admin_logs(array_map('remove_xss', $_REQUEST));
 
 //        //查询IP地址列表
@@ -128,10 +131,10 @@ class AdminSessionController extends ecjia_admin
         $this->assign('ur_here', __('会话管理'));
 //        $this->assign('ip_list', $keys);
 //        $this->assign('user_list', $user_list);
-//        $this->assign('log_date', $log_date);
-        $this->assign('logs', $keys);
+        $this->assign('log_date', $log_date);
+        $this->assign('logs', $logs);
 
-        return $this->display('admin_logs.dwt');
+        return $this->display('admin_session.dwt');
     }
 
     /**
