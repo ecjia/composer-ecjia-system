@@ -8,11 +8,15 @@
 <!-- {/block} -->
 
 <!-- {block name="main_content"} -->
-	<div>
-		<h3 class="heading">
-			<!-- {if $ur_here}{$ur_here}{/if} -->
-		</h3>
-	</div>
+<div>
+	<h3 class="heading">
+		<!-- {if $ur_here}{$ur_here}{/if} -->
+	</h3>
+</div>
+<div id="myModal1" class="modal hide fade view-session-detail" style="height:430px;width:650px;"></div>
+
+
+
 	<div class="row-fluid">
 		<div class="control-group form-horizontal choose_list span12">
 			<form name="deleteForm" method="post" action="{url path='@admin_logs/batch_drop'}">
@@ -51,6 +55,7 @@
 					<td align="left">{$item.ttl_formatted}</td>
 					<td align="center">
                         <a class="no-underline" href='{url path="@admin_logs/init" args="user_id={$list.user_id}"}' title="{t}查看日志{/t}"><i class="fontello-icon-doc-text"></i></a>&nbsp;&nbsp;
+                        <a class="no-underline view-detail-modal" data-toggle="modal" data-backdrop="static" href="#myModal1" view-url='{url path="admincp/admin_session/detail" args="user_id={$list.user_id}"}'  title='查看详情'><i class="fontello-icon-eye"></i></a>
                         <a {if $list.action_list != 'all'}class="ajaxremove no-underline" data-toggle="ajaxremove" data-msg="{t}您确定要删除用户该用户吗？{/t}" href='{url path="@admin_user/remove" args="id={$list.user_id}"}'{else}class="nodel stop_color no-underline" href="javascript:;"{/if} title="{t}移除{/t}"><i class="fontello-icon-trash"></i></a>
                     </td>
 				</tr>

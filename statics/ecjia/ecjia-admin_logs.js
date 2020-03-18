@@ -4,6 +4,7 @@
 			admin.admin_logs.del();
 			admin.admin_logs.sift();
 			admin.admin_logs.search();
+			admin.admin_logs.detail();
 		},
 		del : function(){
 			$('form[name="deleteForm"]').on('submit', function(e){
@@ -47,7 +48,17 @@
 				if(userid == 'undefind')userid='';
 				ecjia.pjax(url + '&ip=' + ip + '&user_id=' + userid + '&keyword=' + keyword);
 			});
-		}
+		},
+		detail :function(){
+            $(".view-detail-modal").on('click', function (e) {
+            	e.preventDefault();
+                var $this = $(this);
+                var url = $this.attr('view-url');
+                $.post(url, function (data) {
+                	$('.view-session-detail').html(data.data);
+                }, 'json');
+			})
+        },
 	};
 
 })(ecjia.admin, jQuery);

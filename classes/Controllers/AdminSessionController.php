@@ -138,6 +138,24 @@ class AdminSessionController extends ecjia_admin
     }
 
     /**
+     * 查看详情
+     */
+    public function detail() {
+    	$this->admin_priv('session_manage');
+    
+    	$user_id = trim($_GET['user_id']);
+    	
+    	$session_info = [
+    		'user_id' => 1,
+    		'user_type' => 'admin'
+    	];
+    	$this->assign('session_info', $session_info);
+    	
+    	$data = $this->fetch('admin_session_detail.dwt');
+    	return $this->showmessage('', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('data' => $data));
+    }
+    
+    /**
      *  获取管理员操作记录
      * @param array $_GET , $_POST, $_REQUEST 参数
      * @return array ['list', 'page', 'desc']
