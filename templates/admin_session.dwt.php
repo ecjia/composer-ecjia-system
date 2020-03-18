@@ -38,6 +38,7 @@
 					<th class="w50">{t}Session Keys{/t}</th>
 					<th>{t}用户ID{/t}</th>
 					<th>{t}用户类型{/t}</th>
+					<th>{t}有效期{/t}</th>
 					<th>{t}操作{/t}</th>
 				</tr>
 			</thead>
@@ -47,6 +48,7 @@
 					<td class="first-cell" >{$key}</td>
 					<td align="left">{$item.session_user_id}</td>
 					<td align="left">{$item.session_user_type}</td>
+					<td align="left">{$item.ttl_formatted}</td>
 					<td align="left"></td>
 				</tr>
 				<!-- {foreachelse} -->

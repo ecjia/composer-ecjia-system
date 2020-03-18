@@ -83,6 +83,8 @@ class SessionManager
         return collect($keys)->mapWithKeys(function ($item) {
             $data = $this->connection->get($item);
             $sessionData = Serialize::unserialize($data);
+            $sessionData['ttl'] = $this->connection->ttl($item);
+            $sessionData['ttl_formatted'] = \RC_Format::seconds2days($sessionData['ttl']);
             $sessionKey = $this->sessionKeyExtract($item);
             return [$sessionKey => $sessionData];
         })->all();
@@ -98,6 +100,17 @@ class SessionManager
     {
         $prefix = $this->prefix . 'session:';
         return str_replace($prefix, '', $key);
+    }
+
+    /**
+     * 删除某个Session Key
+     * @param $key
+     */
+    public function deleteWithSessionKey($key)
+    {
+        $prefix = $this->prefix . 'session:';
+
+        $this->connection->del($key);
     }
 
 }

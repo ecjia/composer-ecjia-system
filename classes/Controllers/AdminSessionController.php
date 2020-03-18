@@ -131,7 +131,7 @@ class AdminSessionController extends ecjia_admin
         $this->assign('ur_here', __('会话管理'));
 //        $this->assign('ip_list', $keys);
 //        $this->assign('user_list', $user_list);
-        $this->assign('log_date', $log_date);
+//        $this->assign('log_date', $log_date);
         $this->assign('logs', $logs);
 
         return $this->display('admin_session.dwt');
