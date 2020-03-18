@@ -91,7 +91,7 @@ class AdminSessionController extends ecjia_admin
                 '<p>' . __('欢迎访问ECJia智能后台会员管理页面，可以在此查看用户登录操作的一些会话记录信息。') . '</p>'
         ));
 
-        $logs = (new SessionManager)->getKeys();
+        $logs = (new SessionManager)->getKeysWithValueUnSerialize();
 
 
 

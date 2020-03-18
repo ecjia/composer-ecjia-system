@@ -35,19 +35,23 @@
 		<table class="table table-striped" id="smpl_tbl">
 			<thead>
 				<tr>
-					<th class="w50">{t}编号{/t}</th>
-					<th>{t}操作记录{/t}</th>
+					<th class="w50">{t}Session Keys{/t}</th>
+					<th>{t}用户ID{/t}</th>
+					<th>{t}用户类型{/t}</th>
+					<th>{t}操作{/t}</th>
 				</tr>
 			</thead>
 			<tbody>
 				<!-- {foreach $logs as $key => $item} -->
 				<tr>
 					<td class="first-cell" >{$key}</td>
-					<td align="left">{$item}</td>
+					<td align="left">{$item.session_user_id}</td>
+					<td align="left">{$item.session_user_type}</td>
+					<td align="left"></td>
 				</tr>
 				<!-- {foreachelse} -->
 				<tr>
-					<td class="no-records" colspan="10">{t}没有找到任何记录{/t}</td>
+					<td class="no-records" colspan="4">{t}没有找到任何记录{/t}</td>
 				</tr>
 				<!-- {/foreach} -->
 			</tbody>
