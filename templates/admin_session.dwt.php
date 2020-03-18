@@ -49,7 +49,10 @@
 					<td align="left">{$item.session_user_id}</td>
 					<td align="left">{$item.session_user_type}</td>
 					<td align="left">{$item.ttl_formatted}</td>
-					<td align="left"></td>
+					<td align="center">
+                        <a class="no-underline" href='{url path="@admin_logs/init" args="user_id={$list.user_id}"}' title="{t}查看日志{/t}"><i class="fontello-icon-doc-text"></i></a>&nbsp;&nbsp;
+                        <a {if $list.action_list != 'all'}class="ajaxremove no-underline" data-toggle="ajaxremove" data-msg="{t}您确定要删除用户该用户吗？{/t}" href='{url path="@admin_user/remove" args="id={$list.user_id}"}'{else}class="nodel stop_color no-underline" href="javascript:;"{/if} title="{t}移除{/t}"><i class="fontello-icon-trash"></i></a>
+                    </td>
 				</tr>
 				<!-- {foreachelse} -->
 				<tr>
