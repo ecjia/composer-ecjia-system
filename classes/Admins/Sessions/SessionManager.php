@@ -63,6 +63,16 @@ class SessionManager
     }
 
     /**
+     * 根据条件搜索keys
+     * @param $search
+     */
+    public function getSearchKeys($search)
+    {
+        $key = $this->prefix . $search . '*';
+        return $this->connection->keys($key);
+    }
+
+    /**
      * 获取所有的Session Keys，并携带Values
      * @return array|mixed
      */
@@ -83,6 +93,17 @@ class SessionManager
     {
         $keys = $this->getKeys();
 
+        return $this->valueUnSerializeForKeys($keys)->all();
+    }
+
+    /**
+     * 根据输入的keys，获取keys数据，并反序列化解析
+     * @param $keys
+     *
+     * @return
+     */
+    public function valueUnSerializeForKeys($keys)
+    {
         return collect($keys)->mapWithKeys(function ($item) {
             $data = $this->connection->get($item);
             $sessionData = Serialize::unserialize($data);
@@ -90,7 +111,7 @@ class SessionManager
             $sessionData['ttl_formatted'] = \RC_Format::seconds2days($sessionData['ttl']);
             $sessionKey = $this->sessionValueExtract($item);
             return [$sessionKey => $sessionData];
-        })->all();
+        });
     }
 
     /**

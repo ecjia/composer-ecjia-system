@@ -16,27 +16,16 @@
 
 <div class="row-fluid">
     <div class="control-group form-horizontal choose_list span12">
-        <form name="deleteForm" method="post" action="{url path='@admin_logs/batch_drop'}">
-            <!-- 批量删除 -->
-            <select class="w110" name="log_date">
-                <option value="0">{t}选择日期{/t}</option>
-                <!-- {foreach from=$log_date item=list} -->
-                <option value="{$list.value}">{$list.label}</option>
-                <!-- {/foreach} -->
-            </select>
-            <input type="hidden" name="drop_type_date" value="true" />
-            <button class="btn f_l" type="submit">{t}批量删除{/t}</button>
-        </form>
-        <form class="f_r" name="searchForm" method="post" action="{url path='@admin_logs/init'}">
+        <form class="f_r" name="searchForm" method="post" action="{url path='@admin_session/init'}">
             <!-- 关键字 -->
-            <input type="text" name="keyword" size="15" placeholder="{t}请输入关键字{/t}" />
+            <input type="text" name="keyword" size="15" placeholder="{t}请输入Session Key{/t}" value="{if $keyword}{$keyword}{/if}" />
             <button class="btn" type="submit">{t}搜索{/t}</button>
         </form>
     </div>
     <table class="table table-striped" id="smpl_tbl">
         <thead>
             <tr>
-                <th class="w50">{t}Session Keys{/t}</th>
+                <th class="w300">{t}Session Keys{/t}</th>
                 <th>{t}用户ID{/t}</th>
                 <th>{t}用户类型{/t}</th>
                 <th>{t}有效期{/t}</th>

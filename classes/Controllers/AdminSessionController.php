@@ -101,7 +101,21 @@ class AdminSessionController extends ecjia_admin
             $logs = [];
         }
         else {
-            $logs = (new SessionManager($redis->getConnection()))->getKeysWithValueUnSerialize();
+
+            $keyword = $this->request->input('keyword');
+
+            $session = new SessionManager($redis->getConnection());
+
+            //搜索时
+            if (!empty($keyword)) {
+                $keys = $session->getSearchKeys($keyword);
+                $logs = $session->valueUnSerializeForKeys($keys)->all();
+
+                $this->assign('keyword', $keyword);
+            }
+            else {
+                $logs = $session->getKeysWithValueUnSerialize();
+            }
         }
 
         $this->assign('ur_here', __('会话管理'));
