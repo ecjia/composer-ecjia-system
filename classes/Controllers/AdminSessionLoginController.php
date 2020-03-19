@@ -5,6 +5,7 @@ namespace Ecjia\System\Controllers;
 
 
 use admin_nav_here;
+use Ecjia\Component\SessionLogins\SessionLoginsModel;
 use ecjia_admin;
 use ecjia_screen;
 
@@ -31,8 +32,9 @@ class AdminSessionLoginController extends ecjia_admin
                 '<p>' . __('欢迎访问ECJia智能后台会员管理页面，可以在此查看用户登录操作的一些会话记录信息。') . '</p>'
         ));
 
-
-        $logs = [];
+        $logs = SessionLoginsModel::get()->toArray();
+//        dd($logs);
+//        $logs = [];
 
 
 

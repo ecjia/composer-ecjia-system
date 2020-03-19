@@ -31,22 +31,27 @@
     <table class="table table-striped" id="smpl_tbl">
         <thead>
             <tr>
-                <th class="w300">{t}Session Key{/t}</th>
-                <th>{t}用户ID{/t}</th>
-                <th>{t}用户类型{/t}</th>
-                <th>{t}有效期{/t}</th>
-                <th>{t}操作{/t}</th>
+                <th class="w100">{t}Session Key{/t}</th>
+                <th class="w100">{t}用户类型{/t}</th>
+                <th class="w50">{t}用户ID{/t}</th>
+                <th>{t}User Agent{/t}</th>
+                <th>{t}登录时间{/t}</th>
+                <th>{t}登录IP{/t}</th>
+                <th>{t}来源{/t}</th>
+                <th class="w50">{t}操作{/t}</th>
             </tr>
         </thead>
         <tbody>
             <!-- {foreach $logs as $key => $item} -->
             <tr>
-                <td class="first-cell" >{$key}</td>
-                <td align="left">{$item.session_user_id}</td>
-                <td align="left">{$item.session_user_type}</td>
-                <td align="left">{$item.ttl_formatted}</td>
+                <td class="first-cell" >{$item.id}</td>
+                <td align="left">{$item.user_type}</td>
+                <td align="left">{$item.user_id}</td>
+                <td align="left">{$item.user_agent}</td>
+                <td align="left">{$item.login_time|ecjia_time_display}</td>
+                <td align="left">{$item.login_ip} ({$item.login_ip_location})</td>
+                <td align="left">{$item.from_type} {if $item.from_value}({$item.from_value}){/if}</td>
                 <td align="center">
-                    <a class="no-underline view-detail-modal" data-toggle="modal" data-backdrop="static" href="#myModal1" view-url='{url path="@admin_session/detail" args="key={$key}"}'  title='查看详情'><i class="fontello-icon-eye"></i></a>
                     <a {if $list.action_list != 'all'}class="ajaxremove no-underline" data-toggle="ajaxremove" data-msg="{t}您确定要删除该会话吗？{/t}" href='{url path="@admin_session/remove" args="key={$key}"}'{else}class="nodel stop_color no-underline" href="javascript:;"{/if} title="{t}移除{/t}"><i class="fontello-icon-trash"></i></a>
                 </td>
             </tr>
