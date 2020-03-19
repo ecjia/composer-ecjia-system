@@ -49,7 +49,9 @@ namespace Ecjia\System\Controllers;
 
 
 use admin_nav_here;
+use admin_notice;
 use ecjia;
+use Ecjia\System\Admins\Redis\RedisManager;
 use Ecjia\System\Admins\Sessions\SessionManager;
 use Ecjia\System\Models\AdminLogModel;
 use ecjia_admin;
@@ -91,7 +93,17 @@ class AdminSessionController extends ecjia_admin
                 '<p>' . __('欢迎访问ECJia智能后台会员管理页面，可以在此查看用户登录操作的一些会话记录信息。') . '</p>'
         ));
 
-        $logs = (new SessionManager)->getKeysWithValueUnSerialize();
+        $redis = new RedisManager();
+
+        if (! $redis->testConnection()) {
+            $warning = sprintf(__("当前功能需要依赖 Redis 支持，未检测到正确连接的Redis，请检查配置或安装Redis后再继续。<br />
+                Redis的配置可在 content/configs/database.php 中 connections.redis.session 进行配置，<br />
+                也可在根目录 .env 中进行配置，涉及到的配置项含有【REDIS_HOST】【REDIS_PORT】，请再次确认。
+            "));
+            ecjia_screen::get_current_screen()->add_admin_notice(new admin_notice($warning));
+        }
+
+        $logs = (new SessionManager($redis->getConnection()))->getKeysWithValueUnSerialize();
 
 
 
@@ -126,7 +138,7 @@ class AdminSessionController extends ecjia_admin
 //            });
 //        }
 
-        $log_date = $this->buildDropLogDate();
+//        $log_date = $this->buildDropLogDate();
 
         $this->assign('ur_here', __('会话管理'));
 //        $this->assign('ip_list', $keys);

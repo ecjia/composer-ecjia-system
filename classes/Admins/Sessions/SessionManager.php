@@ -10,15 +10,18 @@ class SessionManager
 {
     protected $prefix;
 
+    protected $redis;
+
     /**
-     * @var
+     * @var \Predis\Client
      */
     protected $connection;
 
-    public function __construct()
+    public function __construct($connection)
     {
         $this->prefix = $this->markPrefix();
-        $this->connection = $this->markConnection();
+//        $this->redis = new SessionManager;
+        $this->connection = $connection;
     }
 
     protected function markPrefix()
@@ -38,11 +41,6 @@ class SessionManager
     public function getPrefix()
     {
         return $this->prefix;
-    }
-
-    protected function markConnection()
-    {
-        return royalcms('redis')->connection('session');
     }
 
     public function getConnection()
