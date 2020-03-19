@@ -472,11 +472,18 @@ abstract class EcjiaController extends RoyalcmsController
 		// ALERT消息提醒
 		elseif ($type === ecjia::MSGTYPE_ALERT) {
             //alert支持PJAXurl的跳转
-            $url = '';
-            if (!empty($options) && !empty($options['pjaxurl'])) {
-                $url = $options['pjaxurl'];
+            if ($options instanceof PjaxShowMessageOption) {
+                $options->setMessage($message);
+                $options->setState($state);
+                return (new ShowMessage($message, $msgtype, $options))->getResponse();
             }
-            return $this->alert($message, $url);
+            else {
+                $url = '';
+                if (!empty($options) && !empty($options['pjaxurl'])) {
+                    $url = $options['pjaxurl'];
+                }
+                return $this->alert($message, $url);
+            }
         }
  
         // JSON消息提醒
