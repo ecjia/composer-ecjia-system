@@ -19,6 +19,9 @@ class DisplayAdminHeaderNavAction
         $menus = ecjia_admin_menu::singleton()->admin_menu();
         $menus_label = ecjia_admin_menu::singleton()->get_menu_label();
 
+        //移除顶部快捷菜单
+        unset($menus['shortcut']);
+
         echo '<ul class="nav" id="mobile-nav">' . PHP_EOL;
 
         foreach ($menus as $key => $group) {
