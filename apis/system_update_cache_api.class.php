@@ -55,7 +55,7 @@ class system_update_cache_api extends Component_Event_Api {
     public function call(&$options)
     {
 
-        $factory = new \Ecjia\System\Frameworks\CleanCache\CacheFactory();
+        $factory = new \Ecjia\Component\CleanCache\CacheFactory();
 
         $caches = array(
             $factory->component('application_cache'),
