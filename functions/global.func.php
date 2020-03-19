@@ -1182,4 +1182,11 @@ if (! function_exists('ecjia_filter_request_input'))
     }
 }
 
+if (! function_exists('ecjia_time_display'))
+{
+    function ecjia_time_display($time) {
+        return RC_Time::local_date(ecjia::config('time_format'), $time);
+    }
+}
+
 // end
