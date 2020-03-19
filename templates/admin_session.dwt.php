@@ -14,6 +14,12 @@
 	</h3>
 </div>
 
+<ul class="nav nav-pills">
+    <!-- {foreach $navs as $item} -->
+    <li class="{if $item.type eq 'all'}active{/if}"><a class="data-pjax" href='{$item.url}'>{$item.label} <span class="badge badge-info">{$item.count}</span></a></li>
+    <!-- {/foreach} -->
+</ul>
+
 <div class="row-fluid">
     <div class="control-group form-horizontal choose_list span12">
         <form class="f_r" name="searchForm" method="post" action="{url path='@admin_session/init'}">

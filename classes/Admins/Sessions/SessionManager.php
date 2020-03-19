@@ -152,4 +152,12 @@ class SessionManager
         $this->connection->del($key);
     }
 
+    /**
+     * 获取Session会话全部数量
+     */
+    public function count()
+    {
+        return $this->connection->dbsize();
+    }
+
 }

@@ -116,6 +116,17 @@ class AdminSessionController extends ecjia_admin
             else {
                 $logs = $session->getKeysWithValueUnSerialize();
             }
+
+            $navs = [
+                [
+                    'type' => 'all',
+                    'count' => $session->count(),
+                    'url' => RC_Uri::url('@admin_session/init'),
+                    'label' => __('全部')
+                ]
+            ];
+
+            $this->assign('navs', $navs);
         }
 
         $this->assign('ur_here', __('会话管理'));
