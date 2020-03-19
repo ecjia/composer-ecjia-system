@@ -28,6 +28,7 @@ class SystemMenuService
                 ecjia_admin::make_admin_menu('role_list', __('角色管理'), RC_Uri::url('@admin_role/init'), 2)->add_purview('role_manage'),
                 ecjia_admin::make_admin_menu('nav-header', 'Log', '', 10)->add_purview(array('logs_manage')),
                 ecjia_admin::make_admin_menu('admin_logs', __('管理员日志'), RC_Uri::url('@admin_logs/init'), 11)->add_purview(array('logs_manage', 'logs_drop')),
+                ecjia_admin::make_admin_menu('session_logins', __('登录日志'), RC_Uri::url('@admin_session_login/init'), 11)->add_purview(array('session_login_manage', 'session_login_drop')),
                 ecjia_admin::make_admin_menu('nav-header', 'Session', '', 20)->add_purview(array('session_manage')),
                 ecjia_admin::make_admin_menu('admin_session', __('会话管理'), RC_Uri::url('@admin_session/init'), 21)->add_purview(array('session_manage', 'session_drop')),
             )),
