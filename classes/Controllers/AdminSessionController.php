@@ -47,19 +47,15 @@
 
 namespace Ecjia\System\Controllers;
 
-
 use admin_nav_here;
 use admin_notice;
 use ecjia;
 use Ecjia\System\Admins\Redis\RedisManager;
 use Ecjia\System\Admins\Sessions\SessionManager;
-use Ecjia\System\Models\AdminLogModel;
 use ecjia_admin;
-use ecjia_page;
 use ecjia_screen;
 use RC_Script;
 use RC_Style;
-use RC_Time;
 use RC_Uri;
 
 class AdminSessionController extends ecjia_admin
@@ -101,49 +97,15 @@ class AdminSessionController extends ecjia_admin
                 也可在根目录 .env 中进行配置，涉及到的配置项含有【REDIS_HOST】【REDIS_PORT】，请再次确认。
             "));
             ecjia_screen::get_current_screen()->add_admin_notice(new admin_notice($warning));
+
+            $logs = [];
+        }
+        else {
+            $logs = (new SessionManager($redis->getConnection()))->getKeysWithValueUnSerialize();
         }
 
-        $logs = (new SessionManager($redis->getConnection()))->getKeysWithValueUnSerialize();
-
-
-
-//        dd($logs);
-//        $logs = $this->get_admin_logs(array_map('remove_xss', $_REQUEST));
-
-//        //查询IP地址列表
-//        $ip_list = [];
-//        $ipdata = AdminLogModel::select('ip_address')->distinct()->get();
-//        if (!empty($ipdata)){
-//            $ip_list = $ipdata->map(function ($model) {
-//                return $model->ip_address;
-//            })->toArray();
-//        }
-
-
-//        // 查询管理员列表
-//        $user_list = [];
-//        $userdata = AdminLogModel::with(['admin_user_model' => function ($query) {
-//            $query->select('user_id', 'user_name');
-//        }])->select('user_id')->distinct()->get();
-//
-//        if (!empty($userdata)) {
-//            $user_list = $userdata->mapWithKeys(function ($model) {
-//                if (!empty($model->admin_user_model)) {
-//                    $model->user_name = $model->admin_user_model->user_name;
-//                } else {
-//                    $model->user_name = __('佚名') . $model->user_id;
-//                }
-//
-//                return [$model->user_id => $model->user_name];
-//            });
-//        }
-
-//        $log_date = $this->buildDropLogDate();
-
         $this->assign('ur_here', __('会话管理'));
-//        $this->assign('ip_list', $keys);
-//        $this->assign('user_list', $user_list);
-//        $this->assign('log_date', $log_date);
+
         $this->assign('logs', $logs);
 
         return $this->display('admin_session.dwt');
@@ -152,150 +114,50 @@ class AdminSessionController extends ecjia_admin
     /**
      * 查看详情
      */
-    public function detail() {
+    public function detail()
+    {
     	$this->admin_priv('session_manage');
     
-    	$user_id = trim($_GET['user_id']);
-    	
-    	$session_info = [
-    		'user_id' => 1,
-    		'user_type' => 'admin'
-    	];
-    	$this->assign('session_info', $session_info);
+    	$key = trim($this->request->input('key'));
+
+        $session = (new SessionManager())->getSessionKey($key);
+
+    	$this->assign('session_info', $session);
     	
     	$data = $this->fetch('admin_session_detail.dwt');
+
     	return $this->showmessage('', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('data' => $data));
     }
-    
+
     /**
-     *  获取管理员操作记录
-     * @param array $_GET , $_POST, $_REQUEST 参数
-     * @return array ['list', 'page', 'desc']
+     * 删除
      */
-    private function get_admin_logs($args = [])
+    public function remove()
     {
-        $user_id = !empty($args['user_id']) ? intval($args['user_id']) : 0;
-        $ip = !empty($args['ip']) ? $args['ip'] : '';
+        $this->admin_priv('session_manage');
 
-        $filter = [];
-        $filter['sort_by'] = !empty($args['sort_by']) ? safe_replace($args['sort_by']) : 'log_id';
-        $filter['sort_order'] = !empty($args['sort_order']) ? safe_replace($args['sort_order']) : 'DESC';
+        $key = trim($this->request->input('key'));
 
-        $keyword = !empty($args['keyword']) ? trim(htmlspecialchars($args['keyword'])) : '';
+        (new SessionManager())->deleteSessionKey($key);
 
-        $query = AdminLogModel::with(['admin_user_model' => function ($query) {
-            $query->select('user_id', 'user_name');
-        }]);
-
-        if (!empty($ip)) {
-            $query->where('ip_address', $ip);
-        }
-
-        if (!empty($keyword)) {
-            $query->where('log_info', 'like', "%{$keyword}%");
-        }
-
-        if (!empty($user_id)) {
-            $query->where('user_id', $user_id);
-        }
-
-        $filter['record_count'] = $query->count();
-
-        $page = new ecjia_page($filter['record_count'], 15, 6);
-
-        $query->orderBy($filter['sort_by'], $filter['sort_order']);
-
-        $query->skip($page->start_id - 1)->take($page->page_size);
-        $data = $query->get();
-
-        $list = [];
-        if (!empty($data)) {
-            $list = $data->map(function ($model) {
-                $model->user_name = empty($model->admin_user_model) ? __('佚名') . $model->user_id : $model->admin_user_model->user_name;
-                $model->log_time = RC_Time::local_date(ecjia::config('time_format'), $model['log_time']);
-                return $model;
-            })->toArray();
-        }
-
-        return [
-            'list' => $list,
-            'page' => $page->show(5),
-            'desc' => $page->page_desc()
-        ];
+        return $this->showmessage('删除成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS);
     }
 
     /**
-     * 批量删除日志记录
+     * 批量删除记录
      */
     public function batch_drop()
     {
-        $this->admin_priv('logs_drop');
+        $this->admin_priv('session_drop');
 
-        $drop_type_date = remove_xss($this->request->input('drop_type_date', ''));
+        $keys = trim($this->request->input('keys'));
 
-        /* 按日期删除日志 */
-        if (empty($drop_type_date)) {
-            return $this->redirect(RC_Uri::url('@admin_logs/init'));
-        }
 
-        $log_date_select = intval($this->request->input('log_date', 5));
-        if (empty($log_date_select)) {
-            return $this->redirect(RC_Uri::url('@admin_logs/init'));
-        }
 
-        $log_dates = $this->buildDropLogDate();
-        $log_date = collect($log_dates)->where('value', $log_date_select)->first();
-        if (empty($log_date)) {
-            return $this->redirect(RC_Uri::url('@admin_logs/init'));
-        }
-
-        AdminLogModel::where('log_time', '<=', $log_date['log_time'])->delete();
         /* 记录日志 */
-        ecjia_admin::admin_log(sprintf(__('删除 %s 的日志。'), $log_date['lable']), 'remove', 'adminlog');
+        ecjia_admin::admin_log(sprintf(__('删除 %s 的会话。'), ''), 'remove', 'admin_session');
 
         return $this->showmessage(sprintf(__('%s 的日志成功删除。'), $log_date['lable']), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('@admin_logs/init')));
     }
-
-    /**
-     * @return array
-     */
-    private function buildDropLogDate()
-    {
-        $gmtime = RC_Time::gmtime();
-
-        return [
-            [
-                'log_time' => $gmtime - (3600 * 24 * 7),
-                'label' => __('一周之前'),
-                'value' => 1,
-            ],
-
-            [
-                'log_time' => $gmtime - (3600 * 24 * 30),
-                'label' => __('一个月前'),
-                'value' => 2,
-            ],
-
-            [
-                'log_time' => $gmtime - (3600 * 24 * 90),
-                'label' => __('三个月前'),
-                'value' => 3,
-            ],
-
-            [
-                'log_time' => $gmtime - (3600 * 24 * 180),
-                'label' => __('半年之前'),
-                'value' => 4,
-            ],
-
-            [
-                'log_time' => $gmtime - (3600 * 24 * 365),
-                'label' => __('一年之前'),
-                'value' => 5,
-            ],
-
-        ];
-    }
-
 
 }

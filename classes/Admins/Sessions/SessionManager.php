@@ -4,24 +4,27 @@
 namespace Ecjia\System\Admins\Sessions;
 
 
+use Ecjia\System\Admins\Redis\RedisManager;
 use Royalcms\Component\NativeSession\Serialize;
 
 class SessionManager
 {
     protected $prefix;
 
-    protected $redis;
-
     /**
      * @var \Predis\Client
      */
     protected $connection;
 
-    public function __construct($connection)
+    public function __construct($connection = null)
     {
         $this->prefix = $this->markPrefix();
-//        $this->redis = new SessionManager;
-        $this->connection = $connection;
+        if (is_null($connection)) {
+            $this->connection = (new RedisManager())->getConnection();
+        }
+        else {
+            $this->connection = $connection;
+        }
     }
 
     protected function markPrefix()
@@ -34,6 +37,8 @@ class SessionManager
         else {
             $prefix = 'ecjia_session:';
         }
+
+        $prefix .= 'session:';
 
         return $prefix;
     }
@@ -83,7 +88,7 @@ class SessionManager
             $sessionData = Serialize::unserialize($data);
             $sessionData['ttl'] = $this->connection->ttl($item);
             $sessionData['ttl_formatted'] = \RC_Format::seconds2days($sessionData['ttl']);
-            $sessionKey = $this->sessionKeyExtract($item);
+            $sessionKey = $this->sessionValueExtract($item);
             return [$sessionKey => $sessionData];
         })->all();
     }
@@ -94,19 +99,34 @@ class SessionManager
      * @param $key
      * @return string|string
      */
-    protected function sessionKeyExtract($key)
+    protected function sessionValueExtract($key)
     {
-        $prefix = $this->prefix . 'session:';
-        return str_replace($prefix, '', $key);
+        return str_replace($this->prefix, '', $key);
+    }
+
+    /**
+     * 获取某个Session Key的值
+     * @param $key
+     * @return array
+     * @throws \Exception
+     */
+    public function getSessionKey($key)
+    {
+        $key = $this->prefix . $key;
+
+        $value = $this->connection->get($key);
+        $value = Serialize::unserialize($value);
+
+        return $value;
     }
 
     /**
      * 删除某个Session Key
      * @param $key
      */
-    public function deleteWithSessionKey($key)
+    public function deleteSessionKey($key)
     {
-        $prefix = $this->prefix . 'session:';
+        $key = $this->prefix . $key;
 
         $this->connection->del($key);
     }

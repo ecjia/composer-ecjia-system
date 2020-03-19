@@ -4,24 +4,22 @@
 	<h3><span class="action_title">{t domain="store"}查看详情{/t}</span></h3>
 </div>
 <div class="modal-body">
-	<form class="form-horizontal" method="post" action="" name="Form">
-		<fieldset>
-			<div class="row-fluid priv_list">
-				<div class="control-group formSep">
-					<label class="control-label control-label-new">Session Keys：</label>
-					<div class="controls">
-						<span class="parent_name">{$session_info.keys}</span>
-					</div>
-				</div>
-				
-				<div class="control-group formSep">
-					<label class="control-label control-label-new">Session Keys：</label>
-					<div class="controls">
-						<span class="parent_name">{$session_info.keys}</span>
-					</div>
-				</div>
-				
-			</div>
-		</fieldset>
-	</form>
+	<div class="form-horizontal">
+        <div class="row-fluid priv_list">
+            <!-- {foreach $session_info as $key => $item} -->
+            <div class="control-group formSep">
+                <label class="control-label control-label-new">{$key}：</label>
+                <div class="controls">
+                    <span class="parent_name">{$item}</span>
+                </div>
+            </div>
+            <!-- {foreachelse} -->
+            <div class="control-group">
+                <div class="controls">
+                    <span class="parent_name">暂无记录！</span>
+                </div>
+            </div>
+            <!-- {/foreach} -->
+        </div>
+	</div>
 </div>
