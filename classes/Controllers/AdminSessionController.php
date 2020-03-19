@@ -170,5 +170,5 @@ class AdminSessionController extends ecjia_admin
 
         return $this->showmessage('删除成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS);
     }
-    
+
 }
