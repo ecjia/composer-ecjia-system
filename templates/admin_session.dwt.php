@@ -16,7 +16,7 @@
 
 <ul class="nav nav-pills">
     <!-- {foreach $navs as $item} -->
-    <li class="{if $item.type eq 'all'}active{/if}"><a class="data-pjax" href='{$item.url}'>{$item.label} <span class="badge badge-info">{$item.count}</span></a></li>
+    <li class="{if $item.type eq $current_type}active{/if}"><a class="data-pjax" href='{$item.url}'>{$item.label} <span class="badge badge-info">{$item.count}</span></a></li>
     <!-- {/foreach} -->
 </ul>
 

@@ -117,6 +117,8 @@ class AdminSessionController extends ecjia_admin
                 $logs = $session->getKeysWithValueUnSerialize();
             }
 
+            $current_type = $this->request->input('type', 'all');
+
             $navs = [
                 [
                     'type' => 'all',
@@ -126,6 +128,7 @@ class AdminSessionController extends ecjia_admin
                 ]
             ];
 
+            $this->assign('current_type', $current_type);
             $this->assign('navs', $navs);
         }
 
