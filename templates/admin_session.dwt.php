@@ -31,7 +31,7 @@
     <table class="table table-striped" id="smpl_tbl">
         <thead>
             <tr>
-                <th class="w300">{t}Session Keys{/t}</th>
+                <th class="w300">{t}Session Key{/t}</th>
                 <th>{t}用户ID{/t}</th>
                 <th>{t}用户类型{/t}</th>
                 <th>{t}有效期{/t}</th>
