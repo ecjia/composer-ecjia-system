@@ -35,7 +35,7 @@ class SystemPurviewService
             array('action_name' => __('分派权限'), 'action_code' => 'allot_priv', 'relevance'   => 'admin_manage'),
             array('action_name' => __('管理员添加/编辑'), 'action_code' => 'admin_manage', 'relevance'   => ''),
             array('action_name' => __('删除管理员'), 'action_code' => 'admin_drop', 'relevance'   => 'admin_manage'),
-            
+
             array('action_name' => __('管理日志列表'), 'action_code' => 'logs_manage', 'relevance'   => ''),
             array('action_name' => __('删除管理日志'), 'action_code' => 'logs_drop', 'relevance'   => 'logs_manage'),
             array('action_name' => __('会话管理'), 'action_code' => 'session_manage', 'relevance'   => ''),

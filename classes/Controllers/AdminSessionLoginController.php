@@ -32,8 +32,15 @@ class AdminSessionLoginController extends ecjia_admin
         ));
 
 
+        $logs = [];
 
 
+
+        $this->assign('ur_here', __('登录日志'));
+
+        $this->assign('logs', $logs);
+
+        return $this->display('admin_session_login.dwt');
     }
 
 }
