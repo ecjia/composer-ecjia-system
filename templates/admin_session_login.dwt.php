@@ -3,7 +3,7 @@
 
 <!-- {block name="footer"} -->
 <script type="text/javascript">
-	ecjia.admin.admin_logs.init();
+	// ecjia.admin.admin_logs.init();
 </script>
 <!-- {/block} -->
 
@@ -22,7 +22,7 @@
 
 <div class="row-fluid">
     <div class="control-group form-horizontal choose_list span12">
-        <form class="f_r" name="searchForm" method="post" action="{url path='@admin_session/init'}">
+        <form class="f_r" name="searchForm" method="post" action="{url path='@admin_session_login/init'}">
             <!-- 关键字 -->
             <input type="text" name="keyword" size="15" placeholder="{t}请输入Session Key{/t}" value="{if $keyword}{$keyword}{/if}" />
             <button class="btn" type="submit">{t}搜索{/t}</button>
@@ -52,7 +52,7 @@
                 <td align="left">{$item.login_ip} ({$item.login_ip_location})</td>
                 <td align="left">{$item.from_type} {if $item.from_value}({$item.from_value}){/if}</td>
                 <td align="center">
-                    <a {if $list.action_list != 'all'}class="ajaxremove no-underline" data-toggle="ajaxremove" data-msg="{t}您确定要删除该会话吗？{/t}" href='{url path="@admin_session/remove" args="key={$key}"}'{else}class="nodel stop_color no-underline" href="javascript:;"{/if} title="{t}移除{/t}"><i class="fontello-icon-trash"></i></a>
+                    <a class="ajaxremove no-underline" data-toggle="ajaxremove" data-msg="{t}您确定要删除该会话吗？{/t}" href='{url path="@admin_session_login/remove" args="key={$item.id}"}' title="{t}移除{/t}"><i class="fontello-icon-trash"></i></a>
                 </td>
             </tr>
             <!-- {foreachelse} -->

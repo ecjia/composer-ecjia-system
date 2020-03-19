@@ -170,22 +170,5 @@ class AdminSessionController extends ecjia_admin
 
         return $this->showmessage('删除成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS);
     }
-
-    /**
-     * 批量删除记录
-     */
-    public function batch_drop()
-    {
-        $this->admin_priv('session_drop');
-
-        $keys = trim($this->request->input('keys'));
-
-
-
-        /* 记录日志 */
-        ecjia_admin::admin_log(sprintf(__('删除 %s 的会话。'), ''), 'remove', 'admin_session');
-
-        return $this->showmessage(sprintf(__('%s 的日志成功删除。'), $log_date['lable']), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('@admin_logs/init')));
-    }
-
+    
 }
