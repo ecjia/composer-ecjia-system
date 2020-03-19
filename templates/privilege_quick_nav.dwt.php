@@ -3,7 +3,6 @@
 
 <!-- {block name="footer"} -->
 <script type="text/javascript">
-	ecjia.admin.privilege.edit();
     ecjia.admin.privilege.modif();
 </script>
 <!-- {/block} -->

@@ -16,7 +16,6 @@
 			admin.privilege.movemod();
 			admin.privilege.removeNav();
 			admin.privilege.searchNav();
-			admin.privilege.check_pwd();
 		},
 
 		/* list JS START */
@@ -178,7 +177,7 @@
 			}
 		},
 
-	/* password strength checker */
+		/* password strength checker */
 		check_pwd : function() {
 			$("#new_password").complexify({
 				minimumChars: '5',
