@@ -293,12 +293,12 @@ class AdminHookSubscriber
 
         $events->addAction(
             'admin_dashboard_left',
-            'Ecjia\System\Subscribers\AdminHookSubscriber@onAdminDashboardLeftAboutSystemAction'
+            sprintf('%s@%s', __CLASS__, 'onAdminDashboardLeftAboutSystemAction')
         );
 
         $events->addAction(
             'admin_dashboard_right',
-            'Ecjia\System\Subscribers\AdminHookSubscriber@onAdminDashboardRightLogAction'
+            sprintf('%s@%s', __CLASS__, 'onAdminDashboardRightLogAction')
         );
 
         /*
@@ -311,42 +311,42 @@ class AdminHookSubscriber
 
         $events->addAction(
             'display_admin_plugin_menus',
-            'Ecjia\System\Subscribers\AdminHookSubscriber@onDisplayAdminPluginMenusAction'
+            sprintf('%s@%s', __CLASS__, 'onDisplayAdminPluginMenusAction')
         );
 
         $events->addAction(
             'display_admin_privilege_menus',
-            'Ecjia\System\Subscribers\AdminHookSubscriber@onDisplayAdminPrivilegeMenusAction'
+            sprintf('%s@%s', __CLASS__, 'onDisplayAdminPrivilegeMenusAction')
         );
 
         $events->addAction(
             'ecjia_admin_dashboard_index',
-            'Ecjia\System\Subscribers\AdminHookSubscriber@onDisplayAdminUpgradeCheckedAction'
+            sprintf('%s@%s', __CLASS__, 'onDisplayAdminUpgradeCheckedAction')
         );
 
         $events->addAction(
             'ecjia_admin_dashboard_index',
-            'Ecjia\System\Subscribers\AdminHookSubscriber@onDisplayEcjiaLicenseCheckedAction'
+            sprintf('%s@%s', __CLASS__, 'onDisplayEcjiaLicenseCheckedAction')
         );
 
         $events->addAction(
             'ecjia_admin_dashboard_index',
-            'Ecjia\System\Subscribers\AdminHookSubscriber@onDisplayEcjiaCloudCheckedAction'
+            sprintf('%s@%s', __CLASS__, 'onDisplayEcjiaCloudCheckedAction')
         );
 
         $events->addAction(
             'ecjia_admin_login_after',
-            'Ecjia\System\Subscribers\AdminHookSubscriber@onRecordAdminSessionLoginsAction'
+            sprintf('%s@%s', __CLASS__, 'onRecordAdminSessionLoginsAction')
         );
 
         $events->addAction(
             'ecjia_admin_logout_before',
-            'Ecjia\System\Subscribers\AdminHookSubscriber@onAdminSessionLogoutRemoveAction'
+            sprintf('%s@%s', __CLASS__, 'onAdminSessionLogoutRemoveAction')
         );
 
         $events->addAction(
             'admin_head',
-            'Ecjia\System\Subscribers\AdminHookSubscriber@onIsSupportHeaderAction'
+            sprintf('%s@%s', __CLASS__, 'onIsSupportHeaderAction')
         );
 
         //hookers
@@ -399,7 +399,7 @@ class AdminHookSubscriber
         if (config('site.shop_type') == 'cityo2o') {
             $events->addAction(
                 'admin_dashboard_right',
-                'Ecjia\System\Subscribers\AdminHookSubscriber@onAdminDashboardRightProductNewsAction'
+                sprintf('%s@%s', __CLASS__, 'onAdminDashboardRightProductNewsAction')
             );
         }
 

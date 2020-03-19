@@ -76,21 +76,21 @@ class InstalledScreenSubscriber
         //action
         $events->addAction(
             'royalcms_default_controller',
-            'Ecjia\System\Subscribers\InstalledScreenSubscriber@onRoyalcmsDefaultControllerAction'
+            sprintf('%s@%s', __CLASS__, 'onRoyalcmsDefaultControllerAction')
         );
         $events->addAction(
             'ecjia_shop_closed',
-            'Ecjia\System\Subscribers\InstalledScreenSubscriber@onCustomShopClosedAction'
+            sprintf('%s@%s', __CLASS__, 'onCustomShopClosedAction')
         );
 
         //filter
         $events->addFilter(
             'ecjia_general_info_filter',
-            'Ecjia\System\Subscribers\InstalledScreenSubscriber@onEcjiaGeneralInfoFilter'
+            sprintf('%s@%s', __CLASS__, 'onEcjiaGeneralInfoFilter')
         );
         $events->addFilter(
             'page_title_suffix',
-            'Ecjia\System\Subscribers\InstalledScreenSubscriber@onPageTitleSuffixFilter'
+            sprintf('%s@%s', __CLASS__, 'onPageTitleSuffixFilter')
         );
 
 
