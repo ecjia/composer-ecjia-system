@@ -42,5 +42,7 @@ return array(
     'ecjia_loader'          => 'Ecjia\Component\Support\EcjiaLoader',
     'ecjia_installer'       => 'Ecjia\Component\Support\EcjiaInstaller',
 
+    'admin_menu'            => 'Ecjia\Component\Menu\AdminMenu',
+
 );
-dd(1);
+
