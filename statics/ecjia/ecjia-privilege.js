@@ -16,6 +16,7 @@
 			admin.privilege.movemod();
 			admin.privilege.removeNav();
 			admin.privilege.searchNav();
+			admin.privilege.edit_quick_nav();
 		},
 
 		/* list JS START */
@@ -27,7 +28,7 @@
 				var keyword 	= $this.find("input[name='keyword']").val();
 				var url 		= $this.attr('action');
 
-				if(keyword == "undefind")keyword='';
+				if (keyword === "undefind") keyword = '';
 				ecjia.pjax(url + "&key_type=" + key_type + "&keyword=" + keyword);
 			});
 		},
@@ -40,6 +41,22 @@
 		/* list JS END */
 
 		/* edit JS START */
+		edit_quick_nav : function() {
+			var $this = $('form[name="theForm"]');
+			var option = {
+				submitHandler:function(){
+					$this.ajaxSubmit({
+						type:"post",
+						dataType:"json",
+						success:function(data){
+							ecjia.admin.showmessage(data);
+						}
+					});
+				}
+			}
+			var options = $.extend(ecjia.admin.defaultOptions.validate, option);
+			$this.validate(options);
+		},
 		edit_admin : function() {
 			var $this = $('form[name="theForm"]');
 			var is_add = $this.hasClass('add');
