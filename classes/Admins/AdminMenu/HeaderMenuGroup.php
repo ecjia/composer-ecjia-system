@@ -122,7 +122,7 @@ class HeaderMenuGroup
                         return $menu;
                     }
 
-                    return null;
+                    return $menu;
                 }
                 else {
                     return null;

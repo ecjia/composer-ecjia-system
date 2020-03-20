@@ -4,6 +4,7 @@
 namespace Ecjia\System\Hookers;
 
 
+use Ecjia\System\Admins\AdminMenu\HeaderMenuGroup;
 use ecjia_admin_menu;
 
 class DisplayAdminHeaderNavAction
@@ -16,21 +17,18 @@ class DisplayAdminHeaderNavAction
      */
     public function handle()
     {
-        $menus = ecjia_admin_menu::singleton()->admin_menu();
-        $menus_label = ecjia_admin_menu::singleton()->get_menu_label();
-
-        //移除顶部快捷菜单
-        unset($menus['shortcut']);
+        $groups = (new HeaderMenuGroup())->getMenus();
 
         echo '<ul class="nav" id="mobile-nav">' . PHP_EOL;
 
-        foreach ($menus as $key => $group) {
-            if ($group) {
+        foreach ($groups as $key => $group) {
+            $menus = $group['menus'];
+            if (!empty($menus)) {
                 echo '<li class="dropdown">' . PHP_EOL;
-                echo '<a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="icon-list-alt icon-white"></i> ' . $menus_label[$key] . ' <b class="caret"></b></a>' . PHP_EOL;
+                echo '<a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="icon-list-alt icon-white"></i> ' . $group['label'] . ' <b class="caret"></b></a>' . PHP_EOL;
                 echo '<ul class="dropdown-menu">' . PHP_EOL;
 
-                foreach ($group as $k => $menu) {
+                foreach ($menus as $k => $menu) {
                     if ($menu->has_submenus) {
                         echo '<li class="dropdown">' . PHP_EOL;
                         if ($menu->link) {
