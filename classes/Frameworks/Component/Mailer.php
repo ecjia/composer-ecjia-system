@@ -72,9 +72,9 @@ class Mailer extends RoyalcmsMailer
      */
     protected static $swift_mailer;
 
-    public function __construct(Factory $views, Swift_Mailer $swift, Dispatcher $events = null)
+    public function __construct(string $name, Factory $views, Swift_Mailer $swift, Dispatcher $events = null)
     {
-        parent::__construct($views, $swift, $events);
+        parent::__construct($name, $views, $swift, $events);
 
         if (is_null(self::$swift_mailer)) {
             if (config('mail.driver') == 'smtp') {
