@@ -4,8 +4,7 @@
 namespace Ecjia\System\Hookers;
 
 
-use ecjia_admin;
-use ecjia_admin_menu;
+use Ecjia\System\Admins\AdminMenu\SidebarMenuGroup;
 use RC_Uri;
 
 class DisplayAdminSidebarNavAction
@@ -18,35 +17,37 @@ class DisplayAdminSidebarNavAction
      */
     public function handle()
     {
+        $groups = (new SidebarMenuGroup())->getMenus();
 
-        $menus = ecjia_admin_menu::singleton()->admin_menu();
-
-        //快捷菜单
-        if (!empty($menus['shortcut'])) {
-            $shortcut = ecjia_admin::make_admin_menu('shortcut', __('我的快捷菜单'), '', 0);
-            $shortcut->add_submenu($menus['shortcut']);
-            $this->displayMenus($shortcut, 100);
-        }
-
-        //应用菜单
-        if (!empty($menus['apps'])) {
-            foreach ($menus['apps'] as $k => $menu) {
-                $this->displayMenus($menu, $k);
+        if (!empty($groups)) {
+            foreach ($groups as $group) {
+                //应用菜单
+                if (!empty($group['menus'])) {
+                    foreach ($group['menus'] as $k => $menu) {
+                        $this->displayMenus($menu, $k, $group);
+                    }
+                }
             }
         }
-
     }
 
-    protected function displayMenus($menu, $k)
+    /**
+     * @param $menu
+     * @param $k
+     * @param \Ecjia\Component\Menu\MenuGroup\AbstractMenuGroup $group
+     */
+    protected function displayMenus($menu, $k, $group)
     {
+        $key = $group['group'] . $k;
+
         echo '<div class="accordion-group">';
         echo '<div class="accordion-heading">';
-        echo '<a class="accordion-toggle" href="#collapse' . $k . '" data-parent="#side_accordion" data-toggle="collapse">';
+        echo '<a class="accordion-toggle" href="#collapse_' . $key . '" data-parent="#side_accordion" data-toggle="collapse">';
         echo '<i class="icon-folder-close"></i> ' . $menu->name;
         echo '</a>';
         echo '</div>';
         if ($menu->has_submenus) {
-            echo '<div class="accordion-body collapse" id="collapse' . $k . '">';
+            echo '<div class="accordion-body collapse" id="collapse_' . $key . '">';
             echo '<div class="accordion-inner">';
             echo '<ul class="nav nav-list">';
             if ($menu->submenus) {

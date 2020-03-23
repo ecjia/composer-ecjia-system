@@ -5,7 +5,6 @@ namespace Ecjia\System\Hookers;
 
 
 use Ecjia\System\Admins\AdminMenu\HeaderMenuGroup;
-use ecjia_admin_menu;
 
 class DisplayAdminHeaderNavAction
 {

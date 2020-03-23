@@ -129,11 +129,11 @@ abstract class AbstractMenuGroup
             /**
              * @var \Ecjia\Component\Menu\MenuGroup\AbstractMenuGroup $menuGroup
              */
-            $menuGroup = new $group;
+            $menuGroup = new $group($apps);
             $data = [
                 'group' => $menuGroup->getGroup(),
                 'label' => $menuGroup->getLabel(),
-                'menus' => $menuGroup->loadAppMenus($apps),
+                'menus' => $menuGroup->getMenus(),
             ];
             return [$menuGroup->getGroup() => $data];
         })->all();
