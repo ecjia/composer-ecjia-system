@@ -346,7 +346,7 @@ class AdminUserController extends ecjia_admin
                 return $this->showmessage(__('两次输入的密码不一致！'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR, ['links' => $links]);
             }
 
-            $pm = ecjia_password::autoCompatibleDriver($new_password);
+            $pm = ecjia_password::driver('hash');
 
             $user_model->ec_salt  = rand(1, 9999);
             $user_model->password = $pm->createSaltPassword($new_password, $user_model->ec_salt);

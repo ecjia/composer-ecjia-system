@@ -245,9 +245,10 @@ class PrivilegeController extends ecjia_admin
             return $this->showmessage(__('您输入的帐号信息不正确。'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
         }
 
-        $pm = ecjia_password::autoCompatibleDriver($password);
-        if ($model['password'] != $pm->createSaltPassword($password)
-            && $model['password'] != $pm->createSaltPassword($password, $model['ec_salt'])
+        //从数据库中的密码获取兼容驱动
+        $pm = ecjia_password::autoCompatibleDriver($model->password);
+        if (! $pm->verifySaltPassword($password, null, $model['password'])
+            &&  ! $pm->verifySaltPassword($password, $model['ec_salt'], $model['password'])
         ) {
             return $this->showmessage(__('您输入的帐号信息不正确。'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
         }
@@ -370,8 +371,8 @@ class PrivilegeController extends ecjia_admin
         } else {
             /* 旧密与输入的密码比较是否相同 */
             $old_password = remove_xss($this->request->input('old_password'));
-            $pm = ecjia_password::autoCompatibleDriver($old_password);
-            if ($model->password != $pm->createSaltPassword($old_password, $model->ec_salt)) {
+            $pm = ecjia_password::autoCompatibleDriver($model->password);
+            if (! $pm->verifySaltPassword($old_password, $model->ec_salt, $model->password)) {
                 return $this->showmessage(__('输入的旧密码错误！'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
             }
 
