@@ -267,6 +267,7 @@ class PrivilegeController extends ecjia_admin
 
         if (empty($model['ec_salt'])) {
             $ec_salt = rand(1, 9999);
+            $pm = ecjia_password::driver('hash');
             $new_possword = $pm->createSaltPassword($password, $ec_salt);
             $model->ec_salt = $ec_salt;
             $model->password = $new_possword;
@@ -381,6 +382,8 @@ class PrivilegeController extends ecjia_admin
                 return $this->showmessage(__('两次输入的密码不一致！'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
             }
 
+            $pm = ecjia_password::driver('hash');
+            
             $ec_salt = rand(1, 9999);
             $model->ec_salt = $ec_salt;
             $model->password = $pm->createSaltPassword($new_password, $ec_salt);
