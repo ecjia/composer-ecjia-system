@@ -50,6 +50,7 @@ use ecjia;
 use Ecjia\System\Admins\Users\AdminUserModel;
 use Ecjia\System\Admins\Users\Password;
 use ecjia_admin;
+use ecjia_password;
 use RC_Api;
 use RC_ENV;
 use RC_Loader;
@@ -217,7 +218,10 @@ class GetPasswordController extends ecjia_admin
 
         $admin_id = $admin_model['user_id'];
         $admin_pass = $admin_model['password'];
-        $code = Password::generateResetPasswordHash($admin_id, $admin_pass, $rand_code);
+
+        $pm = ecjia_password::autoCompatibleDriver($admin_pass);
+
+        $code = $pm->generateResetPasswordHash($admin_id, $admin_pass, $rand_code);
         $reset_email = RC_Uri::url('@get_password/reset_pwd_form', array('uid' => $admin_id, 'code' => $code));
 
         /* 设置重置邮件模板所需要的内容信息 */
@@ -245,7 +249,6 @@ class GetPasswordController extends ecjia_admin
             'href' => RC_Uri::url('@privilege/login'),
         ]);
         return $this->showmessage($msg, $state, array('links' => $links));
-
     }
 
     public function reset_pwd_form()
@@ -273,7 +276,8 @@ class GetPasswordController extends ecjia_admin
         $password = $model['password'];
         $hash_code = $model->getMeta('forget_password_hash');
 
-        $status = Password::verifyResetPasswordHash($code, $adminid, $password, $hash_code);
+        $pm = ecjia_password::autoCompatibleDriver($password);
+        $status = $pm->verifyResetPasswordHash($code, $adminid, $password, $hash_code);
         if (empty($status)) {
             // 此链接不合法
             return $this->showmessage(__('此链接不合法!'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR, ['links' => $links]);
@@ -301,7 +305,8 @@ class GetPasswordController extends ecjia_admin
         $password = $model['password'];
         $hash_code = $model->getMeta('forget_password_hash');
 
-        $status = Password::verifyResetPasswordHash($code, $adminid, $password, $hash_code);
+        $pm = ecjia_password::autoCompatibleDriver($password);
+        $status = $pm->verifyResetPasswordHash($code, $adminid, $password, $hash_code);
 
         $links = ecjia_alert_links([
             'text' => __('返回'),
@@ -317,7 +322,7 @@ class GetPasswordController extends ecjia_admin
 
         // 更新管理员的密码
         $ec_salt = rand(1, 9999);
-        $model->password = Password::createSaltPassword($new_password, $ec_salt);
+        $model->password = $pm->createSaltPassword($new_password, $ec_salt);
         $model->ec_salt = $ec_salt;
         $result = $model->save();
 

@@ -55,17 +55,16 @@ use admin_nav_here;
 use ecjia;
 use Ecjia\Component\ShowMessage\Options\PjaxShowMessageOption;
 use Ecjia\System\Admins\Users\AdminUserModel;
-use Ecjia\System\Admins\Users\Password;
 use ecjia_admin;
 use ecjia_admin_log;
 use ecjia_admin_menu;
 use ecjia_app;
+use ecjia_password;
 use ecjia_screen;
 use RC_Cache;
 use RC_Cookie;
 use RC_Hook;
 use RC_Ip;
-use RC_Loader;
 use RC_Script;
 use RC_Session;
 use RC_Style;
@@ -246,8 +245,9 @@ class PrivilegeController extends ecjia_admin
             return $this->showmessage(__('您输入的帐号信息不正确。'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
         }
 
-        if ($model['password'] != Password::createSaltPassword($password)
-            && $model['password'] != Password::createSaltPassword($password, $model['ec_salt'])
+        $pm = ecjia_password::autoCompatibleDriver($password);
+        if ($model['password'] != $pm->createSaltPassword($password)
+            && $model['password'] != $pm->createSaltPassword($password, $model['ec_salt'])
         ) {
             return $this->showmessage(__('您输入的帐号信息不正确。'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
         }
@@ -266,7 +266,7 @@ class PrivilegeController extends ecjia_admin
 
         if (empty($model['ec_salt'])) {
             $ec_salt = rand(1, 9999);
-            $new_possword = Password::createSaltPassword($password, $ec_salt);
+            $new_possword = $pm->createSaltPassword($password, $ec_salt);
             $model->ec_salt = $ec_salt;
             $model->password = $new_possword;
         }
@@ -370,7 +370,8 @@ class PrivilegeController extends ecjia_admin
         } else {
             /* 旧密与输入的密码比较是否相同 */
             $old_password = remove_xss($this->request->input('old_password'));
-            if ($model->password != Password::createSaltPassword($old_password, $model->ec_salt)) {
+            $pm = ecjia_password::autoCompatibleDriver($old_password);
+            if ($model->password != $pm->createSaltPassword($old_password, $model->ec_salt)) {
                 return $this->showmessage(__('输入的旧密码错误！'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
             }
 
@@ -381,7 +382,7 @@ class PrivilegeController extends ecjia_admin
 
             $ec_salt = rand(1, 9999);
             $model->ec_salt = $ec_salt;
-            $model->password = Password::createSaltPassword($new_password, $ec_salt);
+            $model->password = $pm->createSaltPassword($new_password, $ec_salt);
 
             /* 如果修改密码，则需要将session中该管理员的数据清空 */
             RC_Session::session()->deleteSpecSession($_SESSION['admin_id'], 'admin'); // 删除session中该管理员的记录

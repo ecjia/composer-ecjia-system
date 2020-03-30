@@ -59,6 +59,7 @@ use Ecjia\System\Models\RoleModel;
 use ecjia_admin;
 use ecjia_admin_log;
 use ecjia_page;
+use ecjia_password;
 use ecjia_purview;
 use ecjia_screen;
 use RC_Script;
@@ -345,8 +346,10 @@ class AdminUserController extends ecjia_admin
                 return $this->showmessage(__('两次输入的密码不一致！'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR, ['links' => $links]);
             }
 
+            $pm = ecjia_password::autoCompatibleDriver($new_password);
+
             $user_model->ec_salt  = rand(1, 9999);
-            $user_model->password = Password::createSaltPassword($new_password, $user_model->ec_salt);
+            $user_model->password = $pm->createSaltPassword($new_password, $user_model->ec_salt);
         }
 
         $role_id    = remove_xss($this->request->input('select_role'));
