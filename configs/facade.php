@@ -30,6 +30,7 @@ return array(
     'ecjia_editor'          => 'Ecjia\Component\Editor\Facades\Editor',
     'ecjia_screen'          => 'Ecjia\Component\Screen\EcjiaScreen',
     'ecjia_purview'         => 'Ecjia\Component\Purview\EcjiaPurview',
+    'ecjia_password'        => 'Ecjia\Component\Password\Facades\Password',
     'ecjia_admin_log'       => 'Ecjia\Component\AdminLog\Facades\AdminLog',
     'ecjia_update_cache'    => 'Ecjia\Component\CleanCache\Facades\CleanCache',
 
