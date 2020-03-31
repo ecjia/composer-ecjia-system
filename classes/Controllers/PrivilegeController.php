@@ -54,6 +54,7 @@ namespace Ecjia\System\Controllers;
 use admin_nav_here;
 use ecjia;
 use Ecjia\Component\ShowMessage\Options\PjaxShowMessageOption;
+use Ecjia\System\Admins\PasswordLock\PasswordLock;
 use Ecjia\System\Admins\Users\AdminUserModel;
 use ecjia_admin;
 use ecjia_admin_log;
@@ -250,6 +251,15 @@ class PrivilegeController extends ecjia_admin
         if (! $pm->verifySaltPassword($password, null, $model['password'])
             &&  ! $pm->verifySaltPassword($password, $model['ec_salt'], $model['password'])
         ) {
+            $lock = new PasswordLock($model);
+            if ($lock->isLoginLock()) {
+                return $this->showmessage(sprintf(__('您登录失败的次数过多，请等%s秒后再进行尝试。'), $lock->getUnLockTime()), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+            }
+            else {
+                //记录一次失败
+                $lock->failed();
+            }
+
             return $this->showmessage(__('您输入的帐号信息不正确。'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
         }
 
