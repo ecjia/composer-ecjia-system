@@ -64,15 +64,22 @@ class MetaAbstract
     {
         $this->object_id = $id;
     }
-    
-    
+
+    /**
+     * @throws Exception
+     */
     protected function validateProperty()
     {
         if (!$this->meta_key || !$this->object_type || !$this->object_group || !$this->object_id) {
             throw new Exception("The class property must be setted.");
         }
     }
-    
+
+    /**
+     * @param $value
+     * @return mixed
+     * @throws Exception
+     */
     public function save($value)
     {
         $this->validateProperty();
@@ -104,8 +111,11 @@ class MetaAbstract
             return RC_DB::table('term_meta')->insert($data);
         }
     }
-    
-    
+
+    /**
+     * @return mixed
+     * @throws Exception
+     */
     public function exists()
     {
         $this->validateProperty();
@@ -116,8 +126,11 @@ class MetaAbstract
         ->where('meta_key', $this->meta_key)
         ->pluck('meta_id');
     }
-    
-    
+
+    /**
+     * @return mixed
+     * @throws Exception
+     */
     public function get()
     {
         $this->validateProperty();
