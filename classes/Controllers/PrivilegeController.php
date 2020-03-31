@@ -269,6 +269,10 @@ class PrivilegeController extends ecjia_admin
 
         $this->admin_session($model->user_id, $model->user_name, $model->action_list, $model->last_login);
 
+        // 登录成功，清除密码错误锁定
+        $lock = new PasswordLock($model);
+        $lock->clearTimes();
+
         if (empty($model['ec_salt']) || !ecjia_password::isHashPassword($model->password)) {
             $ec_salt = rand(1, 9999);
             $pm = ecjia_password::driver('hash');
