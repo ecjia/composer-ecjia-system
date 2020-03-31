@@ -166,7 +166,7 @@ class AdminUserController extends ecjia_admin
         /* 模板赋值 */
         $this->assign('ur_here', __('添加管理员'));
         $this->assign('action_link', array('href' => RC_Uri::url('@admin_user/init'), 'text' => __('管理员列表')));
-        $this->assign('form_link', RC_Uri::url('@admin_user/insert'));
+        $this->assign('form_action', RC_Uri::url('@admin_user/insert'));
         $this->assign('pjax_link', RC_Uri::url('@admin_user/edit'));
         $this->assign('action', 'add');
         $this->assign('select_role', $this->get_role_list());
@@ -203,11 +203,14 @@ class AdminUserController extends ecjia_admin
 
         /* 获取添加日期及密码 */
         $add_time    = RC_Time::gmtime();
-        $password    = md5($password);
+        $ec_salt     = rand(1, 9999);
+        $password    = ecjia_password::driver('hash')->createSaltPassword($password, $ec_salt);
+
         $insert_data = [
             'user_name'   => $user_name,
             'email'       => $email,
             'password'    => $password,
+            'ec_salt'     => $ec_salt,
             'add_time'    => $add_time,
             'role_id'     => $role_id,
             'action_list' => '',
