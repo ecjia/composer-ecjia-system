@@ -62,6 +62,7 @@ use ecjia_admin_menu;
 use ecjia_app;
 use ecjia_password;
 use ecjia_screen;
+use RC_Api;
 use RC_Cache;
 use RC_Cookie;
 use RC_Hook;
@@ -256,6 +257,7 @@ class PrivilegeController extends ecjia_admin
                 return $this->showmessage(sprintf(__('您登录失败的次数过多，请等%s秒后再进行尝试。'), $lock->getUnLockTime()), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
             }
             else {
+                RC_Hook::do_action('ecjia_admin_login_failed', $model);
                 //记录一次失败
                 $lock->failed();
             }
@@ -266,14 +268,6 @@ class PrivilegeController extends ecjia_admin
         RC_Hook::do_action('ecjia_admin_login_before', $model);
 
         $this->admin_session($model->user_id, $model->user_name, $model->action_list, $model->last_login);
-
-        //是否开启开店向导
-        $result = ecjia_app::validate_application('shopguide');
-        if (!is_ecjia_error($result)) {
-            if ($model['action_list'] == 'all' && empty($model['last_login'])) {
-                $_SESSION['shop_guide'] = true;
-            }
-        }
 
         if (empty($model['ec_salt']) || !ecjia_password::isHashPassword($model->password)) {
             $ec_salt = rand(1, 9999);

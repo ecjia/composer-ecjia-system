@@ -254,6 +254,17 @@ class AdminHookSubscriber
     }
 
     /**
+     * admin session logins with failed.
+     */
+    public function onRecordAdminSessionLoginFailedAction($model)
+    {
+        RC_Api::api('system', 'admin_session_logins', [
+            'user_id' => $model->user_id,
+            'from_type' => 'failed',
+        ]);
+    }
+
+    /**
      * admin session logout.
      */
     public function onAdminSessionLogoutRemoveAction()
@@ -337,6 +348,16 @@ class AdminHookSubscriber
         $events->addAction(
             'ecjia_admin_login_after',
             sprintf('%s@%s', __CLASS__, 'onRecordAdminSessionLoginsAction')
+        );
+
+        $events->addAction(
+            'ecjia_admin_login_failed',
+            sprintf('%s@%s', __CLASS__, 'onRecordAdminSessionLoginFailedAction')
+        );
+
+        $events->addAction(
+            'ecjia_admin_login_after',
+            'Ecjia\System\Hookers\DispalyShopGuideAction'
         );
 
         $events->addAction(
