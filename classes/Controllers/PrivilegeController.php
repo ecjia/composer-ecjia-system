@@ -247,12 +247,14 @@ class PrivilegeController extends ecjia_admin
             return $this->showmessage(__('您输入的帐号信息不正确。'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
         }
 
+        $lock = new PasswordLock($model);
+
         //从数据库中的密码获取兼容驱动
         $pm = ecjia_password::autoCompatibleDriver($model->password);
         if (! $pm->verifySaltPassword($password, null, $model['password'])
             &&  ! $pm->verifySaltPassword($password, $model['ec_salt'], $model['password'])
         ) {
-            $lock = new PasswordLock($model);
+
             if ($lock->isLoginLock()) {
                 return $this->showmessage(sprintf(__('您登录失败的次数过多，请等%s秒后再进行尝试。'), $lock->getUnLockTime()), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
             }
@@ -270,7 +272,6 @@ class PrivilegeController extends ecjia_admin
         $this->admin_session($model->user_id, $model->user_name, $model->action_list, $model->last_login);
 
         // 登录成功，清除密码错误锁定
-        $lock = new PasswordLock($model);
         $lock->clearTimes();
 
         if (empty($model['ec_salt']) || !ecjia_password::isHashPassword($model->password)) {
