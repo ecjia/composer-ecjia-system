@@ -45,12 +45,7 @@
 //  ---------------------------------------------------------------------------------
 //
 
-/**
- * Class ecjia_password
- *
- * @method static \Ecjia\Component\Password\PasswordInterface autoCompatibleDriver($password)
- * @method static \Ecjia\Component\Password\PasswordInterface driver($name = null)
- */
+
 class ecjia_password extends Ecjia\Component\Password\Facades\Password
 {
 

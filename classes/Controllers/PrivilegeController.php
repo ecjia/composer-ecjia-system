@@ -265,7 +265,7 @@ class PrivilegeController extends ecjia_admin
             }
         }
 
-        if (empty($model['ec_salt'])) {
+        if (empty($model['ec_salt']) || !ecjia_password::isHashPassword($model->password)) {
             $ec_salt = rand(1, 9999);
             $pm = ecjia_password::driver('hash');
             $new_possword = $pm->createSaltPassword($password, $ec_salt);
