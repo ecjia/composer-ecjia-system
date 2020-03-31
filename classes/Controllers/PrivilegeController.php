@@ -54,7 +54,7 @@ namespace Ecjia\System\Controllers;
 use admin_nav_here;
 use ecjia;
 use Ecjia\Component\ShowMessage\Options\PjaxShowMessageOption;
-use Ecjia\System\Admins\PasswordLock\PasswordLock;
+use Ecjia\Component\PasswordLock\PasswordLock;
 use Ecjia\System\Admins\Users\AdminUserModel;
 use ecjia_admin;
 use ecjia_admin_log;
