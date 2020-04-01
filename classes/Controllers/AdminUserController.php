@@ -189,6 +189,11 @@ class AdminUserController extends ecjia_admin
             return $this->showmessage(__('数据不完整'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
         }
 
+        /* 判断用户名和密码是否相等 */
+        if ($user_name == $password) {
+            return $this->showmessage(__('该管理员密码不能和管理员账号一样！'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+        }
+
         /* 判断管理员是否已经存在 */
         if ($user_name && AdminUserModel::where('user_name', $user_name)->count()) {
             return $this->showmessage(sprintf(__('该管理员 %s 已经存在！'), $user_name), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
