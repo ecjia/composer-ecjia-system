@@ -349,6 +349,11 @@ class AdminUserController extends ecjia_admin
                 'href' => 'javascript:history.back(-1)',
             ]);
 
+            /* 判断用户名和密码是否相等 */
+            if ($admin_name == $new_password) {
+                return $this->showmessage(__('该管理员密码不能和管理员账号一样！'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+            }
+
             /* 比较新密码和确认密码是否相同 */
             if ($new_password != remove_xss($this->request->input('pwd_confirm'))) {
                 return $this->showmessage(__('两次输入的密码不一致！'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR, ['links' => $links]);
