@@ -251,9 +251,7 @@ class PrivilegeController extends ecjia_admin
 
         //从数据库中的密码获取兼容驱动
         $pm = ecjia_password::autoCompatibleDriver($model->password);
-        if (! $pm->verifySaltPassword($password, null, $model['password'])
-            &&  ! $pm->verifySaltPassword($password, $model['ec_salt'], $model['password'])
-        ) {
+        if (! $pm->verifySaltPassword($model->password, $password, $model->ec_salt)) {
 
             if ($lock->isLoginLock()) {
                 return $this->showmessage(sprintf(__('您登录失败的次数过多，请等%s秒后再进行尝试。'), $lock->getUnLockTime()), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
