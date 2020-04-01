@@ -2,6 +2,7 @@
 
 namespace Ecjia\System\Services;
 
+use Ecjia\Component\QuickNav\QuickNav;
 use Ecjia\System\Admins\Users\AdminUserModel;
 use ecjia_admin;
 use RC_Cache;
@@ -51,12 +52,16 @@ class ShortcutMenuService
 
     protected function getUserNavList($user_id)
     {
-        $nav_list = AdminUserModel::where('user_id', $user_id)->pluck('nav_list');
+        $model = AdminUserModel::find($user_id);
+        $nav = new QuickNav($model);
+        $nav_list = $nav->get();
+
         if (!empty($nav_list)) {
-            $navs = explode(',', $nav_list);
-            $nav_list = collect($navs)->mapWithKeys(function ($item) {
+            $nav_list = collect($nav_list)->mapWithKeys(function ($item) {
                 $tmp = explode('|', $item);
-                return [$tmp[1] => $tmp[0]];
+                if (isset($tmp[0], $tmp[1])) {
+                    return [$tmp[1] => $tmp[0]];
+                }
             })->all();
         }
 

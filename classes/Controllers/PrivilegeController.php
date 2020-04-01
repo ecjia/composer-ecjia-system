@@ -55,6 +55,8 @@ use admin_nav_here;
 use ecjia;
 use Ecjia\Component\ShowMessage\Options\PjaxShowMessageOption;
 use Ecjia\Component\PasswordLock\PasswordLock;
+use Ecjia\System\Admins\AdminMenu\HeaderMenuGroup;
+use Ecjia\Component\QuickNav\QuickNav;
 use Ecjia\System\Admins\Users\AdminUserModel;
 use ecjia_admin;
 use ecjia_admin_log;
@@ -426,20 +428,25 @@ class PrivilegeController extends ecjia_admin
 
         ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here(__('设置个人导航菜单')));
 
-        $user_info = AdminUserModel::find($admin_id)->toArray();
-
-        /* 获取导航条 */
-        $nav_list = [];
-        if (!empty($user_info)) {
-            foreach (explode(',', $user_info['nav_list']) as $nav) {
-                $tmp = explode('|', $nav);
-                if (isset($tmp[0], $tmp[1])) {
-                    $nav_list[$tmp[1]] = $tmp[0];
-                }
-            }
+        $model = AdminUserModel::find($admin_id);
+        if (empty($model)) {
+            return $this->showmessage(__('非法操作！'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
         }
 
-        $menus_list = ecjia_admin_menu::singleton()->admin_menu();
+        $nav = new QuickNav($model);
+        $nav_list = $nav->get();
+
+        $nav_list = collect($nav_list)->mapWithKeys(function ($item) {
+            $tmp = explode('|', $item);
+            if (isset($tmp[0], $tmp[1])) {
+                return [$tmp[1] => $tmp[0]];
+            }
+        })->all();
+
+        $menus_list = (new HeaderMenuGroup)->getMenus();
+        $menus_list = collect($menus_list)->map(function ($item) {
+            return $item['menus'];
+        })->all();
 
         $this->assign('menus_list', $menus_list);
         $this->assign('nav_arr', $nav_list);
@@ -465,16 +472,17 @@ class PrivilegeController extends ecjia_admin
             return $this->showmessage(__('非法操作！'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
         }
 
-        $nav_list = join(',', array_map('remove_xss', $this->request->input('nav_list', [])));
-        $model->nav_list = $nav_list;
-        $model->save();
+        $nav_list = $this->request->input('nav_list', []);
+
+        $nav = new QuickNav($model);
+        $nav->save($nav_list);
 
         /* 记录管理员操作 */
         ecjia_admin_log::instance()->add_object('admin_quick_nav', __('个人导航'));
         ecjia_admin::admin_log($_SESSION['admin_name'], 'edit', 'admin_quick_nav');
 
         /* 清除用户缓存 */
-        RC_Cache::userdata_cache_delete('admin_navlist', $admin_id, true);
+        RC_Cache::userdata_cache_delete('admin_navlist', $admin_id, 'admin');
 
         return $this->showmessage('更新成功！', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS,
             (new PjaxShowMessageOption())->setPjaxurl(RC_Uri::url('@privilege/quick_nav'))
