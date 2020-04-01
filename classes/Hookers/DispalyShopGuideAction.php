@@ -3,6 +3,8 @@
 
 namespace Ecjia\System\Hookers;
 
+use ecjia_app;
+
 /**
  * 是否开启开店向导
  * Class DispalyShopGuideAction
