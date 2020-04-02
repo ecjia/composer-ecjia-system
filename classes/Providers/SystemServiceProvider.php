@@ -46,15 +46,15 @@
 //
 namespace Ecjia\System\Providers;
 
-use Ecjia\Component\App\AppManager;
-use Ecjia\Component\Framework\Ecjia;
 use RC_Service;
 use ReflectionClass;
 use Royalcms\Component\App\AppParentServiceProvider;
-use Ecjia\System\Plugin\PluginManager;
-use Ecjia\System\Theme\ThemeManager;
-use Ecjia\System\Frameworks\Site\SiteManager;
-use Ecjia\System\Version\VersionManager;
+use Ecjia\Component\App\AppManager;
+use Ecjia\Component\Framework\Ecjia;
+use Ecjia\Component\Plugin\PluginManager;
+use Ecjia\Component\Theme\ThemeManager;
+use Ecjia\Component\Site\SiteManager;
+use Ecjia\Component\Version\VersionManager;
 
 class SystemServiceProvider extends AppParentServiceProvider 
 {
@@ -180,7 +180,7 @@ class SystemServiceProvider extends AppParentServiceProvider
 
     /**
      * Register the App manager
-     * \Ecjia\System\Plugin\PluginManager
+     * \Ecjia\Component\Plugin\PluginManager
      *
      * @return void
      */
@@ -193,7 +193,7 @@ class SystemServiceProvider extends AppParentServiceProvider
 	
 	/**
 	 * Register the Plugin manager
-     * \Ecjia\System\Plugin\PluginManager
+     * \Ecjia\Component\Plugin\PluginManager
      *
 	 * @return void
 	 */
@@ -206,7 +206,7 @@ class SystemServiceProvider extends AppParentServiceProvider
 	
 	/**
 	 * Register the Theme manager
-     * \Ecjia\System\Theme\ThemeManager
+     * \Ecjia\Component\Theme\ThemeManager
      *
 	 * @return void
 	 */
@@ -219,7 +219,7 @@ class SystemServiceProvider extends AppParentServiceProvider
 	
 	/**
 	 * Register the Site manager
-     * \Ecjia\System\Site\SiteManager
+     * \Ecjia\Component\Site\SiteManager
      *
 	 * @return void
 	 */
@@ -232,7 +232,7 @@ class SystemServiceProvider extends AppParentServiceProvider
 	
 	/**
 	 * Register the Site manager
-	 * \Ecjia\System\Version\VersionManager
+	 * \Ecjia\Component\Version\VersionManager
      *
      * @return void
      */
@@ -270,7 +270,6 @@ class SystemServiceProvider extends AppParentServiceProvider
             $dir . "/Facades/VersionManager.php",
 
             $dir . "/Frameworks/Contracts/EcjiaSessionInterface.php",
-            $dir . "/Frameworks/Contracts/EcjiaTemplateFileLoader.php",
             $dir . "/Frameworks/Contracts/PaidOrderProcessInterface.php",
             $dir . "/Frameworks/Contracts/ScriptLoaderInterface.php",
             $dir . "/Frameworks/Contracts/StyleLoaderInterface.php",
@@ -287,9 +286,6 @@ class SystemServiceProvider extends AppParentServiceProvider
             $dir . "/Frameworks/Sessions/Handler/MysqlSessionHandler.php",
             $dir . "/Frameworks/Sessions/Handler/RedisSessionHandler.php",
 
-            $dir . "/Theme/ThemeManager.php",
-            $dir . "/Theme/Theme.php",
-            $dir . "/Theme/ParseThemeStyle.php",
 
             $dir . "/BaseController/BasicController.php",
             $dir . "/BaseController/EcjiaController.php",
