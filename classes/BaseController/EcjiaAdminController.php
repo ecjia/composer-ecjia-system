@@ -49,7 +49,7 @@ namespace Ecjia\System\BaseController;
 use admin_menu;
 use admin_nav_here;
 use ecjia;
-use Ecjia\System\Frameworks\Contracts\EcjiaTemplateFileLoader;
+use Ecjia\Component\Contracts\EcjiaTemplateFileLoader;
 use ecjia_admin_log;
 use ecjia_admin_menu;
 use ecjia_app;

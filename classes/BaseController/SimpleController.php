@@ -46,7 +46,7 @@
 //
 namespace Ecjia\System\BaseController;
 
-use Ecjia\System\Frameworks\Contracts\EcjiaTemplateFileLoader;
+use Ecjia\Component\Contracts\EcjiaTemplateFileLoader;
 use ecjia_view;
 use RC_File;
 use RC_Config;

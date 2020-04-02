@@ -4,7 +4,7 @@
 namespace Ecjia\System\BaseController;
 
 use ecjia;
-use Ecjia\System\Frameworks\Contracts\EcjiaTemplateFileLoader;
+use Ecjia\Component\Contracts\EcjiaTemplateFileLoader;
 use ecjia_app;
 use Ecjia_ThemeManager;
 use ecjia_view;
