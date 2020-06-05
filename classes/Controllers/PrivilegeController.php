@@ -270,15 +270,17 @@ class PrivilegeController extends ecjia_admin
 
         // 登录成功，清除密码错误锁定
         $lock->clearTimes();
-
-        if (empty($model['ec_salt']) || !ecjia_password::isHashPassword($model->password)) {
-            $ec_salt = rand(1, 9999);
-            $pm = ecjia_password::driver('hash');
-            $new_possword = $pm->createSaltPassword($password, $ec_salt);
-            $model->ec_salt = $ec_salt;
-            $model->password = $new_possword;
+        //有开启强制修改数据库32位非hash密码为64位hash密码
+        if (config('login.force_hash_password')) {
+        	if (empty($model['ec_salt']) || !ecjia_password::isHashPassword($model->password)) {
+        		$ec_salt = rand(1, 9999);
+        		$pm = ecjia_password::driver('hash');
+        		$new_possword = $pm->createSaltPassword($password, $ec_salt);
+        		$model->ec_salt = $ec_salt;
+        		$model->password = $new_possword;
+        	}
         }
-
+        
         $model->last_login = RC_Time::gmtime();
         $model->last_ip = RC_Ip::client_ip();
         $model->save();
