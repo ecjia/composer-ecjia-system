@@ -182,7 +182,7 @@ class GetPasswordController extends ecjia_admin
         RC_Loader::load_app_class('hooks.plugin_captcha', 'captcha', false);
 
         $gd_version = RC_ENV::gd_version();
-        if ((intval(ecjia::config('captcha')) && CaptchaEnum::CAPTCHA_ADMIN) && $gd_version > 0) {
+        if ((intval(ecjia::config('captcha')) & CaptchaEnum::CAPTCHA_ADMIN) && $gd_version > 0) {
             $this->assign('gd_version', $gd_version);
             $this->assign('random', mt_rand());
         }
