@@ -85,7 +85,7 @@ define('CART_AUCTION_GOODS',        2); // 拍卖商品
 define('CART_SNATCH_GOODS',         3); // 夺宝奇兵
 define('CART_EXCHANGE_GOODS',       4); // 积分商城
 define('CART_MOBILE_BUY_GOODS',     100);     //移动专享
-define('CART_CASHDESK_GOODS',       11);     //收银台
+//define('CART_CASHDESK_GOODS',       11);    //收银台（11PC那边有使用作别的类型购物车，有冲突）
 define('CART_STOREBUY_GOODS',       12);     //到店购物
 
 
