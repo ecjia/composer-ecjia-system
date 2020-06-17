@@ -44,13 +44,16 @@
 //
 //  ---------------------------------------------------------------------------------
 //
-defined('IN_ECJIA') or exit('No permission resources.');
+namespace Ecjia\System\Services;
+
+use ecjia_error;
+
 /**
  * 平台管理员登录记录
  * @author royalwang
  *
  */
-class system_admin_session_logins_api extends Component_Event_Api
+class AdminSessionLoginsService
 {
     /**
      * user_id
@@ -58,7 +61,7 @@ class system_admin_session_logins_api extends Component_Event_Api
      * from_value
      * @param array $options
      */
-    public function call(&$options)
+    public function handle(& $options)
     {
         $user_id = array_get($options, 'user_id');
         $from_type = array_get($options, 'from_type');

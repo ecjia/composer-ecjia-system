@@ -1,5 +1,5 @@
 <?php
-//
+//  
 //    ______         ______           __         __         ______
 //   /\  ___\       /\  ___\         /\_\       /\_\       /\  __ \
 //   \/\  __\       \/\ \____        \/\_\      \/\_\      \/\ \_\ \
@@ -7,7 +7,7 @@
 //     \/_____/       \/_____/     \/__\/_/       \/_/       \/_/ /_/
 //
 //   上海商创网络科技有限公司
-//
+//   
 //  ---------------------------------------------------------------------------------
 //
 //   一、协议的许可和权利
@@ -44,23 +44,26 @@
 //
 //  ---------------------------------------------------------------------------------
 //
-defined('IN_ECJIA') or exit('No permission resources.');
+namespace Ecjia\System\Services;
+
+use ecjia_admin;
+use RC_Uri;
 
 /**
- * 后台服务菜单API
+ * 后台菜单API
  * @author royalwang
+ *
  */
-class system_service_menu_api extends Component_Event_Api {
+class PrivilegeMenuService
+{
 	
-	public function call(&$options) {
-
-        if (config('site.shop_type') == 'cityo2o') {
-            $menus = ecjia_admin::make_admin_menu('ecjia_appstore', __('应用市场'), 'https://appstore.ecjia.com', 1, '_blank');
-        } else {
-            $menus = null;
-        }
-
-		return $menus;
+	public function handle(& $options)
+    {
+	    $user_id = royalcms('request')->query('id');
+	    
+	    $admin_privilege_menu 	 = ecjia_admin::make_admin_menu('admin_privilege_menu', __('平台后台权限'), RC_Uri::url('@admin_user/allot', array('id' => $user_id)), 1)->add_purview('admin_privilege_menu');
+	    
+	    return $admin_privilege_menu;
 	}
 }
 
