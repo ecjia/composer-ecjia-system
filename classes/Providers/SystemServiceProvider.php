@@ -248,6 +248,7 @@ class SystemServiceProvider extends AppParentServiceProvider
         RC_Service::addService('system_purview', 'system', 'Ecjia\System\Services\SystemPurviewService');
         RC_Service::addService('system_menu', 'system', 'Ecjia\System\Services\SystemMenuService');
         RC_Service::addService('shortcut_menu', 'system', 'Ecjia\System\Services\ShortcutMenuService');
+        RC_Service::addService('update_cache', 'system', 'Ecjia\System\Services\UpdateCacheService');
     }
 
     /**
