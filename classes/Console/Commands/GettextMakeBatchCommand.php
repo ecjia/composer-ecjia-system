@@ -63,9 +63,9 @@ class GettextMakeBatchCommand extends Command
                 'ecjia:gettext-makepot ecjia-system content/system/',
             ];
 
-            $commands = array_merge($commands, $apps);
-            $commands = array_merge($commands, $plugins);
-            $commands = array_merge($commands, $themes);
+            if ($apps) $commands = array_merge($commands, $apps);
+            if ($plugins) $commands = array_merge($commands, $plugins);
+            if ($themes) $commands = array_merge($commands, $themes);
         }
 
         collect($commands)->each(function($item) {
@@ -98,8 +98,12 @@ class GettextMakeBatchCommand extends Command
         ];
 
         $items = collect($dirs)->map(function($item) {
-            $items = \RC_File::directories($item);
-            return $items;
+            if (\RC_File::isDirectory($item)) {
+                $items = \RC_File::directories($item);
+                return $items;
+            } else {
+                return [];
+            }
         })
             ->collapse()
             ->map(function($item) {
@@ -121,8 +125,12 @@ class GettextMakeBatchCommand extends Command
         ];
 
         $items = collect($dirs)->map(function($item) {
-            $items = \RC_File::directories($item);
-            return $items;
+            if (\RC_File::isDirectory($item)) {
+                $items = \RC_File::directories($item);
+                return $items;
+            } else {
+                return [];
+            }
         })
             ->collapse()
             ->map(function($item) {
@@ -149,8 +157,12 @@ class GettextMakeBatchCommand extends Command
         ];
 
         $items = collect($dirs)->map(function($item) {
-            $items = \RC_File::directories($item);
-            return $items;
+            if (\RC_File::isDirectory($item)) {
+                $items = \RC_File::directories($item);
+                return $items;
+            } else {
+                return [];
+            }
         })
             ->collapse()
             ->map(function($item) {
