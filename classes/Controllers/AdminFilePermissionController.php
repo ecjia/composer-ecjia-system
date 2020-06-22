@@ -53,8 +53,6 @@
 namespace Ecjia\System\Controllers;
 
 use ecjia_admin;
-use RC_Script;
-use RC_Style;
 use RC_Upload;
 use RC_File;
 use ecjia_screen;

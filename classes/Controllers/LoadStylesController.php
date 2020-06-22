@@ -11,7 +11,6 @@ namespace Ecjia\System\Controllers;
 use ecjia;
 use ecjia_admin;
 use RC_Style;
-use RC_Uri;
 use RC_File;
 
 class LoadStylesController extends ecjia_admin

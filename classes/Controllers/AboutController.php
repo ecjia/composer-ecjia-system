@@ -48,13 +48,9 @@ namespace Ecjia\System\Controllers;
 
 use Ecjia\System\Admins\System\SystemChecker;
 use ecjia_admin;
-use RC_ENV;
-use RC_Hook;
-use RC_Model;
 use RC_Script;
 use RC_Uri;
 use ecjia_screen;
-use ecjia;
 use admin_nav_here;
 
 /**
