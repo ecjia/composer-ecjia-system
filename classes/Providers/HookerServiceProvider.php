@@ -46,6 +46,13 @@ class HookerServiceProvider extends ServiceProvider
             'Ecjia\System\Hookers\EcjiaInstallApplicationBundleFilter',
         ],
 
+        'activated_application' => [
+            'Ecjia\System\Hookers\ActivatedApplicationAction',
+        ],
+
+        'deactivate_application' => [
+            'Ecjia\System\Hookers\DeactivateApplicationAction',
+        ],
     ];
 
     /**
