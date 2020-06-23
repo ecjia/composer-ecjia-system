@@ -52,7 +52,7 @@ class SystemChecker
 
     protected function checkRoyalcmsVersion()
     {
-        $this->system['royalcms_version']   = royalcms()->version();
+        $this->system['royalcms_version']   = royalcms()->royalcmsVersion();
         $this->system['royalcms_release']   = royalcms()->release();
     }
 
