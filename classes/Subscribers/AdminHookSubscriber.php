@@ -293,6 +293,12 @@ class AdminHookSubscriber
         }
     }
 
+    public function onAddCleanCacheComponentFilter($factories)
+    {
+        $factories['admin_user_menu_cache'] = 'Ecjia\System\Admins\CleanCacheComponent\AdminUserMenuCache';
+        return $factories;
+    }
+
     /**
      * Register the listeners for the subscriber.
      *
@@ -301,6 +307,11 @@ class AdminHookSubscriber
      */
     public function subscribe(Dispatcher $events)
     {
+
+        $events->addFilter(
+            'ecjia_clean_cache_component_filter',
+            sprintf('%s@%s', __CLASS__, 'onAddCleanCacheComponentFilter')
+        );
 
         $events->addAction(
             'admin_dashboard_left',

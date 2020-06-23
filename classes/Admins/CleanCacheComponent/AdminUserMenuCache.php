@@ -1,5 +1,5 @@
 <?php
-//  
+//
 //    ______         ______           __         __         ______
 //   /\  ___\       /\  ___\         /\_\       /\_\       /\  __ \
 //   \/\  __\       \/\ \____        \/\_\      \/\_\      \/\ \_\ \
@@ -7,7 +7,7 @@
 //     \/_____/       \/_____/     \/__\/_/       \/_/       \/_/ /_/
 //
 //   上海商创网络科技有限公司
-//   
+//
 //  ---------------------------------------------------------------------------------
 //
 //   一、协议的许可和权利
@@ -44,37 +44,53 @@
 //
 //  ---------------------------------------------------------------------------------
 //
-namespace Ecjia\System\Services;
-
 /**
- * 缓存管理API
- * @author royalwang
- *
+ * Created by PhpStorm.
+ * User: royalwang
+ * Date: 2018/7/23
+ * Time: 11:56 AM
  */
-class UpdateCacheService
+
+namespace Ecjia\System\Admins\CleanCacheComponent;
+
+
+use Ecjia\Component\CleanCache\CacheComponentAbstract;
+use Ecjia\System\Admins\AdminMenu\HeaderMenuGroup;
+use Ecjia\System\Admins\AdminMenu\SidebarMenuGroup;
+
+class AdminUserMenuCache extends CacheComponentAbstract
 {
-    
-    public function handle(& $options)
+
+    /**
+     * 代号标识
+     * @var string
+     */
+    protected $code = 'admin_user_menu_cache';
+
+    protected $app = 'system';
+
+    protected $relevance = [
+
+    ];
+
+    /**
+     * 排序
+     * @var int
+     */
+    protected $sort = 20;
+
+    public function __construct()
     {
-
-        $factory = new \Ecjia\Component\CleanCache\CacheFactory();
-
-        $caches = array(
-            $factory->component('service_provider_cache'),
-            $factory->component('application_cache'),
-            $factory->component('system_app_cache'),
-            $factory->component('system_userdata_cache'),
-            $factory->component('system_tablestruct_cache'),
-            $factory->component('system_query_cache'),
-            $factory->component('front_template_cache'),
-            $factory->component('admin_template_cache'),
-
-            $factory->component('admin_user_menu_cache'),
-        );
-
-        return $caches;
+        $this->name = __('后台用户菜单缓存');
+        $this->description = __('后台用户菜单缓存是后台每个用户登录后台看到的菜单数据的缓存。若遇到更改菜单有菜单不显示，则需要更新缓存后才可以查看最新效果。');
     }
-    
-}
 
-// end
+    public function handle()
+    {
+        //清除头部菜单缓存
+        (new HeaderMenuGroup())->cleanMenuCache();
+        //清除边栏菜单缓存
+        (new SidebarMenuGroup())->cleanMenuCache();
+    }
+
+}
