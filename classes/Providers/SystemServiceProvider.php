@@ -150,7 +150,7 @@ class SystemServiceProvider extends AppParentServiceProvider
      */
     protected function registerCommands()
     {
-        $commands = config('system::commands');
+        $commands = config('commands');
 
         $this->commands($commands);
     }
