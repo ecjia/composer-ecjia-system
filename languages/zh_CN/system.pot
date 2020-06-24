@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ecjia System 1.53\n"
 "Report-Msgid-Bugs-To: https://make.ecjia.com/polyglots/\n"
-"POT-Creation-Date: 2020-06-23 09:51:44+00:00\n"
+"POT-Creation-Date: 2020-06-24 08:18:13+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -249,7 +249,6 @@ msgstr ""
 
 #: classes/Controllers/AdminLogsController.php:121
 #: classes/Controllers/AdminLogsController.php:183
-#: classes/admin/ecjia_admin_message.class.php:151
 msgid "佚名"
 msgstr ""
 
