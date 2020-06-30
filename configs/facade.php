@@ -1,24 +1,17 @@
 <?php
 
 return array(
+    //ecjia component
+    'ecjia'                 => 'Ecjia\Component\Framework\Ecjia',
 
     'Ecjia_AppManager'      => 'Ecjia\Component\App\Facades\AppManager',
     'Ecjia_PluginManager'   => 'Ecjia\Component\Plugin\Facades\PluginManager',
-
-    'Ecjia_ThemeManager'    => 'Ecjia\System\Facades\ThemeManager',
-    'Ecjia_SiteManager'     => 'Ecjia\System\Facades\SiteManager',
-    'Ecjia_VersionManager'  => 'Ecjia\System\Facades\VersionManager',
-
-
-    //compatible
-    'ecjia'                 => 'Ecjia\Component\Framework\Ecjia',
-    'ecjia_base'            => 'Ecjia\System\BaseController\EcjiaController',
-    'ecjia_admin'           => 'Ecjia\System\BaseController\EcjiaAdminController',
-    'ecjia_front'           => 'Ecjia\System\BaseController\EcjiaFrontController',
+    'Ecjia_ThemeManager'    => 'Ecjia\Component\Facades\ThemeManager',
+    'Ecjia_SiteManager'     => 'Ecjia\Component\Facades\SiteManager',
+    'Ecjia_VersionManager'  => 'Ecjia\Component\Facades\VersionManager',
     'ecjia_config'          => 'Ecjia\Component\Config\Facades\Config',
     'ecjia_cloud'           => 'Ecjia\Component\EcjiaCloud\EcjiaCloud',
     'ecjia_license'         => 'Ecjia\Component\EcjiaLicense\EcjiaLicense',
-    'ecjia_error'           => 'Royalcms\Component\Error\Error',
     'ecjia_app'             => 'Ecjia\Component\App\Facades\AppManager',
     'ecjia_plugin'          => 'Ecjia\Component\Plugin\Facades\PluginManager',
     'ecjia_view'            => 'Ecjia\Component\View\Facades\View',
@@ -43,6 +36,17 @@ return array(
     'ecjia_loader'          => 'Ecjia\Component\Support\EcjiaLoader',
     'ecjia_installer'       => 'Ecjia\Component\Support\EcjiaInstaller',
 
+    // royalcms component
+    'ecjia_error'           => 'Royalcms\Component\Error\Error',
+
+
+    //compatible
+    'ecjia_base'            => 'Ecjia\System\BaseController\EcjiaController',
+    'ecjia_admin'           => 'Ecjia\System\BaseController\EcjiaAdminController',
+    'ecjia_front'           => 'Ecjia\System\BaseController\EcjiaFrontController',
+
+
+    
     'admin_menu'            => 'Ecjia\Component\Menu\AdminMenu',
 
 );
