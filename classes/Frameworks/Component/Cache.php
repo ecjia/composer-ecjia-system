@@ -216,7 +216,7 @@ class Cache extends RC_Object
      * Remove an item from the cache.
      *
      * @param  string  $key
-     * @return void
+     * @return bool
      */
     public function forget($key)
     {
@@ -226,7 +226,7 @@ class Cache extends RC_Object
     /**
      * Remove all items from the cache.
      *
-     * @return void
+     * @return bool
      */
     public function flush()
     {

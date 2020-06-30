@@ -57,7 +57,7 @@ interface UserAllotPurview
     
     /**
      * 保存权限值给指定用户
-     * @param unknown $value
+     * @param string $value
      */
     public function save($value);
     
