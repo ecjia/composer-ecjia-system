@@ -4,7 +4,7 @@
 namespace Ecjia\System\Mixins;
 
 
-use Ecjia\System\Frameworks\Component\Mailer;
+use Ecjia\Component\Mailer\Mailer;
 use RC_Hook;
 
 class EcjiaMailMixin
@@ -18,7 +18,7 @@ class EcjiaMailMixin
         return function ($name, $email, $subject, $content, $type = 0, $notification = false) {
 
             //hook
-            RC_Hook::add_action('reset_mail_config', ['Ecjia\System\Frameworks\Component\Mailer', 'ecjia_mail_config']);
+            RC_Hook::add_action('reset_mail_config', ['Ecjia\Component\Mailer\Mailer', 'ecjia_mail_config']);
 
             return (new Mailer(
                 config('mail.default'),
