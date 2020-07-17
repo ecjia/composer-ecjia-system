@@ -901,11 +901,11 @@ if (! function_exists('ecjia_cache'))
     /**
      * APP缓存对象获取
      * @param string $app
-     * @return \Ecjia\System\Frameworks\Component\Cache
+     * @return \Ecjia\Component\Cache\Cache
      */
     function ecjia_cache($app, $driver = null)
     {
-        return Ecjia\System\Frameworks\Component\Cache::singleton()->app($app, $driver);
+        return \Ecjia\Component\Cache\Cache::singleton()->app($app, $driver);
     }
 }
 
