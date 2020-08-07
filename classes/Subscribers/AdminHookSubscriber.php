@@ -52,7 +52,7 @@ class AdminHookSubscriber
         $title = __('操作日志');
         $data = RC_Cache::app_cache_get('admin_dashboard_admin_log', 'system');
         if (!$data) {
-            $data = RC_DB::table('admin_log')->select('admin_log.*', 'admin_user.user_name')->leftJoin('admin_user', 'admin_log.user_id', '=', 'admin_user.user_id')->orderBy('log_id', 'desc')->take(5)->get();
+            $data = RC_DB::connection(config('ecjia.database_connection', 'default'))->table('admin_log')->select('admin_log.*', 'admin_user.user_name')->leftJoin('admin_user', 'admin_log.user_id', '=', 'admin_user.user_id')->orderBy('log_id', 'desc')->take(5)->get();
             RC_Cache::app_cache_set('admin_dashboard_admin_log', $data, 'system', 30);
         }
 

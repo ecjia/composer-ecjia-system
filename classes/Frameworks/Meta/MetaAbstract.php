@@ -91,7 +91,7 @@ class MetaAbstract
                 'meta_value'    => $value,
             ];
             
-            return RC_DB::table('term_meta')->where('object_type', $this->object_type)
+            return RC_DB::connection(config('ecjia.database_connection', 'default'))->table('term_meta')->where('object_type', $this->object_type)
             ->where('object_group', $this->object_group)
             ->where('object_id', $this->object_id)
             ->where('meta_key', $this->meta_key)
@@ -108,7 +108,7 @@ class MetaAbstract
                 'meta_value'    => $value,
             ];
             
-            return RC_DB::table('term_meta')->insert($data);
+            return RC_DB::connection(config('ecjia.database_connection', 'default'))->table('term_meta')->insert($data);
         }
     }
 
@@ -120,7 +120,7 @@ class MetaAbstract
     {
         $this->validateProperty();
         
-        return RC_DB::table('term_meta')->select('meta_id')->where('object_type', $this->object_type)
+        return RC_DB::connection(config('ecjia.database_connection', 'default'))->table('term_meta')->select('meta_id')->where('object_type', $this->object_type)
         ->where('object_group', $this->object_group)
         ->where('object_id', $this->object_id)
         ->where('meta_key', $this->meta_key)
@@ -135,7 +135,7 @@ class MetaAbstract
     {
         $this->validateProperty();
         
-        return RC_DB::table('term_meta')->select('meta_value')->where('object_type', $this->object_type)
+        return RC_DB::connection(config('ecjia.database_connection', 'default'))->table('term_meta')->select('meta_value')->where('object_type', $this->object_type)
         ->where('object_group', $this->object_group)
         ->where('object_id', $this->object_id)
         ->where('meta_key', $this->meta_key)
