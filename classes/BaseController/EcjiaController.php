@@ -382,7 +382,7 @@ abstract class EcjiaController extends RoyalcmsController
      *
      * @param string $msg 显示内容
      */
-    protected function displayContent($content, $content_type = null)
+    public function displayContent($content, $content_type = null)
     {
         $response = royalcms('response');
         if ($content_type) {
