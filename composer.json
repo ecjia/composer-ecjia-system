@@ -1,0 +1,20 @@
+{
+  "name": "ecjia/system",
+  "type": "royalcms-system",
+  "license": "MIT",
+  "minimum-stability": "dev",
+  "authors": [
+    {
+      "name": "royalwang",
+      "email": "hxroyal@gmail.com"
+    }
+  ],
+  "extra": {
+    "branch-alias": {
+      "dev-master": "2.x-dev"
+    }
+  },
+  "require": {
+    "oomphinc/composer-installers-extender": "1.1.2"
+  }
+}
