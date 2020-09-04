@@ -9,6 +9,14 @@
       "email": "hxroyal@gmail.com"
     }
   ],
+  "autoload": {
+    "psr-4": {
+        "Ecjia\\System\\": ""
+    },
+    "classmap": [
+
+    ]
+},
   "extra": {
     "branch-alias": {
       "dev-master": "2.x-dev"
