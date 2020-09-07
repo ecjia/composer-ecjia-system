@@ -46,8 +46,18 @@
 //
 namespace Ecjia\System\Providers;
 
+use Ecjia\System\Mixins\EcjiaConfigMixin;
+use Ecjia\System\Mixins\EcjiaMailMixin;
+use Ecjia\System\Mixins\EcjiaSessionMixin;
+use RC_Hook;
+use RC_Loader;
+use RC_Locale;
+use RC_Mail;
+use RC_Response;
 use RC_Service;
+use RC_Session;
 use ReflectionClass;
+use Royalcms;
 use Royalcms\Component\App\AppParentServiceProvider;
 use Ecjia\Component\App\AppManager;
 use Ecjia\Component\Framework\Ecjia;
@@ -68,6 +78,30 @@ class SystemServiceProvider extends AppParentServiceProvider
         define('APPNAME', 'ECJIA');
         define('VERSION', Ecjia::VERSION);
         define('RELEASE', Ecjia::RELEASE);
+
+        // 加载扩展函数库
+        RC_Loader::auto_load_func();
+
+        // 请求数据自动转义
+        $_POST      = rc_addslashes($_POST);
+        $_GET       = rc_addslashes($_GET);
+        $_REQUEST   = rc_addslashes($_REQUEST);
+        $_COOKIE    = rc_addslashes($_COOKIE);
+
+        // Load the default text localization domain.
+        RC_Locale::loadDefaultTextdomain();
+
+        //加载项目函数库
+        RC_Loader::load_sys_func('functions');
+
+        /**
+         * Fires after Royalcms has finished loading but before any headers are sent.
+         *
+         * @since 1.5.0
+         */
+        RC_Hook::do_action('ecjia_loading');
+
+        RC_Hook::do_action('ecjia_loading_after');
     }
 
     /**
@@ -101,6 +135,8 @@ class SystemServiceProvider extends AppParentServiceProvider
 
         $this->registerFacades();
 
+        $this->registerMixins();
+
         $this->registerCommands();
 
         $this->registerAppManager();
@@ -114,6 +150,8 @@ class SystemServiceProvider extends AppParentServiceProvider
         $this->registerVersionManager();
 
         $this->registerAppService();
+
+        $this->registerErrorRender();
 	}
 
     /**
@@ -143,6 +181,19 @@ class SystemServiceProvider extends AppParentServiceProvider
                 $this->royalcms->register($item);
             });
         }
+    }
+
+    /**
+     * Register the mixins
+     */
+    protected function registerMixins()
+    {
+        //注册Session驱动
+        RC_Session::mixin(new EcjiaSessionMixin());
+        //注册邮件发送方法
+        RC_Mail::mixin(new EcjiaMailMixin());
+        //注册ecjia::config用法
+        Ecjia::mixin(new EcjiaConfigMixin());
     }
 
     /**
@@ -252,6 +303,46 @@ class SystemServiceProvider extends AppParentServiceProvider
         RC_Service::addService('service_menu', 'system', 'Ecjia\System\Services\ServiceMenuService');
         RC_Service::addService('privilege_menu', 'system', 'Ecjia\System\Services\PrivilegeMenuService');
         RC_Service::addService('admin_session_logins', 'system', 'Ecjia\System\Services\AdminSessionLoginsService');
+    }
+
+    /**
+     * Register the error render.
+     */
+    protected function registerErrorRender()
+    {
+        /*
+        |--------------------------------------------------------------------------
+        | Application Error Handler
+        |--------------------------------------------------------------------------
+        |
+        | Here you may handle any errors that occur in your application, including
+        | logging them or displaying custom views for specific errors. You may
+        | even register several error handlers to handle different types of
+        | exceptions. If nothing is returned, the default error view is
+        | shown, which includes a detailed stack trace during debug.
+        |
+        */
+        Royalcms::errorRender(new \Ecjia\Kernel\Exceptions\Renders\ExceptionRender());
+        Royalcms::errorRender(new \Ecjia\Kernel\Exceptions\Renders\ErrorExceptionRender());
+        Royalcms::errorRender(new \Ecjia\Kernel\Exceptions\Renders\FatalThrowableErrorRender());
+        Royalcms::errorRender(new \Ecjia\Kernel\Exceptions\Renders\NotFoundHttpExceptionRender());
+        Royalcms::errorRender(new \Ecjia\Kernel\Exceptions\Renders\HttpExceptionRender());
+
+        /*
+        |--------------------------------------------------------------------------
+        | Maintenance Mode Handler
+        |--------------------------------------------------------------------------
+        |
+        | The "down" Artisan command gives you the ability to put an application
+        | into maintenance mode. Here, you will define what is displayed back
+        | to the user if maintenance mode is in effect for the application.
+        |
+        */
+
+        Royalcms::down(function()
+        {
+            return RC_Response::make("Be right back!", 503);
+        });
     }
 
     /**
