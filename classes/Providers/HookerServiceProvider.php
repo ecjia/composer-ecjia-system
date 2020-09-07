@@ -53,6 +53,10 @@ class HookerServiceProvider extends ServiceProvider
         'deactivate_application' => [
             'Ecjia\System\Hookers\DeactivateApplicationAction',
         ],
+
+        'handle_403_error' => [
+            'Ecjia\System\Hookers\Handle403ErrorAction',
+        ],
     ];
 
     /**
