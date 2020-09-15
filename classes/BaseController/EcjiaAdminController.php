@@ -193,11 +193,11 @@ abstract class EcjiaAdminController extends EcjiaController implements EcjiaTemp
 	{
 	    $view = new ecjia_view($this);
 	    
-	    $view->setTemplateDir(SITE_SYSTEM_PATH . 'templates' . DIRECTORY_SEPARATOR);
+	    $view->setTemplateDir(royalcms()->systemPath('templates' . DIRECTORY_SEPARATOR));
 	    if (!in_array($this->get_template_dir(), $view->getTemplateDir())) {
 	        $view->addTemplateDir($this->get_template_dir());
 	    }
-	    $view->setCompileDir(TEMPLATE_COMPILE_PATH . 'admin' . DIRECTORY_SEPARATOR);
+	    $view->setCompileDir(storage_path('template/compiled/'. 'admin' . DIRECTORY_SEPARATOR));
 	    
 	    if (RC_Config::get('system.debug')) {
 	        $view->caching = Smarty::CACHING_OFF;
@@ -208,7 +208,8 @@ abstract class EcjiaAdminController extends EcjiaController implements EcjiaTemp
 	        $view->debugging = false;
 	        $view->force_compile = false;
 	    }
-	    
+
+        $view = RC_Hook::apply_filters('create_admin_view', $view);
 	    return $view;
 	}
 
