@@ -172,6 +172,13 @@ abstract class EcjiaController extends RoyalcmsController
         return $this->request;
     }
 
+    public function setResponse($response)
+    {
+        royalcms()->instance('response', $response);
+
+        return $response;
+    }
+
     protected function registerServiceProvider()
     {
         //sub class to do...
