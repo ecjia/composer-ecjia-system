@@ -44,7 +44,7 @@
 //
 //  ---------------------------------------------------------------------------------
 //
-namespace Ecjia\System\Services;
+namespace Ecjia\System\AdminPanel\Services;
 
 use ecjia_admin;
 use RC_Uri;

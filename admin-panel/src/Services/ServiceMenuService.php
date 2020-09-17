@@ -1,5 +1,5 @@
 <?php
-//  
+//
 //    ______         ______           __         __         ______
 //   /\  ___\       /\  ___\         /\_\       /\_\       /\  __ \
 //   \/\  __\       \/\ \____        \/\_\      \/\_\      \/\ \_\ \
@@ -7,7 +7,7 @@
 //     \/_____/       \/_____/     \/__\/_/       \/_/       \/_/ /_/
 //
 //   上海商创网络科技有限公司
-//   
+//
 //  ---------------------------------------------------------------------------------
 //
 //   一、协议的许可和权利
@@ -44,37 +44,28 @@
 //
 //  ---------------------------------------------------------------------------------
 //
-namespace Ecjia\System\Services;
+namespace Ecjia\System\AdminPanel\Services;
+
+use ecjia_admin;
 
 /**
- * 缓存管理API
+ * 后台服务菜单API
  * @author royalwang
- *
  */
-class UpdateCacheService
+class ServiceMenuService
 {
-    
-    public function handle(& $options)
+	
+	public function handle(& $options)
     {
 
-        $factory = new \Ecjia\Component\CleanCache\CacheFactory();
+        if (config('site.shop_type') == 'cityo2o') {
+            $menus = ecjia_admin::make_admin_menu('ecjia_appstore', __('应用市场'), 'https://appstore.ecjia.com', 1, '_blank');
+        } else {
+            $menus = null;
+        }
 
-        $caches = array(
-            $factory->component('service_provider_cache'),
-            $factory->component('application_cache'),
-            $factory->component('system_app_cache'),
-            $factory->component('system_userdata_cache'),
-            $factory->component('system_tablestruct_cache'),
-            $factory->component('system_query_cache'),
-            $factory->component('front_template_cache'),
-            $factory->component('admin_template_cache'),
-
-            $factory->component('admin_user_menu_cache'),
-        );
-
-        return $caches;
-    }
-    
+		return $menus;
+	}
 }
 
 // end

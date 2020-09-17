@@ -1,6 +1,6 @@
 <?php
 
-namespace Ecjia\System\Services;
+namespace Ecjia\System\AdminPanel\Services;
 
 
 /**

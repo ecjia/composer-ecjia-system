@@ -1,5 +1,5 @@
 <?php
-//
+//  
 //    ______         ______           __         __         ______
 //   /\  ___\       /\  ___\         /\_\       /\_\       /\  __ \
 //   \/\  __\       \/\ \____        \/\_\      \/\_\      \/\ \_\ \
@@ -7,7 +7,7 @@
 //     \/_____/       \/_____/     \/__\/_/       \/_/       \/_/ /_/
 //
 //   上海商创网络科技有限公司
-//
+//   
 //  ---------------------------------------------------------------------------------
 //
 //   一、协议的许可和权利
@@ -44,28 +44,40 @@
 //
 //  ---------------------------------------------------------------------------------
 //
-namespace Ecjia\System\Services;
+namespace Ecjia\System\AdminPanel\Services;
 
-use ecjia_admin;
+use ecjia_error;
 
 /**
- * 后台服务菜单API
+ * 平台管理员登录记录
  * @author royalwang
+ *
  */
-class ServiceMenuService
+class AdminSessionLoginsService
 {
-	
-	public function handle(& $options)
+    /**
+     * user_id
+     * from_type
+     * from_value
+     * @param array $options
+     */
+    public function handle(& $options)
     {
+        $user_id = array_get($options, 'user_id');
+        $from_type = array_get($options, 'from_type');
+        $from_value = array_get($options, 'from_value');
 
-        if (config('site.shop_type') == 'cityo2o') {
-            $menus = ecjia_admin::make_admin_menu('ecjia_appstore', __('应用市场'), 'https://appstore.ecjia.com', 1, '_blank');
-        } else {
-            $menus = null;
+        $session_id = session()->getId();
+
+        if (empty($user_id)) {
+            return new ecjia_error('invalid_parameter', __('参数无效'));
         }
 
-		return $menus;
-	}
+        (new \Ecjia\Component\SessionLogins\AdminSessionLogins($session_id, $user_id))->record($from_type, $from_value);
+
+        return true;
+    }
+    
 }
 
 // end

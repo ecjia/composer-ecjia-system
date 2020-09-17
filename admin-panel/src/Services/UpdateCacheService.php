@@ -44,38 +44,35 @@
 //
 //  ---------------------------------------------------------------------------------
 //
-namespace Ecjia\System\Services;
-
-use ecjia_error;
+namespace Ecjia\System\AdminPanel\Services;
 
 /**
- * 平台管理员登录记录
+ * 缓存管理API
  * @author royalwang
  *
  */
-class AdminSessionLoginsService
+class UpdateCacheService
 {
-    /**
-     * user_id
-     * from_type
-     * from_value
-     * @param array $options
-     */
+    
     public function handle(& $options)
     {
-        $user_id = array_get($options, 'user_id');
-        $from_type = array_get($options, 'from_type');
-        $from_value = array_get($options, 'from_value');
 
-        $session_id = session()->getId();
+        $factory = new \Ecjia\Component\CleanCache\CacheFactory();
 
-        if (empty($user_id)) {
-            return new ecjia_error('invalid_parameter', __('参数无效'));
-        }
+        $caches = array(
+            $factory->component('service_provider_cache'),
+            $factory->component('application_cache'),
+            $factory->component('system_app_cache'),
+            $factory->component('system_userdata_cache'),
+            $factory->component('system_tablestruct_cache'),
+            $factory->component('system_query_cache'),
+            $factory->component('front_template_cache'),
+            $factory->component('admin_template_cache'),
 
-        (new \Ecjia\Component\SessionLogins\AdminSessionLogins($session_id, $user_id))->record($from_type, $from_value);
+            $factory->component('admin_user_menu_cache'),
+        );
 
-        return true;
+        return $caches;
     }
     
 }
