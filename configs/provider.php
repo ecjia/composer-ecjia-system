@@ -15,6 +15,8 @@ return array(
     'Ecjia\System\Providers\EventServiceProvider',
     'Ecjia\System\Providers\HookerServiceProvider',
 
+    'Ecjia\System\AdminPanel\EcjiaAdminPanelServiceProvider',
+
 );
 
 //end
