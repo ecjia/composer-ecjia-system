@@ -296,13 +296,7 @@ class SystemServiceProvider extends AppParentServiceProvider
 
     protected function registerAppService()
     {
-        RC_Service::addService('system_purview', 'system', 'Ecjia\System\Services\SystemPurviewService');
-        RC_Service::addService('system_menu', 'system', 'Ecjia\System\Services\SystemMenuService');
-        RC_Service::addService('shortcut_menu', 'system', 'Ecjia\System\Services\ShortcutMenuService');
-        RC_Service::addService('update_cache', 'system', 'Ecjia\System\Services\UpdateCacheService');
-        RC_Service::addService('service_menu', 'system', 'Ecjia\System\Services\ServiceMenuService');
-        RC_Service::addService('privilege_menu', 'system', 'Ecjia\System\Services\PrivilegeMenuService');
-        RC_Service::addService('admin_session_logins', 'system', 'Ecjia\System\Services\AdminSessionLoginsService');
+
     }
 
     /**

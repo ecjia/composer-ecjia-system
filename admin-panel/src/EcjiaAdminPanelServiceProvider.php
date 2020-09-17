@@ -94,7 +94,13 @@ class EcjiaAdminPanelServiceProvider extends AppParentServiceProvider
 
     protected function registerAppService()
     {
-
+        RC_Service::addService('system_purview', 'system', 'Ecjia\System\AdminPanel\Services\SystemPurviewService');
+        RC_Service::addService('system_menu', 'system', 'Ecjia\System\AdminPanel\Services\SystemMenuService');
+        RC_Service::addService('shortcut_menu', 'system', 'Ecjia\System\AdminPanel\Services\ShortcutMenuService');
+        RC_Service::addService('update_cache', 'system', 'Ecjia\System\AdminPanel\Services\UpdateCacheService');
+        RC_Service::addService('service_menu', 'system', 'Ecjia\System\AdminPanel\Services\ServiceMenuService');
+        RC_Service::addService('privilege_menu', 'system', 'Ecjia\System\AdminPanel\Services\PrivilegeMenuService');
+        RC_Service::addService('admin_session_logins', 'system', 'Ecjia\System\AdminPanel\Services\AdminSessionLoginsService');
 
     }
 
