@@ -44,81 +44,104 @@
 //
 //  ---------------------------------------------------------------------------------
 //
-/**
- * Created by PhpStorm.
- * User: royalwang
- * Date: 2018/12/21
- * Time: 16:29
- */
-namespace Ecjia\System\Controllers;
+namespace Ecjia\System\AdminPanel\Controllers;
 
 use ecjia_admin;
-use RC_Upload;
-use RC_File;
+use RC_Script;
+use RC_Uri;
+use RC_Time;
 use ecjia_screen;
+use ecjia_config;
 use admin_nav_here;
+use ecjia;
 
 /**
  * ECJIA 在线升级
  */
-class AdminFilePermissionController extends ecjia_admin
+class UpgradeController extends ecjia_admin
 {
 
     public function __construct()
     {
         parent::__construct();
 
+        RC_Script::enqueue_script('jquery-dataTables');
+        RC_Script::enqueue_script('smoke');
+        RC_Script::enqueue_script('ecjia-admin_upgrade');
     }
 
 
-    /**
-     * 文件权限检测
-     */
     public function init()
     {
-        $this->admin_priv('file_priv');
+        $this->admin_priv('admin_upgrade');
 
-        ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here(__('文件权限检测')));
-        $this->assign('ur_here',	__('文件权限检测'));
+        ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here(__('可用更新')));
+        $this->assign('ur_here', __('可用更新'));
 
-        $Upload_Current_Path		= str_replace(SITE_ROOT, '', RC_Upload::upload_path());
-        $Cache_Current_Path			= str_replace(SITE_ROOT, '', SITE_CACHE_PATH);
+        ecjia_screen::get_current_screen()->add_help_tab(array(
+            'id'      => 'overview',
+            'title'   => __('概述'),
+            'content' =>
+                '<p>' . __('欢迎访问ECJia智能后台更新页面，在此可以进行对版本的更新。') . '</p>'
+        ));
 
-        $dir['content/configs']		        = str_replace(SITE_ROOT, '', SITE_CONTENT_PATH) . 'configs';
-        $dir['content/uploads']	            = $Upload_Current_Path;
-        $dir['content/caches']		        = $Cache_Current_Path;
+        ecjia_screen::get_current_screen()->set_help_sidebar(
+            '<p><strong>' . __('更多信息：') . '</strong></p>' .
+            '<p>' . __('<a href="https://ecjia.com/wiki/帮助:ECJia智能后台:可用更新" target="_blank">关于可用更新帮助文档</a>') . '</p>'
+        );
 
-        $list = array();
-        /* 检查目录 */
-        foreach ($dir AS $key => $val) {
-            $mark = RC_File::file_mode_info(SITE_ROOT . $val);
-            $list[] = array('item' => $key . __('目录'), 'r' => $mark&1, 'w' => $mark&2, 'm' => $mark&4);
-        }
+        $current_version = $this->request->query('version');
 
-        /* 检查smarty的缓存目录和编译目录及image目录是否有执行rename()函数的权限 */
-        $tpl_list   = array();
-        $tpl_dirs[] = $Cache_Current_Path . 'temp/template_caches';
-        $tpl_dirs[] = $Cache_Current_Path . 'temp/template_compiled';
-        $tpl_dirs[] = $Cache_Current_Path . 'temp/template_compiled/admin';
+        $result = (new \Ecjia\Component\UpgradeCheck\CloudCheck)->checkCurrentVersion();
+        if (!is_ecjia_error($result)) {
 
-        foreach ($tpl_dirs AS $dir) {
-            $mask = RC_File::file_mode_info(SITE_ROOT .$dir);
-            if (($mask & 4) > 0) {
-                /* 之前已经检查过修改权限，只有有修改权限才检查rename权限 */
-                if (($mask & 8) < 1) {
-                    $tpl_list[] = $dir;
+            $formatter = (new \Ecjia\Component\UpgradeCheck\ResultManager($result))->formatter();
+            if (!empty($formatter)) {
+                if (empty($current_version)) {
+                    $current_version = head($formatter)->getVersion();
                 }
-            }
-        }
-        $tpl_msg = implode(', ', $tpl_list);
-        $this->assign('list',		$list);
-        $this->assign('tpl_msg',	$tpl_msg);
-        $this->assign('nav_tabs',	$this->nav_tabs);
 
-        return $this->display('check_file_priv.dwt');
+                $version = collect($formatter)->first(function ($value, $key) use ($current_version) {
+                    return $value->getVersion() == $current_version;
+                });
+
+                $this->assign('current_version', $current_version);
+                $this->assign('versions', $formatter);
+                $this->assign('version', $version);
+            }
+
+        }
+
+        $last_check_upgrade_time = ecjia_config::get('last_check_upgrade_time', RC_Time::gmtime());
+        $last_check_upgrade_time = RC_Time::local_date('Y年m月d日 H:i:s', $last_check_upgrade_time);
+
+        $this->assign('action_link', array('text' => __('再次检查'), 'href' => RC_Uri::url('@upgrade/check_update')));
+        $this->assign('check_upgrade_time', $last_check_upgrade_time);
+
+        return $this->display('admin_upgrade.dwt');
     }
 
 
+    public function check_update()
+    {
+        $this->admin_priv('admin_upgrade', ecjia::MSGTYPE_JSON);
 
+        $result = (new \Ecjia\Component\UpgradeCheck\CloudCheck)->checkCurrentVersion();
+        if (is_ecjia_error($result)) {
+            return $this->showmessage($result->get_error_message(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+        }
+
+        $last_check_upgrade_time = RC_Time::gmtime();
+        ecjia_config::write('last_check_upgrade_time', $last_check_upgrade_time);
+
+        if (empty($result)) {
+            return $this->showmessage(__('你当前使用的已经是最新版本了。'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('@upgrade/init')));
+        }
+
+        $count = count($result);
+        return $this->showmessage(sprintf(__('已经检测到%s个新版本更新。'), $count), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('@upgrade/init')));
+    }
 
 }
+
+// end

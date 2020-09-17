@@ -45,7 +45,7 @@
 //  ---------------------------------------------------------------------------------
 //
 
-namespace Ecjia\System\Controllers;
+namespace Ecjia\System\AdminPanel\Controllers;
 
 
 use admin_nav_here;
@@ -84,8 +84,8 @@ class AdminLogsController extends ecjia_admin
         ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here(__('管理员日志')));
 
         ecjia_screen::get_current_screen()->add_help_tab(array(
-            'id' => 'overview',
-            'title' => __('概述'),
+            'id'      => 'overview',
+            'title'   => __('概述'),
             'content' =>
                 '<p>' . __('欢迎访问ECJia智能后台管理员日志页面，可以在此查看管理员操作的一些记录信息。') . '</p>'
         ));
@@ -99,8 +99,8 @@ class AdminLogsController extends ecjia_admin
 
         //查询IP地址列表
         $ip_list = [];
-        $ipdata = AdminLogModel::select('ip_address')->distinct()->get();
-        if (!empty($ipdata)){
+        $ipdata  = AdminLogModel::select('ip_address')->distinct()->get();
+        if (!empty($ipdata)) {
             $ip_list = $ipdata->map(function ($model) {
                 return $model->ip_address;
             })->toArray();
@@ -109,7 +109,7 @@ class AdminLogsController extends ecjia_admin
 
         // 查询管理员列表
         $user_list = [];
-        $userdata = AdminLogModel::with(['admin_user_model' => function ($query) {
+        $userdata  = AdminLogModel::with(['admin_user_model' => function ($query) {
             $query->select('user_id', 'user_name');
         }])->select('user_id')->distinct()->get();
 
@@ -144,10 +144,10 @@ class AdminLogsController extends ecjia_admin
     private function get_admin_logs($args = [])
     {
         $user_id = !empty($args['user_id']) ? intval($args['user_id']) : 0;
-        $ip = !empty($args['ip']) ? $args['ip'] : '';
+        $ip      = !empty($args['ip']) ? $args['ip'] : '';
 
-        $filter = [];
-        $filter['sort_by'] = !empty($args['sort_by']) ? safe_replace($args['sort_by']) : 'log_id';
+        $filter               = [];
+        $filter['sort_by']    = !empty($args['sort_by']) ? safe_replace($args['sort_by']) : 'log_id';
         $filter['sort_order'] = !empty($args['sort_order']) ? safe_replace($args['sort_order']) : 'DESC';
 
         $keyword = !empty($args['keyword']) ? trim(htmlspecialchars($args['keyword'])) : '';
@@ -181,7 +181,7 @@ class AdminLogsController extends ecjia_admin
         if (!empty($data)) {
             $list = $data->map(function ($model) {
                 $model->user_name = empty($model->admin_user_model) ? __('佚名') . $model->user_id : $model->admin_user_model->user_name;
-                $model->log_time = RC_Time::local_date(ecjia::config('time_format'), $model['log_time']);
+                $model->log_time  = RC_Time::local_date(ecjia::config('time_format'), $model['log_time']);
                 return $model;
             })->toArray();
         }
@@ -213,7 +213,7 @@ class AdminLogsController extends ecjia_admin
         }
 
         $log_dates = $this->buildDropLogDate();
-        $log_date = collect($log_dates)->where('value', $log_date_select)->first();
+        $log_date  = collect($log_dates)->where('value', $log_date_select)->first();
         if (empty($log_date)) {
             return $this->redirect(RC_Uri::url('@admin_logs/init'));
         }
@@ -235,32 +235,32 @@ class AdminLogsController extends ecjia_admin
         return [
             [
                 'log_time' => $gmtime - (3600 * 24 * 7),
-                'label' => __('一周之前'),
-                'value' => 1,
+                'label'    => __('一周之前'),
+                'value'    => 1,
             ],
 
             [
                 'log_time' => $gmtime - (3600 * 24 * 30),
-                'label' => __('一个月前'),
-                'value' => 2,
+                'label'    => __('一个月前'),
+                'value'    => 2,
             ],
 
             [
                 'log_time' => $gmtime - (3600 * 24 * 90),
-                'label' => __('三个月前'),
-                'value' => 3,
+                'label'    => __('三个月前'),
+                'value'    => 3,
             ],
 
             [
                 'log_time' => $gmtime - (3600 * 24 * 180),
-                'label' => __('半年之前'),
-                'value' => 4,
+                'label'    => __('半年之前'),
+                'value'    => 4,
             ],
 
             [
                 'log_time' => $gmtime - (3600 * 24 * 365),
-                'label' => __('一年之前'),
-                'value' => 5,
+                'label'    => __('一年之前'),
+                'value'    => 5,
             ],
 
         ];

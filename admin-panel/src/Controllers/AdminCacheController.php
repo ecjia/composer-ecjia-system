@@ -44,113 +44,94 @@
 //
 //  ---------------------------------------------------------------------------------
 //
-namespace Ecjia\System\Controllers;
+namespace Ecjia\System\AdminPanel\Controllers;
 
 use ecjia_admin;
 use RC_Script;
+use RC_Style;
 use RC_Uri;
 use ecjia_screen;
+use ecjia_update_cache;
+use ecjia;
 use admin_nav_here;
 
 /**
- * ECJIA 在线文件一致性检测
+ * ECJIA 更新缓存控制器
  */
-class AdminFilehashController extends ecjia_admin
+class AdminCacheController extends ecjia_admin
 {
-	private $sidebar_menus;
-	
-	public function __construct() {
-		parent::__construct();
 
-        @set_time_limit(0);
-
-		RC_Script::enqueue_script('jquery-dataTables');
-		RC_Script::enqueue_script('smoke');
-
-		$this->sidebar_menus = (new \Ecjia\System\Admins\FileHash\Menu())->getMenus();
-
-		$this->assign('sidebar_menus', $this->sidebar_menus);
-	}
-
-
-	/**
-	 * 文件校验结果显示
-	 */
-	public function init()
+    public function __construct()
     {
-		$this->admin_priv('file_check');
+        parent::__construct();
 
-        ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here(__('文件校验')));
+        RC_Style::enqueue_style('jquery-stepy');
+        RC_Style::enqueue_style('uniform-aristo');
+        RC_Script::enqueue_script('jquery-uniform');
+        RC_Script::enqueue_script('jquery-stepy');
+        RC_Script::enqueue_script('smoke');
+    }
 
-		$group = $this->request->query('group');
-		if (empty($group)) {
-		    $item = $this->sidebar_menus->first();
-            $group = $item['name'];
-        } else {
-            $item = $this->sidebar_menus->where('name', $group)->first();
-        }
-
-        $hash = new \Ecjia\System\Admins\FileHash\FileCheck($item['dir']);
-
-        $hashstatus = $hash->readHashFileStatus();
-        if (!empty($hashstatus)) {
-            $hashdata = (new \Ecjia\System\Admins\FileHash\CloudCheck())->checkCurrentVersion($item['dir']);
-
-            $new_result = $hash->readXmlFileHash();
-            $old_result = $hash->readXmlStringHash($hashdata);
-
-            if ($old_result && $new_result) {
-                $result = (new \Ecjia\System\Admins\FileHash\FileCheck($item['dir']))->compareHash($old_result, $new_result);
-                $formatterResult = new \Ecjia\System\Admins\FileHash\FormatterResult($result);
-                $dirlog = $formatterResult->formatter();
-                $counter = $formatterResult->counter();
-                $counterLabel = $formatterResult->counterLabel();
-
-                $this->assign('dirlog',     $dirlog);
-                $this->assign('counter',    $counter);
-                $this->assign('counter_label',    $counterLabel);
-            }
-
-        }
-
-        $this->assign('hashstatus', $hashstatus);
-        $this->assign('group',     $group);
-
-		$this->assign('ur_here', __('文件校验'));
-        $this->assign('action_link', array('text' => __('返回重新校验'), 'href' => RC_Uri::url('@admin_filehash/check', ['group' => $group])));
-
-		return $this->display('check_file_hash.dwt');
-	}
 
     /**
-     * 文件校验，是否变动
+     * 更新缓存
      */
-    public function check()
+    public function init()
     {
-        $this->admin_priv('file_check');
+        $this->admin_priv('admin_cache');
 
-        $group = $this->request->query('group');
-        if (empty($group)) {
-            $item = $this->sidebar_menus->first();
-            $group = $item['name'];
-        } else {
-            $item = $this->sidebar_menus->where('name', $group)->first();
+        ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here(__('更新缓存')));
+
+        ecjia_screen::get_current_screen()->add_help_tab(array(
+            'id'      => 'overview',
+            'title'   => __('概述'),
+            'content' =>
+                '<p>' . __('欢迎访问ECJia智能后台更新缓存页面，可以在此页面进行清除系统中缓存的操作。') . '</p>'
+        ));
+
+        ecjia_screen::get_current_screen()->set_help_sidebar(
+            '<p><strong>' . __('更多信息：') . '</strong></p>' .
+            '<p>' . __('<a href="https://ecjia.com/wiki/帮助:ECJia智能后台:更新缓存" target="_blank">关于清除缓存帮助文档</a>') . '</p>'
+        );
+
+        RC_Script::enqueue_script('ecjia-admin_cache');
+        RC_Style::enqueue_style('chosen');
+        RC_Script::enqueue_script('jquery-chosen');
+
+        $this->assign('ur_here', __('更新缓存'));
+
+        //js语言包调用
+        RC_Script::localize_script('ecjia-admin_cache', 'admin_cache_lang', config('system::jslang.cache_page'));
+
+        $res = ecjia_update_cache::loadGroupCache();
+
+        $this->assign('form_action', RC_Uri::url('@admin_cache/update_cache'));
+        $this->assign('cache_list', $res);
+        return $this->display('admin_cache.dwt');
+    }
+
+    /**
+     * 更新缓存
+     */
+    public function update_cache()
+    {
+        $this->admin_priv('admin_cache');
+
+        $cachekey = trim($_POST['cachekey']);
+
+        $result = ecjia_update_cache::clean($cachekey);
+
+        if (!empty($result)) {
+            if (is_ecjia_error($result[$cachekey])) {
+                //返回错误
+                return $this->showmessage($result->get_error_message(), ecjia::MSGSTAT_ERROR | ecjia::MSGTYPE_JSON, ['error' => 1]);
+            } else {
+                //返回成功
+                return $this->showmessage('', ecjia::MSGSTAT_SUCCESS | ecjia::MSGTYPE_JSON, ['error' => 0]);
+            }
         }
 
-        $hash = new \Ecjia\System\Admins\FileHash\FileCheck($item['dir']);
-        $result = $hash->builder();
-        $hash->writeFile($result);
-
-        $hashdata = (new \Ecjia\System\Admins\FileHash\CloudCheck())->checkCurrentVersion($item['dir']);
-
-        $new_result = $hash->readXmlFileHash();
-        $old_result = $hash->readXmlStringHash($hashdata);
-
-        if ($old_result && $new_result) {
-            $result = (new \Ecjia\System\Admins\FileHash\FileCheck($item['dir']))->compareHash($old_result, $new_result, true);
-        }
-
-        return $this->redirect(RC_Uri::url('@admin_filehash/init', ['group' => $group]));
+        return $this->showmessage('', ecjia::MSGSTAT_ERROR | ecjia::MSGTYPE_JSON, ['error' => 1]);
     }
 
 }

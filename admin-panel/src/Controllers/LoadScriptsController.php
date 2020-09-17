@@ -6,7 +6,7 @@
  * Time: 09:38
  */
 
-namespace Ecjia\System\Controllers;
+namespace Ecjia\System\AdminPanel\Controllers;
 
 use ecjia;
 use ecjia_admin;
@@ -27,31 +27,31 @@ class LoadScriptsController extends ecjia_admin
     {
 
         $load = $this->request->input('load');
-        if ( is_array( $load ) ) {
-            $load = implode( '', $load );
+        if (is_array($load)) {
+            $load = implode('', $load);
         }
-        $load = preg_replace( '/[^a-z0-9,_-]+/i', '', $load );
-        $load = array_unique( explode( ',', $load ) );
+        $load = preg_replace('/[^a-z0-9,_-]+/i', '', $load);
+        $load = array_unique(explode(',', $load));
 
-        if ( empty($load) ) {
+        if (empty($load)) {
             exit;
         }
 
         $expires_offset = 31536000; // 1 year
-        $out = '';
+        $out            = '';
 
 
-        foreach ( $load as $handle ) {
-            if ( !array_key_exists($handle, RC_Script::instance()->registered) )
+        foreach ($load as $handle) {
+            if (!array_key_exists($handle, RC_Script::instance()->registered))
                 continue;
 
             $path = RC_SYSTEM_PATH . 'statics' . RC_Script::instance()->registered[$handle]->src;
-            $out .= RC_File::get($path) . "\n";
+            $out  .= RC_File::get($path) . "\n";
         }
 
         header("Etag: " . ecjia::VERSION);
         header('Content-Type: text/css; charset=UTF-8');
-        header('Expires: ' . gmdate( "D, d M Y H:i:s", time() + $expires_offset ) . ' GMT');
+        header('Expires: ' . gmdate("D, d M Y H:i:s", time() + $expires_offset) . ' GMT');
         header("Cache-Control: public, max-age=$expires_offset");
 
         echo $out;

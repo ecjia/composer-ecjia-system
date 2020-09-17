@@ -45,7 +45,7 @@
 //  ---------------------------------------------------------------------------------
 //
 
-namespace Ecjia\System\Controllers;
+namespace Ecjia\System\AdminPanel\Controllers;
 
 /**
  * ECJIA 用户登录、修改个人信息及权限管理程序
@@ -250,12 +250,11 @@ class PrivilegeController extends ecjia_admin
 
         //从数据库中的密码获取兼容驱动
         $pm = ecjia_password::autoCompatibleDriver($model->password);
-        if (! $pm->verifySaltPassword($model->password, $password, $model->ec_salt)) {
+        if (!$pm->verifySaltPassword($model->password, $password, $model->ec_salt)) {
 
             if ($lock->isLoginLock()) {
                 return $this->showmessage(sprintf(__('您登录失败的次数过多，请等%s秒后再进行尝试。'), $lock->getUnLockTime()), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
-            }
-            else {
+            } else {
                 RC_Hook::do_action('ecjia_admin_login_failed', $model);
                 //记录一次失败
                 $lock->failed();
@@ -272,17 +271,17 @@ class PrivilegeController extends ecjia_admin
         $lock->clearTimes();
         //有开启强制修改数据库32位非hash密码为64位hash密码
         if (config('login.force_hash_password')) {
-        	if (empty($model['ec_salt']) || !ecjia_password::isHashPassword($model->password)) {
-        		$ec_salt = rand(1, 9999);
-        		$pm = ecjia_password::driver('hash');
-        		$new_possword = $pm->createSaltPassword($password, $ec_salt);
-        		$model->ec_salt = $ec_salt;
-        		$model->password = $new_possword;
-        	}
+            if (empty($model['ec_salt']) || !ecjia_password::isHashPassword($model->password)) {
+                $ec_salt         = rand(1, 9999);
+                $pm              = ecjia_password::driver('hash');
+                $new_possword    = $pm->createSaltPassword($password, $ec_salt);
+                $model->ec_salt  = $ec_salt;
+                $model->password = $new_possword;
+            }
         }
-        
+
         $model->last_login = RC_Time::gmtime();
-        $model->last_ip = RC_Ip::client_ip();
+        $model->last_ip    = RC_Ip::client_ip();
         $model->save();
 
         if (!empty($remember)) {
@@ -325,8 +324,8 @@ class PrivilegeController extends ecjia_admin
         ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here(__('编辑个人资料')));
 
         ecjia_screen::get_current_screen()->add_help_tab(array(
-            'id' => 'overview',
-            'title' => __('概述'),
+            'id'      => 'overview',
+            'title'   => __('概述'),
             'content' =>
                 '<p>' . __('欢迎访问ECJia智能后台编辑个人资料页面，用户可在此编辑个人资料。') . '</p>'
         ));
@@ -380,8 +379,8 @@ class PrivilegeController extends ecjia_admin
         } else {
             /* 旧密与输入的密码比较是否相同 */
             $old_password = remove_xss($this->request->input('old_password'));
-            $pm = ecjia_password::autoCompatibleDriver($model->password);
-            if (! $pm->verifySaltPassword($old_password, $model->ec_salt, $model->password)) {
+            $pm           = ecjia_password::autoCompatibleDriver($model->password);
+            if (!$pm->verifySaltPassword($old_password, $model->ec_salt, $model->password)) {
                 return $this->showmessage(__('输入的旧密码错误！'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
             }
 
@@ -391,9 +390,9 @@ class PrivilegeController extends ecjia_admin
             }
 
             $pm = ecjia_password::driver('hash');
-            
-            $ec_salt = rand(1, 9999);
-            $model->ec_salt = $ec_salt;
+
+            $ec_salt         = rand(1, 9999);
+            $model->ec_salt  = $ec_salt;
             $model->password = $pm->createSaltPassword($new_password, $ec_salt);
 
             /* 如果修改密码，则需要将session中该管理员的数据清空 */
@@ -432,7 +431,7 @@ class PrivilegeController extends ecjia_admin
             return $this->showmessage(__('非法操作！'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
         }
 
-        $nav = new QuickNav($model);
+        $nav      = new QuickNav($model);
         $nav_list = $nav->get();
 
         $nav_list = collect($nav_list)->mapWithKeys(function ($item) {

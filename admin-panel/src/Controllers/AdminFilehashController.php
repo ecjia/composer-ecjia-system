@@ -44,131 +44,116 @@
 //
 //  ---------------------------------------------------------------------------------
 //
+namespace Ecjia\System\AdminPanel\Controllers;
 
-namespace Ecjia\System\Controllers;
-
-use admin_nav_here;
-use admin_notice;
-use ecjia;
-use Ecjia\System\Admins\Redis\RedisManager;
-use Ecjia\System\Admins\Sessions\SessionManager;
 use ecjia_admin;
-use ecjia_screen;
 use RC_Script;
-use RC_Style;
 use RC_Uri;
+use ecjia_screen;
+use admin_nav_here;
 
-class AdminSessionController extends ecjia_admin
+/**
+ * ECJIA 在线文件一致性检测
+ */
+class AdminFilehashController extends ecjia_admin
 {
+    private $sidebar_menus;
 
     public function __construct()
     {
         parent::__construct();
 
+        @set_time_limit(0);
 
-        RC_Style::enqueue_style('chosen');
+        RC_Script::enqueue_script('jquery-dataTables');
         RC_Script::enqueue_script('smoke');
-        RC_Script::enqueue_script('jquery-form');
-        RC_Script::enqueue_script('jquery-chosen');
-        RC_Script::enqueue_script('ecjia-admin_logs');
 
-        //js语言包调用
-        RC_Script::localize_script('ecjia-admin_logs', 'admin_logs_lang', config('system::jslang.logs_page'));
+        $this->sidebar_menus = (new \Ecjia\System\Admins\FileHash\Menu())->getMenus();
+
+        $this->assign('sidebar_menus', $this->sidebar_menus);
     }
 
+
+    /**
+     * 文件校验结果显示
+     */
     public function init()
     {
-        $this->admin_priv('session_manage');
+        $this->admin_priv('file_check');
 
-        ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here(__('会话管理')));
+        ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here(__('文件校验')));
 
-        ecjia_screen::get_current_screen()->add_help_tab(array(
-            'id' => 'overview',
-            'title' => __('概述'),
-            'content' =>
-                '<p>' . __('欢迎访问ECJia智能后台会员管理页面，可以在此查看用户登录操作的一些会话记录信息。') . '</p>'
-        ));
-
-        $redis = new RedisManager();
-
-        if (! $redis->testConnection()) {
-            $warning = sprintf(__("当前功能需要依赖 Redis 支持，未检测到正确连接的Redis，请检查配置或安装Redis后再继续。<br />
-                Redis的配置可在 content/configs/database.php 中 connections.redis.session 进行配置，<br />
-                也可在根目录 .env 中进行配置，涉及到的配置项含有【REDIS_HOST】【REDIS_PORT】，请再次确认。
-            "));
-            ecjia_screen::get_current_screen()->add_admin_notice(new admin_notice($warning));
-
-            $logs = [];
-        }
-        else {
-
-            $keyword = $this->request->input('keyword');
-
-            $session = new SessionManager($redis->getConnection());
-
-            //搜索时
-            if (!empty($keyword)) {
-                $keys = $session->getSearchKeys($keyword);
-                $logs = $session->valueUnSerializeForKeys($keys)->all();
-
-                $this->assign('keyword', $keyword);
-            }
-            else {
-                $logs = $session->getKeysWithValueUnSerialize();
-            }
-
-            $current_type = $this->request->input('type', 'all');
-
-            $navs = [
-                [
-                    'type' => 'all',
-                    'count' => $session->count(),
-                    'url' => RC_Uri::url('@admin_session/init'),
-                    'label' => __('全部')
-                ]
-            ];
-
-            $this->assign('current_type', $current_type);
-            $this->assign('navs', $navs);
+        $group = $this->request->query('group');
+        if (empty($group)) {
+            $item  = $this->sidebar_menus->first();
+            $group = $item['name'];
+        } else {
+            $item = $this->sidebar_menus->where('name', $group)->first();
         }
 
-        $this->assign('ur_here', __('会话管理'));
+        $hash = new \Ecjia\System\Admins\FileHash\FileCheck($item['dir']);
 
-        $this->assign('logs', $logs);
+        $hashstatus = $hash->readHashFileStatus();
+        if (!empty($hashstatus)) {
+            $hashdata = (new \Ecjia\System\Admins\FileHash\CloudCheck())->checkCurrentVersion($item['dir']);
 
-        return $this->display('admin_session.dwt');
+            $new_result = $hash->readXmlFileHash();
+            $old_result = $hash->readXmlStringHash($hashdata);
+
+            if ($old_result && $new_result) {
+                $result          = (new \Ecjia\System\Admins\FileHash\FileCheck($item['dir']))->compareHash($old_result, $new_result);
+                $formatterResult = new \Ecjia\System\Admins\FileHash\FormatterResult($result);
+                $dirlog          = $formatterResult->formatter();
+                $counter         = $formatterResult->counter();
+                $counterLabel    = $formatterResult->counterLabel();
+
+                $this->assign('dirlog', $dirlog);
+                $this->assign('counter', $counter);
+                $this->assign('counter_label', $counterLabel);
+            }
+
+        }
+
+        $this->assign('hashstatus', $hashstatus);
+        $this->assign('group', $group);
+
+        $this->assign('ur_here', __('文件校验'));
+        $this->assign('action_link', array('text' => __('返回重新校验'), 'href' => RC_Uri::url('@admin_filehash/check', ['group' => $group])));
+
+        return $this->display('check_file_hash.dwt');
     }
 
     /**
-     * 查看详情
+     * 文件校验，是否变动
      */
-    public function detail()
+    public function check()
     {
-    	$this->admin_priv('session_manage');
-    
-    	$key = trim($this->request->input('key'));
+        $this->admin_priv('file_check');
 
-        $session = (new SessionManager())->getSessionKey($key);
+        $group = $this->request->query('group');
+        if (empty($group)) {
+            $item  = $this->sidebar_menus->first();
+            $group = $item['name'];
+        } else {
+            $item = $this->sidebar_menus->where('name', $group)->first();
+        }
 
-    	$this->assign('session_info', $session);
-    	
-    	$data = $this->fetch('admin_session_detail.dwt');
+        $hash   = new \Ecjia\System\Admins\FileHash\FileCheck($item['dir']);
+        $result = $hash->builder();
+        $hash->writeFile($result);
 
-    	return $this->showmessage('', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('data' => $data));
-    }
+        $hashdata = (new \Ecjia\System\Admins\FileHash\CloudCheck())->checkCurrentVersion($item['dir']);
 
-    /**
-     * 删除
-     */
-    public function remove()
-    {
-        $this->admin_priv('session_manage');
+        $new_result = $hash->readXmlFileHash();
+        $old_result = $hash->readXmlStringHash($hashdata);
 
-        $key = trim($this->request->input('key'));
+        if ($old_result && $new_result) {
+            $result = (new \Ecjia\System\Admins\FileHash\FileCheck($item['dir']))->compareHash($old_result, $new_result, true);
+        }
 
-        (new SessionManager())->deleteSessionKey($key);
-
-        return $this->showmessage('删除成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS);
+        return $this->redirect(RC_Uri::url('@admin_filehash/init', ['group' => $group]));
     }
 
 }
+
+// end

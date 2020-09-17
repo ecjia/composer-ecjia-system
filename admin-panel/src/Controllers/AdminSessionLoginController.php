@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Ecjia\System\Controllers;
+namespace Ecjia\System\AdminPanel\Controllers;
 
 
 use admin_nav_here;
@@ -28,8 +28,8 @@ class AdminSessionLoginController extends ecjia_admin
         ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here(__('登录日志')));
 
         ecjia_screen::get_current_screen()->add_help_tab(array(
-            'id' => 'overview',
-            'title' => __('概述'),
+            'id'      => 'overview',
+            'title'   => __('概述'),
             'content' =>
                 '<p>' . __('欢迎访问ECJia智能后台会员管理页面，可以在此查看用户登录操作的一些会话记录信息。') . '</p>'
         ));

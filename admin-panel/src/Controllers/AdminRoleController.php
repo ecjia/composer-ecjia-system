@@ -45,7 +45,7 @@
 //  ---------------------------------------------------------------------------------
 //
 
-namespace Ecjia\System\Controllers;
+namespace Ecjia\System\AdminPanel\Controllers;
 
 use admin_nav_here;
 use ecjia;
@@ -95,8 +95,8 @@ class AdminRoleController extends ecjia_admin
         $this->assign('ur_here', __('角色管理'));
 
         ecjia_screen::get_current_screen()->add_help_tab(array(
-            'id' => 'overview',
-            'title' => __('概述'),
+            'id'      => 'overview',
+            'title'   => __('概述'),
             'content' =>
                 '<p>' . __('欢迎访问ECJia智能后台角色管理页面，系统中所有的角色都会显示在此列表中。') . '</p>'
         ));
@@ -143,9 +143,9 @@ class AdminRoleController extends ecjia_admin
         $act_list = join(',', array_map('remove_xss', $this->request->input('action_code', [])));
 
         $role_data = [
-            'role_name' => $username,
+            'role_name'     => $username,
             'role_describe' => remove_xss($this->request->input('role_describe', '')),
-            'action_list' => $act_list
+            'action_list'   => $act_list
         ];
 
         $new_id = RoleModel::insertGetId($role_data);
@@ -182,7 +182,7 @@ class AdminRoleController extends ecjia_admin
             return $this->showmessage(__('此角色不存在'), ecjia::MSGTYPE_HTML | ecjia::MSGSTAT_ERROR);
         }
 
-        $priv_str = $role_model['action_list'];
+        $priv_str  = $role_model['action_list'];
         $user_info = $role_model->toArray();
 
         $priv_group = ecjia_purview::load_purview($priv_str);
@@ -205,13 +205,13 @@ class AdminRoleController extends ecjia_admin
     public function update()
     {
         $this->admin_priv('admin_manage');
-        $act_list = join(',', array_map('remove_xss', $this->request->input('action_code', [])));
-        $role_id = remove_xss($this->request->input('id'));
-        $username = remove_xss($this->request->input('user_name', ''));
+        $act_list  = join(',', array_map('remove_xss', $this->request->input('action_code', [])));
+        $role_id   = remove_xss($this->request->input('id'));
+        $username  = remove_xss($this->request->input('user_name', ''));
         $role_data = [
-            'role_name' => $username,
+            'role_name'     => $username,
             'role_describe' => remove_xss($this->request->input('role_describe', '')),
-            'action_list' => $act_list
+            'action_list'   => $act_list
         ];
 
         RoleModel::where('role_id', $role_id)->update($role_data);
@@ -243,7 +243,7 @@ class AdminRoleController extends ecjia_admin
             return $this->showmessage(__('此角色有管理员在使用，暂时不能删除！'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
         }
 
-        $role = RoleModel::select('role_id', 'role_name')->find($role_id);
+        $role      = RoleModel::select('role_id', 'role_name')->find($role_id);
         $role_name = $role->role_name;
         $role->delete();
 
@@ -262,9 +262,9 @@ class AdminRoleController extends ecjia_admin
     private function get_role_list($where = [])
     {
         $record_count = RoleModel::where($where)->count();
-        $page = new ecjia_page($record_count, 15, 6);
+        $page         = new ecjia_page($record_count, 15, 6);
 
-        $list = RoleModel::orderBy('role_id', 'DESC')->take($page->page_row)->skip($page->start_id - 1)->get()->toArray();
+        $list  = RoleModel::orderBy('role_id', 'DESC')->take($page->page_row)->skip($page->start_id - 1)->get()->toArray();
         $lists = array('list' => $list, 'page' => $page->show(5));
         return $lists;
     }

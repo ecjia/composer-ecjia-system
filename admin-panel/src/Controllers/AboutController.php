@@ -44,7 +44,7 @@
 //
 //  ---------------------------------------------------------------------------------
 //
-namespace Ecjia\System\Controllers;
+namespace Ecjia\System\AdminPanel\Controllers;
 
 use Ecjia\System\Admins\System\SystemChecker;
 use ecjia_admin;
@@ -59,11 +59,11 @@ use admin_nav_here;
 class AboutController extends ecjia_admin
 {
 
-	public function __construct()
+    public function __construct()
     {
-		parent::__construct();
+        parent::__construct();
 
-	}
+    }
 
 
     /**
@@ -75,14 +75,14 @@ class AboutController extends ecjia_admin
 
         ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here(__('关于'), RC_Uri::url('@about/about_us')));
         ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here(__('关于 ECJIA')));
-        $this->assign('ur_here',       __('关于 ECJIA'));
+        $this->assign('ur_here', __('关于 ECJIA'));
 
-        ecjia_screen::get_current_screen()->add_help_tab( array(
-            'id'        => 'overview',
-            'title'     => __('概述'),
-            'content'   =>
+        ecjia_screen::get_current_screen()->add_help_tab(array(
+            'id'      => 'overview',
+            'title'   => __('概述'),
+            'content' =>
                 '<p>' . __('欢迎访问ECJia智能后台关于页面，可以更加了解ECJia。') . '</p>'
-        ) );
+        ));
 
         ecjia_screen::get_current_screen()->set_help_sidebar(
             '<p><strong>' . __('更多信息：') . '</strong></p>' .
@@ -101,14 +101,14 @@ class AboutController extends ecjia_admin
 
         ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here(__('关于'), RC_Uri::url('@about/about_us')));
         ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here(__('ECJIA团队')));
-        $this->assign('ur_here',       __('ECJIA团队'));
+        $this->assign('ur_here', __('ECJIA团队'));
 
-        ecjia_screen::get_current_screen()->add_help_tab( array(
-            'id'        => 'overview',
-            'title'     => __('概述'),
-            'content'   =>
+        ecjia_screen::get_current_screen()->add_help_tab(array(
+            'id'      => 'overview',
+            'title'   => __('概述'),
+            'content' =>
                 '<p>' . __('欢迎访问ECJia智能后台关于页面，可以更加了解ECJia。') . '</p>'
-        ) );
+        ));
 
         ecjia_screen::get_current_screen()->set_help_sidebar(
             '<p><strong>' . __('更多信息：') . '</strong></p>' .
@@ -125,14 +125,14 @@ class AboutController extends ecjia_admin
     {
         ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here(__('关于'), RC_Uri::url('@about/about_us')));
         ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here(__('系统信息')));
-        $this->assign('ur_here',       __('系统信息'));
+        $this->assign('ur_here', __('系统信息'));
 
-        ecjia_screen::get_current_screen()->add_help_tab( array(
-            'id'        => 'overview',
-            'title'     => __('概述'),
-            'content'   =>
+        ecjia_screen::get_current_screen()->add_help_tab(array(
+            'id'      => 'overview',
+            'title'   => __('概述'),
+            'content' =>
                 '<p>' . __('欢迎访问ECJia智能后台关于页面，可以更加了解ECJia。') . '</p>'
-        ) );
+        ));
 
         ecjia_screen::get_current_screen()->set_help_sidebar(
             '<p><strong>' . __('更多信息：') . '</strong></p>' .
@@ -142,7 +142,7 @@ class AboutController extends ecjia_admin
         /* 系统信息 */
         $sys_info = (new SystemChecker())->getSystem();
 
-        $this->assign('sys_info',      $sys_info);
+        $this->assign('sys_info', $sys_info);
 
         return $this->display('about_system.dwt');
     }

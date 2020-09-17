@@ -44,97 +44,80 @@
 //
 //  ---------------------------------------------------------------------------------
 //
-namespace Ecjia\System\Controllers;
+/**
+ * Created by PhpStorm.
+ * User: royalwang
+ * Date: 2018/12/21
+ * Time: 16:29
+ */
+
+namespace Ecjia\System\AdminPanel\Controllers;
 
 use ecjia_admin;
-use RC_Script;
-use RC_Style;
-use RC_Uri;
+use RC_Upload;
+use RC_File;
 use ecjia_screen;
-use ecjia_update_cache;
-use ecjia;
 use admin_nav_here;
 
 /**
- * ECJIA 更新缓存控制器
+ * ECJIA 在线升级
  */
-class AdminCacheController extends ecjia_admin
+class AdminFilePermissionController extends ecjia_admin
 {
 
-	public function __construct()
+    public function __construct()
     {
-		parent::__construct();
+        parent::__construct();
 
-        RC_Style::enqueue_style('jquery-stepy');
-        RC_Style::enqueue_style('uniform-aristo');
-        RC_Script::enqueue_script('jquery-uniform');
-        RC_Script::enqueue_script('jquery-stepy');
-        RC_Script::enqueue_script('smoke');
-	}
-
-
-	/**
-	 * 更新缓存
-	 */
-	public function init()
-    {
-        $this->admin_priv('admin_cache');
-
-        ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here(__('更新缓存')));
-
-        ecjia_screen::get_current_screen()->add_help_tab( array(
-            'id'        => 'overview',
-            'title'     => __('概述'),
-            'content'   =>
-                '<p>' . __('欢迎访问ECJia智能后台更新缓存页面，可以在此页面进行清除系统中缓存的操作。') . '</p>'
-        ) );
-
-        ecjia_screen::get_current_screen()->set_help_sidebar(
-            '<p><strong>' . __('更多信息：') . '</strong></p>' .
-            '<p>' . __('<a href="https://ecjia.com/wiki/帮助:ECJia智能后台:更新缓存" target="_blank">关于清除缓存帮助文档</a>') . '</p>'
-        );
-
-        RC_Script::enqueue_script('ecjia-admin_cache');
-        RC_Style::enqueue_style('chosen');
-        RC_Script::enqueue_script('jquery-chosen');
-
-        $this->assign('ur_here',    __('更新缓存'));
-
-        //js语言包调用
-        RC_Script::localize_script('ecjia-admin_cache', 'admin_cache_lang', config('system::jslang.cache_page'));
-
-        $res = ecjia_update_cache::loadGroupCache();
-
-        $this->assign('form_action', RC_Uri::url('@admin_cache/update_cache'));
-        $this->assign('cache_list', $res);
-        return $this->display('admin_cache.dwt');
-	}
-
-    /**
-     * 更新缓存
-     */
-    public function update_cache()
-    {
-        $this->admin_priv('admin_cache');
-
-        $cachekey = trim($_POST['cachekey']);
-
-        $result = ecjia_update_cache::clean($cachekey);
-
-        if (!empty($result)) {
-            if (is_ecjia_error($result[$cachekey])) {
-                //返回错误
-                return $this->showmessage($result->get_error_message(), ecjia::MSGSTAT_ERROR | ecjia::MSGTYPE_JSON, ['error' => 1]);
-            }
-            else {
-                //返回成功
-                return $this->showmessage('', ecjia::MSGSTAT_SUCCESS | ecjia::MSGTYPE_JSON, ['error' => 0]);
-            }
-        }
-
-        return $this->showmessage('', ecjia::MSGSTAT_ERROR | ecjia::MSGTYPE_JSON, ['error' => 1]);
     }
 
-}
 
-// end
+    /**
+     * 文件权限检测
+     */
+    public function init()
+    {
+        $this->admin_priv('file_priv');
+
+        ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here(__('文件权限检测')));
+        $this->assign('ur_here', __('文件权限检测'));
+
+        $Upload_Current_Path = str_replace(SITE_ROOT, '', RC_Upload::upload_path());
+        $Cache_Current_Path  = str_replace(SITE_ROOT, '', SITE_CACHE_PATH);
+
+        $dir['content/configs'] = str_replace(SITE_ROOT, '', SITE_CONTENT_PATH) . 'configs';
+        $dir['content/uploads'] = $Upload_Current_Path;
+        $dir['content/caches']  = $Cache_Current_Path;
+
+        $list = array();
+        /* 检查目录 */
+        foreach ($dir as $key => $val) {
+            $mark   = RC_File::file_mode_info(SITE_ROOT . $val);
+            $list[] = array('item' => $key . __('目录'), 'r' => $mark & 1, 'w' => $mark & 2, 'm' => $mark & 4);
+        }
+
+        /* 检查smarty的缓存目录和编译目录及image目录是否有执行rename()函数的权限 */
+        $tpl_list   = array();
+        $tpl_dirs[] = $Cache_Current_Path . 'temp/template_caches';
+        $tpl_dirs[] = $Cache_Current_Path . 'temp/template_compiled';
+        $tpl_dirs[] = $Cache_Current_Path . 'temp/template_compiled/admin';
+
+        foreach ($tpl_dirs as $dir) {
+            $mask = RC_File::file_mode_info(SITE_ROOT . $dir);
+            if (($mask & 4) > 0) {
+                /* 之前已经检查过修改权限，只有有修改权限才检查rename权限 */
+                if (($mask & 8) < 1) {
+                    $tpl_list[] = $dir;
+                }
+            }
+        }
+        $tpl_msg = implode(', ', $tpl_list);
+        $this->assign('list', $list);
+        $this->assign('tpl_msg', $tpl_msg);
+        $this->assign('nav_tabs', $this->nav_tabs);
+
+        return $this->display('check_file_priv.dwt');
+    }
+
+
+}

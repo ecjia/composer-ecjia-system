@@ -44,103 +44,67 @@
 //
 //  ---------------------------------------------------------------------------------
 //
-namespace Ecjia\System\Controllers;
+namespace Ecjia\System\AdminPanel\Controllers;
 
-use ecjia_admin;
+use RC_Hook;
 use RC_Script;
 use RC_Uri;
-use RC_Time;
 use ecjia_screen;
-use ecjia_config;
+use ecjia_admin;
+use ecjia_utility;
+use admin_notice;
 use admin_nav_here;
 use ecjia;
 
 /**
- * ECJIA 在线升级
+ * ECJIA 首页控制器
  */
-class UpgradeController extends ecjia_admin
+class IndexController extends ecjia_admin
 {
 
-	public function __construct()
+    public function __construct()
     {
-		parent::__construct();
+        parent::__construct();
 
-		RC_Script::enqueue_script('jquery-dataTables');
-		RC_Script::enqueue_script('smoke');
-		RC_Script::enqueue_script('ecjia-admin_upgrade');
-	}
+    }
 
-
-	public function init()
+    /**
+     * 后台控制面板首页
+     */
+    public function init()
     {
-        $this->admin_priv('admin_upgrade');
+        RC_Script::enqueue_script('ecjia-admin_dashboard');
+        RC_Script::enqueue_script('ecjia-chart', RC_Uri::admin_url() . '/statics/lib/Chart/Chart.min.js', array('ecjia-admin'), false, true);
 
-		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here(__('可用更新')));
-		$this->assign('ur_here', __('可用更新'));
-		
-		ecjia_screen::get_current_screen()->add_help_tab( array(
-		'id'        => 'overview',
-		'title'     => __('概述'),
-		'content'   =>
-		'<p>' . __('欢迎访问ECJia智能后台更新页面，在此可以进行对版本的更新。') . '</p>'
-		) );
-		 
-		ecjia_screen::get_current_screen()->set_help_sidebar(
-		'<p><strong>' . __('更多信息：') . '</strong></p>' .
-		'<p>' . __('<a href="https://ecjia.com/wiki/帮助:ECJia智能后台:可用更新" target="_blank">关于可用更新帮助文档</a>') . '</p>'
-		);
+        ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here(__('仪表盘')));
+        $this->assign('ur_here', __('仪表盘'));
 
-        $current_version = $this->request->query('version');
+        ecjia_screen::get_current_screen()->add_help_tab(array(
+            'id'      => 'overview',
+            'title'   => __('概述'),
+            'content' =>
+                '<p>' . __('欢迎访问ECJia智能后台仪表盘！在您每次登录站点后，您都会看到本页面。您可以在这里访问ECJia智能后台的各种管理页面。点击任何页面右上角的“帮助”选项卡可阅读相应帮助信息。') . '</p>'
+        ));
 
-        $result = (new \Ecjia\Component\UpgradeCheck\CloudCheck)->checkCurrentVersion();
-        if (! is_ecjia_error($result)) {
+        ecjia_screen::get_current_screen()->set_help_sidebar(
+            '<p><strong>' . __('更多信息：') . '</strong></p>' .
+            '<p>' . __('<a href="https://ecjia.com/wiki/帮助:ECJia智能后台操作指南" target="_blank">关于ECJia智能后台的帮助文档</a>') . '</p>'
+        );
 
-            $formatter = (new \Ecjia\Component\UpgradeCheck\ResultManager($result))->formatter();
-            if (! empty($formatter)) {
-                if (empty($current_version)) {
-                    $current_version = head($formatter)->getVersion();
-                }
+        RC_Hook::do_action('ecjia_admin_dashboard_index');
 
-                $version = collect($formatter)->first(function ($value, $key) use ($current_version) {
-                    return $value->getVersion() == $current_version;
-                });
-
-                $this->assign('current_version', $current_version);
-                $this->assign('versions', $formatter);
-                $this->assign('version', $version);
+        $admin_notices = ecjia_utility::site_admin_notice();
+        if (!empty($admin_notices)) {
+            foreach ($admin_notices as $admin_notice) {
+                $notice_info = $admin_notice['content'] . sprintf(__('<a target="_blank" href="%s">点击查看</a>。'), $admin_notice['url']);
+                ecjia_screen::get_current_screen()->add_admin_notice(new admin_notice($notice_info));
             }
-
         }
 
-		$last_check_upgrade_time = ecjia_config::get('last_check_upgrade_time', RC_Time::gmtime());
-		$last_check_upgrade_time = RC_Time::local_date('Y年m月d日 H:i:s', $last_check_upgrade_time);
+        $this->assign('ecjia_version', ecjia::VERSION);
 
-        $this->assign('action_link', array('text' => __('再次检查'), 'href' => RC_Uri::url('@upgrade/check_update')));
-		$this->assign('check_upgrade_time', $last_check_upgrade_time);
-
-		return $this->display('admin_upgrade.dwt');
-	}
-
-
-	public function check_update()
-    {
-        $this->admin_priv('admin_upgrade', ecjia::MSGTYPE_JSON);
-
-        $result = (new \Ecjia\Component\UpgradeCheck\CloudCheck)->checkCurrentVersion();
-        if (is_ecjia_error($result)) {
-            return $this->showmessage($result->get_error_message(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
-        }
-
-        $last_check_upgrade_time = RC_Time::gmtime();
-        ecjia_config::write('last_check_upgrade_time', $last_check_upgrade_time);
-
-        if (empty($result)) {
-            return $this->showmessage(__('你当前使用的已经是最新版本了。'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('@upgrade/init')));
-        }
-
-        $count = count($result);
-        return $this->showmessage(sprintf(__('已经检测到%s个新版本更新。'), $count), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('@upgrade/init')));
-	}
+        return $this->display('index.dwt');
+    }
 
 }
 

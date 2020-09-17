@@ -44,7 +44,7 @@
 //
 //  ---------------------------------------------------------------------------------
 //
-namespace Ecjia\System\Controllers;
+namespace Ecjia\System\AdminPanel\Controllers;
 
 use ecjia_admin;
 use ecjia_admin_log;
@@ -65,11 +65,11 @@ use RC_Response;
 class LicenseController extends ecjia_admin
 {
 
-	public function __construct()
+    public function __construct()
     {
-		parent::__construct();
+        parent::__construct();
 
-	}
+    }
 
     /**
      * 证书编辑页
@@ -87,19 +87,19 @@ class LicenseController extends ecjia_admin
         ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here(__('授权证书')));
         $this->assign('ur_here', __('授权证书'));
 
-        ecjia_screen::get_current_screen()->add_help_tab( array(
-            'id'        => 'overview',
-            'title'     => __('概述'),
-            'content'   =>
+        ecjia_screen::get_current_screen()->add_help_tab(array(
+            'id'      => 'overview',
+            'title'   => __('概述'),
+            'content' =>
                 '<p>' . __('欢迎访问ECJia智能后台授权证书管理页面，可以在此对证书进行授权操作。') . '</p>'
-        ) );
+        ));
 
         ecjia_screen::get_current_screen()->set_help_sidebar(
             '<p><strong>' . __('更多信息：') . '</strong></p>' .
             '<p>' . __('<a href="https://ecjia.com/wiki/帮助:ECJia智能后台:授权证书" target="_blank">关于授权证书管理帮助文档</a>') . '</p>'
         );
 
-        $license = ecjia_license::get_shop_license();
+        $license     = ecjia_license::get_shop_license();
         $is_download = 0;
         if ($license['certificate_sn'] && $license['certificate_file']) {
             $is_download = 1;
@@ -107,18 +107,18 @@ class LicenseController extends ecjia_admin
 
         if (!empty($license['certificate_file'])) {
             $certificate_file = RC_Upload::upload_path() . str_replace('/', DS, $license['certificate_file']);
-            $cert_data = ecjia_license::instance()->parse_certificate($certificate_file);
+            $cert_data        = ecjia_license::instance()->parse_certificate($certificate_file);
             if (!$cert_data) {
                 $is_download = 0;
             } else {
                 $subject = $cert_data['subject'];
-                $issuer = $cert_data['issuer'];
+                $issuer  = $cert_data['issuer'];
 
                 $license_info = array(
-                    'company_name'      => $subject['organizationName'],
-                    'license_level'     => $subject['organizationalUnitName'],
-                    'license_domain'    => $subject['commonName'],
-                    'license_time'      => date('Y-m-d', $cert_data['validFrom_time_t']) . ' ~ ' . date('Y-m-d', $cert_data['validTo_time_t'])
+                    'company_name'   => $subject['organizationName'],
+                    'license_level'  => $subject['organizationalUnitName'],
+                    'license_domain' => $subject['commonName'],
+                    'license_time'   => date('Y-m-d', $cert_data['validFrom_time_t']) . ' ~ ' . date('Y-m-d', $cert_data['validTo_time_t'])
                 );
 
                 $this->assign('license_info', $license_info);
@@ -129,7 +129,6 @@ class LicenseController extends ecjia_admin
 
         return $this->display('license.dwt');
     }
-
 
 
     /**
@@ -147,8 +146,8 @@ class LicenseController extends ecjia_admin
         if (!$upload->check_upload_file($_FILES['license'])) {
             return $this->showmessage($upload->error(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
         }
-        $info = $upload->upload($_FILES['license']);
-        $license_file = $upload->get_position($info);
+        $info              = $upload->upload($_FILES['license']);
+        $license_file      = $upload->get_position($info);
         $license_full_file = RC_Upload::upload_path(str_replace('/', DS, $license_file));
 
         /* 取出证书内容 */
@@ -198,7 +197,7 @@ class LicenseController extends ecjia_admin
 
         /* 文件下载 */
         $headers = [
-            'Content-Type' => 'application/x-x509-ca-cert',
+            'Content-Type'  => 'application/x-x509-ca-cert',
             'Accept-Ranges' => 'bytes',
         ];
         return RC_Response::download($certificate_file, $download_filename, $headers);

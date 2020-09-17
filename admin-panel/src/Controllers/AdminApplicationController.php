@@ -44,7 +44,7 @@
 //
 //  ---------------------------------------------------------------------------------
 //
-namespace Ecjia\System\Controllers;
+namespace Ecjia\System\AdminPanel\Controllers;
 
 use RC_App;
 use RC_Script;
@@ -63,9 +63,9 @@ use admin_nav_here;
 class AdminApplicationController extends ecjia_admin
 {
 
-	public function __construct()
+    public function __construct()
     {
-		parent::__construct();
+        parent::__construct();
 
         RC_Style::enqueue_style('jquery-stepy');
 
@@ -91,15 +91,16 @@ class AdminApplicationController extends ecjia_admin
         RC_Script::localize_script('ecjia-admin_application', 'admin_application', config('system::jslang.application_page'));
 
         ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here(__('应用管理'), RC_Uri::url('@admin_application/init')));
-	}
+    }
 
     /**
      * 应用列表
      */
-    public function init() {
+    public function init()
+    {
         $this->admin_priv('application_manage', ecjia::MSGTYPE_JSON);
 
-        if (! empty($_GET['reload'])) {
+        if (!empty($_GET['reload'])) {
             RC_App::clean_applications_cache();
         }
 
@@ -107,12 +108,12 @@ class AdminApplicationController extends ecjia_admin
         ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here(__('应用管理')));
         $this->assign('ur_here', __('应用管理'));
 
-        ecjia_screen::get_current_screen()->add_help_tab( array(
-            'id'        => 'overview',
-            'title'     => __('概述'),
-            'content'   =>
+        ecjia_screen::get_current_screen()->add_help_tab(array(
+            'id'      => 'overview',
+            'title'   => __('概述'),
+            'content' =>
                 '<p>' . __('欢迎访问ECJia智能后台应用管理页面，系统中所有的应用都会显示在此列表中。') . '</p>'
-        ) );
+        ));
 
         ecjia_screen::get_current_screen()->set_help_sidebar(
             '<p><strong>' . __('更多信息：') . '</strong></p>' .
@@ -120,41 +121,39 @@ class AdminApplicationController extends ecjia_admin
         );
 
         $active_applications = ecjia_app::active_applications();
-        $croe_applications = ecjia_app::core_applications();
-        $croe_applications = array_keys($croe_applications);
+        $croe_applications   = ecjia_app::core_applications();
+        $croe_applications   = array_keys($croe_applications);
 
         /* 取得所有应用列表 */
         $applications = RC_App::get_apps();
 
 
-        $application_num = count($applications);
-        $use_application_num = 0;
+        $application_num       = count($applications);
+        $use_application_num   = 0;
         $unuse_application_num = 0;
 
         $applications = collect($applications)->map(function ($app, $key) use ($active_applications, $croe_applications, & $use_application_num, & $unuse_application_num) {
             if (in_array($key, $active_applications)) {
                 $use_application_num++;
                 $app['installed'] = true;
-            }
-            else {
+            } else {
                 $use_application_num++;
                 $app['installed'] = false;
             }
 
             if (in_array($app['alias'], $croe_applications)) {
                 $app['is_core'] = true;
-            }
-            else {
+            } else {
                 $app['is_core'] = false;
             }
 
             return $app;
         })->all();
 
-        $this->assign('application_num',			$application_num);
-        $this->assign('use_application_num',		$use_application_num);
-        $this->assign('unuse_application_num',		$unuse_application_num);
-        $this->assign('applications',	$applications);
+        $this->assign('application_num', $application_num);
+        $this->assign('use_application_num', $use_application_num);
+        $this->assign('unuse_application_num', $unuse_application_num);
+        $this->assign('applications', $applications);
 
         return $this->display('application_list.dwt');
     }
@@ -171,13 +170,14 @@ class AdminApplicationController extends ecjia_admin
     /**
      * 查看应用
      */
-    public function detail() {
+    public function detail()
+    {
         $this->admin_priv('application_manage', ecjia::MSGTYPE_JSON);
 
         $id = trim($_GET['id']);
 
         $app_dir = ecjia_app::get_app_dir($id);
-        $result = ecjia_app::validate_application($app_dir);
+        $result  = ecjia_app::validate_application($app_dir);
         if (is_ecjia_error($result)) {
             //@todo 报错
         }
@@ -191,7 +191,7 @@ class AdminApplicationController extends ecjia_admin
         } else {
             ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here(__('应用详情')));
             $this->assign('ur_here', __('应用详情'));
-            $this->assign('action_link',	array('href' => RC_Uri::url('@admin_application/init'), 'text' => __('返回应用列表')));
+            $this->assign('action_link', array('href' => RC_Uri::url('@admin_application/init'), 'text' => __('返回应用列表')));
         }
         $this->assign('application', $package);
 
@@ -201,15 +201,16 @@ class AdminApplicationController extends ecjia_admin
     /**
      * 安装应用
      */
-    public function install() {
+    public function install()
+    {
         $this->admin_priv('application_install', ecjia::MSGTYPE_JSON);
 
         $id = $_GET['id'];
 
         $result = ecjia_app::install_application($id);
 
-        if ( is_ecjia_error( $result ) ) {
-            if ( 'unexpected_output' == $result->get_error_code() ) {
+        if (is_ecjia_error($result)) {
+            if ('unexpected_output' == $result->get_error_code()) {
                 return $this->showmessage($result->get_error_data(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
             } else {
                 return $this->showmessage($result->get_error_message(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
@@ -231,15 +232,16 @@ class AdminApplicationController extends ecjia_admin
     /**
      * 卸载应用
      */
-    public function uninstall() {
+    public function uninstall()
+    {
         $this->admin_priv('application_uninstall', ecjia::MSGTYPE_JSON);
 
         $id = $_GET['id'];
 
         $result = ecjia_app::uninstall_application($id);
 
-        if ( is_ecjia_error( $result ) ) {
-            if ( 'unexpected_output' == $result->get_error_code() ) {
+        if (is_ecjia_error($result)) {
+            if ('unexpected_output' == $result->get_error_code()) {
                 return $this->showmessage($result->get_error_data(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
             } else {
                 return $this->showmessage($result->get_error_message(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
