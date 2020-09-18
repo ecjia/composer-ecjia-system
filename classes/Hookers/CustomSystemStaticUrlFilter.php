@@ -22,6 +22,9 @@ class CustomSystemStaticUrlFilter
             $static_url = RC_Config::get('site.custom_static_url');
             $url = $static_url . '/' . $path;
         }
+        else {
+            $url = RC_Uri::admin_url('admin-panel/statics/') . '/' . $path;
+        }
         return rtrim($url, '/');
     }
 
