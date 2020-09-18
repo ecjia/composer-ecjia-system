@@ -1,6 +1,8 @@
 <?php
 namespace Ecjia\System\AdminPanel;
 
+use Ecjia\System\AdminPanel\Foundation\ScriptLoader\RegisterDefaultScripts;
+use Ecjia\System\AdminPanel\Foundation\ScriptLoader\RegisterDefaultStyles;
 use RC_Hook;
 use RC_Loader;
 use RC_Locale;
@@ -53,6 +55,9 @@ class EcjiaAdminPanelServiceProvider extends AppParentServiceProvider
         $this->registerSubscribers($dispatcher);
 
         $this->registerAppService();
+
+        $this->registerDefaultStyles();
+        $this->registerDefaultScripts();
     }
 
     /**
@@ -178,6 +183,21 @@ class EcjiaAdminPanelServiceProvider extends AppParentServiceProvider
         });
     }
 
+    public function registerDefaultScripts()
+    {
+        //启动后执行
+        $this->royalcms->booted(function () {
+            (new RegisterDefaultScripts())();
+        });
+    }
+
+    public function registerDefaultStyles()
+    {
+        //启动后执行
+        $this->royalcms->booted(function () {
+            (new RegisterDefaultStyles())();
+        });
+    }
 
 
 }
