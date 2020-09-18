@@ -16,6 +16,7 @@ return array(
     'Ecjia\System\Providers\HookerServiceProvider',
 
     'Ecjia\System\AdminPanel\EcjiaAdminPanelServiceProvider',
+    'Ecjia\System\AdminUI\EcjiaAdminUIServiceProvider',
 
 );
 
