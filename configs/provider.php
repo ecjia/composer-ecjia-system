@@ -11,7 +11,6 @@ return array(
 	'Ecjia\Component\CleanCache\CleanCacheServiceProvider',
 
 
-    'Ecjia\System\Providers\RouteServiceProvider',
     'Ecjia\System\Providers\EventServiceProvider',
     'Ecjia\System\Providers\HookerServiceProvider',
 
