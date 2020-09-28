@@ -48,19 +48,12 @@
  * 加载手动加载的类
  */
 return array(
-    
-    'class_ecjia_admin_log' => 'admin.ecjia_admin_log',
-    'class_ecjia_admin_message' => 'admin.ecjia_admin_message',
-    'class_ecjia_update_cache' => 'admin.ecjia_update_cache',
-    'class_ecjia_admin_menu' => 'admin.ecjia_admin_menu',
-    'class_ecjia_upgrade_db' => 'admin.ecjia_upgrade_db',
+
     'class_ecjia_admin_notifiable' => 'admin.ecjia_admin_notifiable',
-    
-    'class_admin_notice' => 'struct.admin_notice',
-//    'class_admin_menu' => 'struct.admin_menu',
-    'class_admin_nav_here' => 'struct.admin_nav_here',
+
+    'class_admin_notice'       => 'struct.admin_notice',
+    'class_admin_nav_here'     => 'struct.admin_nav_here',
     'class_admin_notification' => 'struct.admin_notification',
-    'class_admin_cache' => 'struct.admin_cache',
-    
+
 
 );
