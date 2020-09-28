@@ -78,7 +78,7 @@ class RoleModel extends Model
      */
     public function __construct(array $attributes = [])
     {
-        $this->connection = config('ecjia.database_connection', 'default');
+//        $this->connection = config('ecjia.database_connection', 'default');
 
         parent::__construct($attributes);
     }
