@@ -47,7 +47,7 @@
 
 namespace Ecjia\System\Frameworks\Meta;
 
-use RC_DB;
+use Ecjia\System\Models\TermMetaModel;
 use Exception;
 
 class MetaAbstract
@@ -91,11 +91,11 @@ class MetaAbstract
                 'meta_value'    => $value,
             ];
             
-            return RC_DB::connection(config('ecjia.database_connection', 'default'))->table('term_meta')->where('object_type', $this->object_type)
-            ->where('object_group', $this->object_group)
-            ->where('object_id', $this->object_id)
-            ->where('meta_key', $this->meta_key)
-            ->update($data);
+            return TermMetaModel::where('object_type', $this->object_type)
+                ->where('object_group', $this->object_group)
+                ->where('object_id', $this->object_id)
+                ->where('meta_key', $this->meta_key)
+                ->update($data);
         }
         //如果不存在，则插入新值
         else
@@ -108,7 +108,7 @@ class MetaAbstract
                 'meta_value'    => $value,
             ];
             
-            return RC_DB::connection(config('ecjia.database_connection', 'default'))->table('term_meta')->insert($data);
+            return TermMetaModel::insert($data);
         }
     }
 
@@ -120,11 +120,11 @@ class MetaAbstract
     {
         $this->validateProperty();
         
-        return RC_DB::connection(config('ecjia.database_connection', 'default'))->table('term_meta')->select('meta_id')->where('object_type', $this->object_type)
-        ->where('object_group', $this->object_group)
-        ->where('object_id', $this->object_id)
-        ->where('meta_key', $this->meta_key)
-        ->pluck('meta_id');
+        return TermMetaModel::select('meta_id')->where('object_type', $this->object_type)
+            ->where('object_group', $this->object_group)
+            ->where('object_id', $this->object_id)
+            ->where('meta_key', $this->meta_key)
+            ->pluck('meta_id');
     }
 
     /**
@@ -135,11 +135,11 @@ class MetaAbstract
     {
         $this->validateProperty();
         
-        return RC_DB::connection(config('ecjia.database_connection', 'default'))->table('term_meta')->select('meta_value')->where('object_type', $this->object_type)
-        ->where('object_group', $this->object_group)
-        ->where('object_id', $this->object_id)
-        ->where('meta_key', $this->meta_key)
-        ->pluck('meta_value');
+        return TermMetaModel::select('meta_value')->where('object_type', $this->object_type)
+            ->where('object_group', $this->object_group)
+            ->where('object_id', $this->object_id)
+            ->where('meta_key', $this->meta_key)
+            ->pluck('meta_value');
     }
     
 }
