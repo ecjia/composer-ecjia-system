@@ -5,6 +5,7 @@ namespace Ecjia\System\Admins\AdminMenu;
 
 
 use Ecjia\Component\Menu\Menu;
+use Ecjia\System\Admins\AdminPrivilege\AdminPrivilege;
 use ecjia_app;
 use RC_Cache;
 
@@ -101,15 +102,7 @@ abstract class AbstractMenuGroup
             $action_list = $_SESSION['action_list'];
         }
 
-        if ($action_list == 'all') {
-            return true;
-        }
-
-        if (strpos(',' . $action_list . ',', ',' . $action . ',') === false) {
-            return false;
-        } else {
-            return true;
-        }
+        return (new AdminPrivilege($action_list))->isChecked($action);
     }
 
     /**
