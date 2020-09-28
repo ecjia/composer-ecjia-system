@@ -46,12 +46,13 @@
 //
 namespace Ecjia\System\AdminPanel\Controllers;
 
+use Ecjia\System\Admins\AdminMenu\HeaderMenuGroup;
+use Ecjia\System\Admins\AdminMenu\SidebarMenuGroup;
 use RC_App;
 use RC_Script;
 use RC_Style;
 use RC_Uri;
 use ecjia_admin;
-use ecjia_admin_menu;
 use ecjia_app;
 use ecjia_screen;
 use ecjia;
@@ -221,7 +222,8 @@ class AdminApplicationController extends ecjia_admin
         $package = RC_App::get_app_package($app_dir);
 
         /* 清除缓存 */
-        ecjia_admin_menu::singleton()->clean_admin_menu_cache();
+        (new HeaderMenuGroup())->cleanMenuCache();
+        (new SidebarMenuGroup())->cleanMenuCache();
 
         /* 记录日志 */
         ecjia_admin::admin_log($package['format_name'], 'install', 'app');

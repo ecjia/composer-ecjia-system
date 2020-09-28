@@ -50,8 +50,8 @@ use admin_menu;
 use admin_nav_here;
 use ecjia;
 use Ecjia\Component\Contracts\EcjiaTemplateFileLoader;
+use Ecjia\System\Admins\AdminPrivilege\AdminPrivilege;
 use ecjia_admin_log;
-use ecjia_admin_menu;
 use ecjia_app;
 use ecjia_config;
 use ecjia_editor;
@@ -401,7 +401,7 @@ abstract class EcjiaAdminController extends EcjiaController implements EcjiaTemp
 	 * @return true/false
 	 */
 	public final function admin_priv($priv_str, $msg_type = ecjia::MSGTYPE_HTML , $msg_output = true) {
-		if (ecjia_admin_menu::singleton()->admin_priv($priv_str)) {
+		if (AdminPrivilege::singleton()->isChecked($priv_str)) {
 		    return true;
 		} else {
 		    if ($msg_output) {
