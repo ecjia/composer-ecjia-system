@@ -116,6 +116,10 @@ class HookerServiceProvider extends ServiceProvider
         'set_server_timezone' => [
             'Ecjia\System\Hookers\SetCurrentTimezoneFilter',
         ],
+
+        'set_current_url' => [
+            'Ecjia\System\Hookers\SetCurrentUrlFilter'
+        ],
     ];
 
     /**
