@@ -13,9 +13,9 @@ class AdminPrivilege extends RoyalcmsObject
      * admin_priv constructor.
      * @param $action_list
      */
-    public function __construct($action_list)
+    public function __construct($action_list = null)
     {
-        $this->action_list = $action_list;
+        $this->action_list = $action_list ?: session('action_list');
     }
 
 
