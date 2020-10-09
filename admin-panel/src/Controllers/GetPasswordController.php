@@ -49,6 +49,7 @@ namespace Ecjia\System\AdminPanel\Controllers;
 use ecjia;
 use Ecjia\System\Admins\Users\AdminUserModel;
 use Ecjia\App\Captcha\Enums\CaptchaEnum;
+use Ecjia\System\Admins\Users\AdminUserRepository;
 use ecjia_admin;
 use ecjia_password;
 use RC_Api;
@@ -205,7 +206,7 @@ class GetPasswordController extends ecjia_admin
         $admin_email    = remove_xss($this->request->input('email'));
 
         /* 管理员用户名和邮件地址是否匹配，并取得原密码 */
-        $admin_model = AdminUserModel::where('user_name', $admin_username)->where('email', $admin_email)->first();
+        $admin_model = AdminUserRepository::model()->where('user_name', $admin_username)->where('email', $admin_email)->first();
 
         if (empty($admin_model)) {
             return $this->showmessage(__('用户名与Email地址不匹配,请返回！'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
@@ -261,7 +262,7 @@ class GetPasswordController extends ecjia_admin
         }
 
         /* 以用户的原密码，与code的值匹配 */
-        $model = AdminUserModel::find($adminid);
+        $model = AdminUserRepository::model()->find($adminid);
 
         $links = ecjia_alert_links([
             'text' => __('返回'),
@@ -301,7 +302,7 @@ class GetPasswordController extends ecjia_admin
         }
 
         /* 以用户的原密码，与code的值匹配 */
-        $model     = AdminUserModel::find($adminid);
+        $model     = AdminUserRepository::model()->find($adminid);
         $password  = $model['password'];
         $hash_code = $model->getMeta('forget_password_hash');
 

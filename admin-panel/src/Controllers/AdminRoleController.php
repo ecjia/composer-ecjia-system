@@ -50,6 +50,7 @@ namespace Ecjia\System\AdminPanel\Controllers;
 use admin_nav_here;
 use ecjia;
 use Ecjia\System\Admins\Users\AdminUserModel;
+use Ecjia\System\Admins\Users\AdminUserRepository;
 use Ecjia\System\Models\RoleModel;
 use ecjia_admin;
 use ecjia_admin_log;
@@ -215,7 +216,7 @@ class AdminRoleController extends ecjia_admin
         ];
 
         RoleModel::where('role_id', $role_id)->update($role_data);
-        AdminUserModel::where('role_id', $role_id)->update(['action_list' => $act_list]);
+        AdminUserRepository::model()->where('role_id', $role_id)->update(['action_list' => $act_list]);
 
         /* 记录日志 */
         ecjia_admin_log::instance()->add_object('role', __('管理员角色'));
@@ -238,7 +239,7 @@ class AdminRoleController extends ecjia_admin
 
         $role_id = intval($this->request->input('id'));
 
-        $remove_num = AdminUserModel::where('role_id', $role_id)->count();
+        $remove_num = AdminUserRepository::model()->where('role_id', $role_id)->count();
         if ($remove_num > 0) {
             return $this->showmessage(__('此角色有管理员在使用，暂时不能删除！'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
         }

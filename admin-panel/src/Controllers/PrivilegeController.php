@@ -58,6 +58,7 @@ use Ecjia\Component\PasswordLock\PasswordLock;
 use Ecjia\System\Admins\AdminMenu\HeaderMenuGroup;
 use Ecjia\Component\QuickNav\QuickNav;
 use Ecjia\System\Admins\Users\AdminUserModel;
+use Ecjia\System\Admins\Users\AdminUserRepository;
 use ecjia_admin;
 use ecjia_admin_log;
 use ecjia_password;
@@ -240,7 +241,7 @@ class PrivilegeController extends ecjia_admin
         $password = remove_xss($this->request->input('password'));
         $remember = remove_xss($this->request->input('remember'));
 
-        $model = AdminUserModel::where('user_name', $username)->first();
+        $model = AdminUserRepository::model()->where('user_name', $username)->first();
 
         if (empty($model)) {
             return $this->showmessage(__('您输入的帐号信息不正确。'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
@@ -335,7 +336,7 @@ class PrivilegeController extends ecjia_admin
             '<p>' . __('<a href="https://ecjia.com/wiki/帮助:ECJia智能后台:个人设置" target="_blank">关于编辑个人资料帮助文档</a>') . '</p>'
         );
 
-        $user_info = AdminUserModel::find($_SESSION['admin_id'])->toArray();
+        $user_info = AdminUserRepository::model()->find($_SESSION['admin_id'])->toArray();
 
         /* 模板赋值 */
         $this->assign('ur_here', __('编辑个人资料'));
@@ -359,14 +360,14 @@ class PrivilegeController extends ecjia_admin
 
         $admin_email = remove_xss($this->request->input('email'));
 
-        $model = AdminUserModel::find($admin_id);
+        $model = AdminUserRepository::model()->find($admin_id);
 
         if (empty($model)) {
             return $this->showmessage(__('非法操作！'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
         }
 
         /* Email地址是否有重复 */
-        if ($admin_email && $admin_email != $model->email && AdminUserModel::where('email', $admin_email)->count()) {
+        if ($admin_email && $admin_email != $model->email && AdminUserRepository::model()->where('email', $admin_email)->count()) {
             return $this->showmessage(sprintf(__('该Email地址 %s 已经存在！'), stripslashes($admin_email)), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
         }
 
@@ -426,7 +427,7 @@ class PrivilegeController extends ecjia_admin
 
         ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here(__('设置个人导航菜单')));
 
-        $model = AdminUserModel::find($admin_id);
+        $model = AdminUserRepository::model()->find($admin_id);
         if (empty($model)) {
             return $this->showmessage(__('非法操作！'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
         }
@@ -464,7 +465,7 @@ class PrivilegeController extends ecjia_admin
             return $this->showmessage(__('非法操作！'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
         }
 
-        $model = AdminUserModel::find($admin_id);
+        $model = AdminUserRepository::model()->find($admin_id);
 
         if (empty($model)) {
             return $this->showmessage(__('非法操作！'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);

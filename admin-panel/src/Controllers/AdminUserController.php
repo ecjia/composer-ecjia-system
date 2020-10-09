@@ -54,6 +54,7 @@ namespace Ecjia\System\AdminPanel\Controllers;
 use admin_nav_here;
 use ecjia;
 use Ecjia\System\Admins\Users\AdminUserModel;
+use Ecjia\System\Admins\Users\AdminUserRepository;
 use Ecjia\System\Admins\Users\Password;
 use Ecjia\System\Models\RoleModel;
 use ecjia_admin;
@@ -116,7 +117,7 @@ class AdminUserController extends ecjia_admin
 
         $keyword = remove_xss($this->request->input('keyword'));
 
-        $query = AdminUserModel::select('user_id', 'user_name', 'email', 'add_time', 'last_login');
+        $query = AdminUserRepository::model()->select('user_id', 'user_name', 'email', 'add_time', 'last_login');
         if (!empty($keyword)) {
             $key_type = intval($this->request->input('key_type', 1));
             switch ($key_type) {
@@ -195,12 +196,12 @@ class AdminUserController extends ecjia_admin
         }
 
         /* 判断管理员是否已经存在 */
-        if ($user_name && AdminUserModel::where('user_name', $user_name)->count()) {
+        if ($user_name && AdminUserRepository::model()->where('user_name', $user_name)->count()) {
             return $this->showmessage(sprintf(__('该管理员 %s 已经存在！'), $user_name), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
         }
 
         /* Email地址是否有重复 */
-        if ($email && AdminUserModel::where('email', $email)->count()) {
+        if ($email && AdminUserRepository::model()->where('email', $email)->count()) {
             return $this->showmessage(sprintf(__('该Email地址 %s 已经存在！'), $email), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
         }
 
@@ -221,7 +222,7 @@ class AdminUserController extends ecjia_admin
             'action_list' => '',
         ];
 
-        $new_id = AdminUserModel::insertGetId($insert_data);
+        $new_id = AdminUserRepository::model()->insertGetId($insert_data);
 
         if (!empty($new_id)) {
             $role_model = RoleModel::find($role_id);
@@ -272,7 +273,7 @@ class AdminUserController extends ecjia_admin
         ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here(__('编辑管理员')));
 
         /* 获取管理员信息 */
-        $user_info = AdminUserModel::find($id)->toArray();
+        $user_info = AdminUserRepository::model()->find($id)->toArray();
 
         /* 模板赋值 */
         $this->assign('ur_here', __('编辑管理员'));
@@ -329,16 +330,16 @@ class AdminUserController extends ecjia_admin
         }
 
         /* 判断管理员是否已经存在 */
-        if ($admin_name && AdminUserModel::where('user_name', $admin_name)->where('user_id', '!=', $admin_id)->count()) {
+        if ($admin_name && AdminUserRepository::model()->where('user_name', $admin_name)->where('user_id', '!=', $admin_id)->count()) {
             return $this->showmessage(sprintf(__('该管理员 %s 已经存在！'), $admin_name), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
         }
 
         /* Email地址是否有重复 */
-        if ($admin_email && AdminUserModel::where('email', $admin_email)->where('user_id', '!=', $admin_id)->count()) {
+        if ($admin_email && AdminUserRepository::model()->where('email', $admin_email)->where('user_id', '!=', $admin_id)->count()) {
             return $this->showmessage(sprintf(__('该Email地址 %s 已经存在！'), $admin_email), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
         }
 
-        $user_model = AdminUserModel::find($admin_id);
+        $user_model = AdminUserRepository::model()->find($admin_id);
         if ($user_model->action_list == 'all') {
             return $this->showmessage(sprintf(__('超级管理员 %s 不可被修改！'), $admin_name), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
         }
@@ -487,7 +488,7 @@ class AdminUserController extends ecjia_admin
         }
 
         /* 获得管理员用户名 */
-        $model = AdminUserModel::find($id);
+        $model = AdminUserRepository::model()->find($id);
         if (empty($model)) {
             return $this->showmessage(__('您不能删除这个管理员！'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
         }
