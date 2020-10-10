@@ -421,6 +421,25 @@ abstract class EcjiaController extends RoyalcmsController
         $resource_name = RC_Package::package('app::'.$app)->loadTemplate($resource_name, true);
         return $this->display($resource_name, $cache_id, $show, $options);
     }
+
+    /**
+     * 显示视图
+     *
+     * @param string   $app            应用目录
+     * @param string   $tpl_file       模板文件
+     * @param null     $cache_id       缓存id
+     * @param string   $cache_path     缓存目录
+     * @param bool     $stat           是否返回解析结果
+     * @param string   $content_type   文件类型
+     * @param string   $charset        字符集
+     * @param bool     $show           是否显示
+     * @return mixed $stat = false, $content_type = 'text/html', $charset = ''
+     */
+    public function fetchAppTemplate($app, $resource_name, $cache_id = null, $options = array())
+    {
+        $resource_name = RC_Package::package('app::'.$app)->loadTemplate($resource_name, true);
+        return $this->fetch($resource_name, $cache_id, $options);
+    }
     
     /**
      * 载入项目常量
