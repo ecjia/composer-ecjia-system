@@ -106,6 +106,7 @@ class EcjiaAdminPanelServiceProvider extends AppParentServiceProvider
         RC_Service::addService('service_menu', 'system', 'Ecjia\System\AdminPanel\Services\ServiceMenuService');
         RC_Service::addService('privilege_menu', 'system', 'Ecjia\System\AdminPanel\Services\PrivilegeMenuService');
         RC_Service::addService('admin_session_logins', 'system', 'Ecjia\System\AdminPanel\Services\AdminSessionLoginsService');
+        RC_Service::addService('ecjia_deactivate_plugin', 'system', 'Ecjia\System\AdminPanel\Services\EcjiaDeactivatePluginService');
 
     }
 
