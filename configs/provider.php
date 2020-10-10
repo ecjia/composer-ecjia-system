@@ -9,6 +9,7 @@ return array(
 	'Ecjia\Component\Password\PasswordServiceProvider',
 	'Ecjia\Component\AdminLog\AdminLogServiceProvider',
 	'Ecjia\Component\CleanCache\CleanCacheServiceProvider',
+	'Ecjia\Component\Plugin\PluginServiceProvider',
 
 
     'Ecjia\System\Providers\EventServiceProvider',

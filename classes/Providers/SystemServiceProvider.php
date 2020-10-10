@@ -141,8 +141,6 @@ class SystemServiceProvider extends AppParentServiceProvider
 
         $this->registerAppManager();
 
-        $this->registerPluginManager();
-
         $this->registerThemeManager();
 
         $this->registerSiteManager();
@@ -241,19 +239,6 @@ class SystemServiceProvider extends AppParentServiceProvider
             return new AppManager();
         });
     }
-	
-	/**
-	 * Register the Plugin manager
-     * \Ecjia\Component\Plugin\PluginManager
-     *
-	 * @return void
-	 */
-	public function registerPluginManager() 
-	{
-	    $this->royalcms->singleton('ecjia.plugin.manager', function($royalcms) {
-	    	return new PluginManager($royalcms);
-	    });
-	}
 	
 	/**
 	 * Register the Theme manager
