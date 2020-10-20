@@ -691,8 +691,12 @@ if ( ! function_exists('ecjia_price_format'))
         } else {
             $price = number_format($price, 2, '.', '');
         }
-    
-        return sprintf(ecjia::config('currency_format'), $price);
+        
+        $currency_format = ecjia::config('currency_format');
+    	if ($currency_format != '￥%s') {
+    		$currency_format = config('site.currency_format');
+    	}
+        return sprintf($currency_format, $price);
     }
 }
 
