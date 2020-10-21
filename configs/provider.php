@@ -10,6 +10,7 @@ return array(
 	'Ecjia\Component\AdminLog\AdminLogServiceProvider',
 	'Ecjia\Component\CleanCache\CleanCacheServiceProvider',
 	'Ecjia\Component\Plugin\PluginServiceProvider',
+	'Ecjia\Component\Region\RegionServiceProvider',
 
 
     'Ecjia\System\Providers\EventServiceProvider',
