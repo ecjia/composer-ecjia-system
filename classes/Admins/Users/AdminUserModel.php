@@ -53,6 +53,8 @@ class AdminUserModel extends Model
 {
     use Metable;
 
+    protected $with = ['meta'];
+
 	protected $table = 'admin_user';
 	
 	protected $primaryKey = 'user_id';
