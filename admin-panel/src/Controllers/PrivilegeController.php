@@ -57,7 +57,6 @@ use Ecjia\Component\ShowMessage\Options\PjaxShowMessageOption;
 use Ecjia\Component\PasswordLock\PasswordLock;
 use Ecjia\System\Admins\AdminMenu\HeaderMenuGroup;
 use Ecjia\Component\QuickNav\QuickNav;
-use Ecjia\System\Admins\Users\AdminUserModel;
 use Ecjia\System\Admins\Users\AdminUserRepository;
 use ecjia_admin;
 use ecjia_admin_log;
