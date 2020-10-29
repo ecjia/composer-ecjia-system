@@ -5,11 +5,10 @@ namespace Ecjia\System\AdminPanel\Controllers;
 
 
 use ecjia;
+use Ecjia\Component\AutoLogin\AuthEncrypter;
 use Ecjia\Component\AutoLogin\AuthLoginDecrypt;
-use Ecjia\Component\AutoLogin\AuthLoginEncrypt;
 use Ecjia\System\Admins\Users\AdminUserRepository;
 use Ecjia\Theme\AdminPanel\BaseControllers\AdminPanelBaseController;
-use Ecjia\Theme\AdminPanel\RpcClients\AdminService;
 use ecjia_error;
 use RC_Hook;
 use RC_Session;
@@ -47,7 +46,7 @@ class AdminAutoLoginController extends AdminPanelBaseController
             RC_Session::destroy();
 
             $links[] = array('text' => __('返回重新登录', 'admin'), 'href' => RC_Uri::url('@/privilege/login'));
-            return $this->showmessage($result->get_error_message(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('links' => $links));
+            return $this->showmessage($result->get_error_message(), ecjia::MSGTYPE_HTML | ecjia::MSGSTAT_SUCCESS, array('links' => $links));
         }
 
         return $this->redirect($redirect_url);
@@ -65,7 +64,7 @@ class AdminAutoLoginController extends AdminPanelBaseController
         }
 
         try {
-            $encrypter = new AuthLoginEncrypt(config('dscmallx.auth_key'), config('dscmallx.cipher'));
+            $encrypter = new AuthEncrypter(config('dscmallx.auth_key'), config('dscmallx.cipher'));
             $params = (new AuthLoginDecrypt($authcode, $encrypter))->decrypt();
         }
         catch (\Exception $exception) {
