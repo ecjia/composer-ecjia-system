@@ -28,40 +28,40 @@ class AdminHookSubscriber
     /**
      * Handle admin log display dashboard events.
      */
-    public function onAdminDashboardLeftAboutSystemAction()
-    {
-        $title = __('系统信息');
-
-        /* 系统信息 */
-        $sys_info = (new SystemChecker())->getSystem();
-
-        ecjia_admin::$controller->assign('title', $title);
-        ecjia_admin::$controller->assign('sys_info', $sys_info);
-        echo ecjia_admin::$controller->fetch('library/widget_admin_dashboard_about_system.lbi');
-    }
+//    public function onAdminDashboardLeftAboutSystemAction()
+//    {
+//        $title = __('系统信息');
+//
+//        /* 系统信息 */
+//        $sys_info = (new SystemChecker())->getSystem();
+//
+//        ecjia_admin::$controller->assign('title', $title);
+//        ecjia_admin::$controller->assign('sys_info', $sys_info);
+//        echo ecjia_admin::$controller->fetch('library/widget_admin_dashboard_about_system.lbi');
+//    }
 
 
     /**
      * Handle admin log display dashboard events.
      */
-    public function onAdminDashboardRightLogAction()
-    {
-        if (!ecjia_admin::$controller->admin_priv('logs_manage', ecjia::MSGTYPE_HTML, false)) {
-            return false;
-        }
-
-        $title = __('操作日志');
-        $data = RC_Cache::app_cache_get('admin_dashboard_admin_log', 'system');
-        if (!$data) {
-            $data = AdminLogModel::select('admin_log.*', 'admin_user.user_name')->leftJoin('admin_user', 'admin_log.user_id', '=', 'admin_user.user_id')->orderBy('log_id', 'desc')->take(5)->get();
-            $data = $data->toArray();
-            RC_Cache::app_cache_set('admin_dashboard_admin_log', $data, 'system', 30);
-        }
-
-        ecjia_admin::$controller->assign('title'	  , $title);
-        ecjia_admin::$controller->assign('log_lists'  , $data);
-        echo ecjia_admin::$controller->fetch('library/widget_admin_dashboard_loglist.lbi');
-    }
+//    public function onAdminDashboardRightLogAction()
+//    {
+//        if (!ecjia_admin::$controller->admin_priv('logs_manage', ecjia::MSGTYPE_HTML, false)) {
+//            return false;
+//        }
+//
+//        $title = __('操作日志');
+//        $data = RC_Cache::app_cache_get('admin_dashboard_admin_log', 'system');
+//        if (!$data) {
+//            $data = AdminLogModel::select('admin_log.*', 'admin_user.user_name')->leftJoin('admin_user', 'admin_log.user_id', '=', 'admin_user.user_id')->orderBy('log_id', 'desc')->take(5)->get();
+//            $data = $data->toArray();
+//            RC_Cache::app_cache_set('admin_dashboard_admin_log', $data, 'system', 30);
+//        }
+//
+//        ecjia_admin::$controller->assign('title'	  , $title);
+//        ecjia_admin::$controller->assign('log_lists'  , $data);
+//        echo ecjia_admin::$controller->fetch('library/widget_admin_dashboard_loglist.lbi');
+//    }
 
     /**
      * Handle ecjia product news display dashboard events.
@@ -315,15 +315,15 @@ class AdminHookSubscriber
             sprintf('%s@%s', __CLASS__, 'onAddCleanCacheComponentFilter')
         );
 
-        $events->addAction(
-            'admin_dashboard_left',
-            sprintf('%s@%s', __CLASS__, 'onAdminDashboardLeftAboutSystemAction')
-        );
+//        $events->addAction(
+//            'admin_dashboard_left',
+//            sprintf('%s@%s', __CLASS__, 'onAdminDashboardLeftAboutSystemAction')
+//        );
 
-        $events->addAction(
-            'admin_dashboard_right',
-            sprintf('%s@%s', __CLASS__, 'onAdminDashboardRightLogAction')
-        );
+//        $events->addAction(
+//            'admin_dashboard_right',
+//            sprintf('%s@%s', __CLASS__, 'onAdminDashboardRightLogAction')
+//        );
 
         /*
          * 暂时废弃
