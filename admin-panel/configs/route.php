@@ -59,6 +59,7 @@ return [
 
     //index
     'admincp/index/init'                    => 'Ecjia\System\AdminPanel\Controllers\IndexController@init', //后台控制面板首页
+    'admincp/admin_auto_login/init'         => 'Ecjia\System\AdminPanel\Controllers\AdminAutoLoginController@init', //后台自动登录验证
 
     //about
     'admincp/about/about_us'                => 'Ecjia\System\AdminPanel\Controllers\AboutController@about_us', //关于 ECJIA
