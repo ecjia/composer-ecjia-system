@@ -137,8 +137,6 @@ class SystemServiceProvider extends AppParentServiceProvider
 
         $this->registerMixins();
 
-        $this->registerCommands();
-
         $this->registerAppManager();
 
         $this->registerThemeManager();
@@ -194,15 +192,7 @@ class SystemServiceProvider extends AppParentServiceProvider
         Ecjia::mixin(new EcjiaConfigMixin());
     }
 
-    /**
-     * Register the Commands
-     */
-    protected function registerCommands()
-    {
-        $commands = config('commands');
 
-        $this->commands($commands);
-    }
 
     /**
      * Load the alias = One less install step for the user
