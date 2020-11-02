@@ -23,6 +23,6 @@
     }
   },
   "require": {
-    "oomphinc/composer-installers-extender": "1.1.2"
+    "oomphinc/composer-installers-extender": "^2.0"
   }
 }
