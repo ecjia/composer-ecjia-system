@@ -37,7 +37,7 @@ class AdminAutoLoginController extends AdminPanelBaseController
         $authcode     = trim($this->request->input('authcode'));
         $redirect_url = htmlspecialchars_decode($this->request->input('redirect_url'));
         if (empty($redirect_url)) {
-            $redirect_url = RC_Uri::url('@/dashboard/init');
+            $redirect_url = RC_Uri::url('@index/init');
         }
 
         $result = $this->autologin_verification($authcode);
