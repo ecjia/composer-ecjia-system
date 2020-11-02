@@ -60,16 +60,17 @@
 					<div class="controls">
 						<div class="sepH_b">
 							<input class="input-xlarge" name="new_password" type="password" id="new_password" maxlength="32" size="34" autocomplete="off" />
-							<span class="help-block">{t}新密码{/t}</span>
-
-							<div class="progress progress-danger input-xlarge" id="pass_progress">
-								<div class="bar" style="width: 0"></div>
-							</div>
 						</div>
-						<input class="input-xlarge" name="pwd_confirm" type="password" id="s_password_re" value="" size="34" autocomplete="off" />
-						<span class="help-block">{t}确认密码{/t}</span>
 					</div>
 				</div>
+                <div class="control-group formSep{if !$no_oldpwd} hide{/if}">
+                    <label class="control-label">{t}确认密码：{/t}</label>
+                    <div class="controls">
+                        <div class="sepH_b">
+                            <input class="input-xlarge" name="pwd_confirm" type="password" id="s_password_re" value="" size="34" autocomplete="off" />
+                        </div>
+                         </div>
+                </div>
 				<!-- {if $user.agency_name} -->
 				<div class="control-group">
 					<label class="control-label" for="user_name">{t}负责的办事处：{/t}</label>
