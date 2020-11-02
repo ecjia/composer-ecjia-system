@@ -137,14 +137,6 @@ class SystemServiceProvider extends AppParentServiceProvider
 
         $this->registerMixins();
 
-        $this->registerAppManager();
-
-        $this->registerThemeManager();
-
-        $this->registerSiteManager();
-
-        $this->registerVersionManager();
-
         $this->registerAppService();
 
         $this->registerErrorRender();
@@ -193,7 +185,6 @@ class SystemServiceProvider extends AppParentServiceProvider
     }
 
 
-
     /**
      * Load the alias = One less install step for the user
      */
@@ -210,64 +201,6 @@ class SystemServiceProvider extends AppParentServiceProvider
         });
     }
 
-    public function registerEcjiaContainer()
-    {
-        $this->royalcms->singleton('ecjia', function($royalcms){
-            return new Ecjia();
-        });
-    }
-
-    /**
-     * Register the App manager
-     * \Ecjia\Component\Plugin\PluginManager
-     *
-     * @return void
-     */
-    public function registerAppManager()
-    {
-        $this->royalcms->singleton('ecjia.app.manager', function($royalcms) {
-            return new AppManager();
-        });
-    }
-	
-	/**
-	 * Register the Theme manager
-     * \Ecjia\Component\Theme\ThemeManager
-     *
-	 * @return void
-	 */
-	public function registerThemeManager()
-	{
-	    $this->royalcms->singleton('ecjia.theme.manager', function($royalcms) {
-	        return new ThemeManager($royalcms);
-	    });
-	}
-	
-	/**
-	 * Register the Site manager
-     * \Ecjia\Component\Site\SiteManager
-     *
-	 * @return void
-	 */
-	public function registerSiteManager()
-	{
-	    $this->royalcms->singleton('ecjia.site.manager', function($royalcms) {
-	        return new SiteManager($royalcms);
-	    });
-	}
-	
-	/**
-	 * Register the Site manager
-	 * \Ecjia\Component\Version\VersionManager
-     *
-     * @return void
-     */
-	public function registerVersionManager()
-	{
-	    $this->royalcms->singleton('ecjia.version.manager', function($royalcms) {
-	        return new VersionManager($royalcms);
-	    });
-	}
 
     protected function registerAppService()
     {
