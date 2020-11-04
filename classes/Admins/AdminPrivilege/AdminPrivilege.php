@@ -32,7 +32,7 @@ class AdminPrivilege extends RoyalcmsObject
             return true;
         }
 
-        if (strpos(',' . $this->action_list['action_list'] . ',', ',' . $priv_str . ',') === false) {
+        if (strpos(',' . $this->action_list . ',', ',' . $priv_str . ',') === false) {
             return false;
         } else {
             return true;
