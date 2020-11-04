@@ -139,7 +139,7 @@ class EcjiaAdminPanelServiceProvider extends AppParentServiceProvider
                     $action = 'init';
                 }
                 RC_Hook::add_action($key, function () use ($action, $class) {
-                    return (new $class)->$action();
+                    return royalcms('default-router')->runControllerAction($class, $action);
                 });
             }
         }
