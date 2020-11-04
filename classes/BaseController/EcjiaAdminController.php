@@ -51,6 +51,7 @@ use admin_nav_here;
 use ecjia;
 use Ecjia\Component\Contracts\EcjiaTemplateFileLoader;
 use Ecjia\System\Admins\AdminPrivilege\AdminPrivilege;
+use Ecjia\System\Middleware\AdminCheckLoginRequest;
 use ecjia_admin_log;
 use ecjia_app;
 use ecjia_config;
@@ -123,25 +124,27 @@ abstract class EcjiaAdminController extends EcjiaController implements EcjiaTemp
 		RC_Hook::add_action('admin_print_main_header', array(ecjia_screen::$current_screen, 'render_screen_meta'));
 		
 		$this->public_route = RC_Hook::apply_filters('admin_access_public_route', config('system::public_route'));
-		
-		// 判断用户是否登录
-		if (!$this->_check_login()) {
-		    RC_Session::destroy();
-		    if (is_pjax()) {
-		        ecjia_screen::$current_screen->add_nav_here(new admin_nav_here(__('系统提示')));
-		        $response = $this->showmessage(__('对不起,您没有执行此项操作的权限!'), ecjia::MSGTYPE_HTML | ecjia::MSGSTAT_ERROR, array('links' => array(array('text' => __('重新登录'), 'href' => RC_Uri::url('@privilege/login')))));
-		        royalcms('response')->send();
-		        exit();
-		    } elseif (is_ajax()) {
-		        $this->showmessage(__('对不起,您没有执行此项操作的权限!'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
-                royalcms('response')->send();
-                exit();
-		    } else {
 
-		        RC_Cookie::set('admin_login_referer', RC_Uri::current_url());
-                $this->redirectWithExited(RC_Uri::url('@privilege/login'));
-		    }
-		}
+        $this->middleware(AdminCheckLoginRequest::class);
+
+//		// 判断用户是否登录
+//		if (!$this->_check_login()) {
+//		    RC_Session::destroy();
+//		    if (is_pjax()) {
+//		        ecjia_screen::$current_screen->add_nav_here(new admin_nav_here(__('系统提示')));
+//		        $response = $this->showmessage(__('对不起,您没有执行此项操作的权限!'), ecjia::MSGTYPE_HTML | ecjia::MSGSTAT_ERROR, array('links' => array(array('text' => __('重新登录'), 'href' => RC_Uri::url('@privilege/login')))));
+//		        royalcms('response')->send();
+//		        exit();
+//		    } elseif (is_ajax()) {
+//		        $this->showmessage(__('对不起,您没有执行此项操作的权限!'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+//                royalcms('response')->send();
+//                exit();
+//		    } else {
+//
+//		        RC_Cookie::set('admin_login_referer', RC_Uri::current_url());
+//                $this->redirectWithExited(RC_Uri::url('@privilege/login'));
+//		    }
+//		}
         
 		if (RC_Config::get('system.debug')) {
 			error_reporting(E_ALL);
@@ -216,7 +219,7 @@ abstract class EcjiaAdminController extends EcjiaController implements EcjiaTemp
     /**
      * 登录session授权
      */
-    protected function authSession()
+    public function authSession()
     {
         /* 验证管理员身份 */
         if (session('session_user_id') && session('session_user_type') == 'admin') {
