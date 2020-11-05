@@ -45,7 +45,7 @@ class AdminAutoLoginController extends AdminPanelBaseController
         if (is_ecjia_error($result)) {
             RC_Session::destroy();
 
-            $links[] = array('text' => __('返回重新登录', 'admin'), 'href' => RC_Uri::url('@/privilege/login'));
+            $links[] = array('text' => __('返回重新登录', 'admin'), 'href' => RC_Uri::url('@privilege/login'));
             return $this->showmessage($result->get_error_message(), ecjia::MSGTYPE_HTML | ecjia::MSGSTAT_SUCCESS, array('links' => $links));
         }
 
