@@ -52,13 +52,11 @@ use Ecjia\Component\ShowMessage\Options\JsonShowMessageOption;
 use Ecjia\Component\ShowMessage\Options\PjaxShowMessageOption;
 use Ecjia\Component\ShowMessage\ShowMessage;
 use ecjia_utility;
-use RC_DB;
 use RC_Redirect;
 use RC_Response;
 use RC_Package;
 use Royalcms\Component\Routing\Controller as RoyalcmsController;
 
-defined('IN_ECJIA') or exit('No permission resources.');
 
 /**
  * ECJIA 控制器基础类
@@ -144,14 +142,7 @@ abstract class EcjiaController extends RoyalcmsController
         static::$controller = & $this;
         static::$view_object = & $this->view;
 
-        if (ecjia::is_debug_display() && config('system.debug_display_query') === true) {
-            RC_DB::enableQueryLog();
-        }
-
         $this->load_hooks();
-
-        RC_Response::header('X-XSS-Protection', '1; mode=block');
-        RC_Response::header('X-Frame-Options', 'SAMEORIGIN');
     }
     
     

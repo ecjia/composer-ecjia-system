@@ -125,7 +125,7 @@ abstract class EcjiaAdminController extends EcjiaController implements EcjiaTemp
 		
 		$this->public_route = RC_Hook::apply_filters('admin_access_public_route', config('system::public_route'));
 
-        $this->middleware(AdminCheckLoginRequest::class);
+        $this->middleware(config('system::middlewares'));
 
 //		// 判断用户是否登录
 //		if (!$this->_check_login()) {
