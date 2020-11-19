@@ -84,10 +84,6 @@ abstract class EcjiaFrontController extends SmartyController
 		
 		self::$controller = static::$controller;
 		self::$view_object = static::$view_object;
-	
-		if (defined('DEBUG_MODE') == false) {
-			define('DEBUG_MODE', 0);
-		}
 
 		/* 商店关闭了，输出关闭的消息 */
 		if (ecjia::config('shop_closed') == 1) {

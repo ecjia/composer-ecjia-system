@@ -104,10 +104,6 @@ abstract class EcjiaAdminController extends EcjiaController implements EcjiaTemp
 		self::$controller = static::$controller;
 		self::$view_object = static::$view_object;
 		
-		if (defined('DEBUG_MODE') == false) {
-		    define('DEBUG_MODE', 2);
-		}
-		
 		/* 新加载全局方法 */
 		RC_Loader::load_sys_func('global');
 
@@ -124,7 +120,7 @@ abstract class EcjiaAdminController extends EcjiaController implements EcjiaTemp
 		RC_Hook::add_action('admin_print_main_header', array(ecjia_screen::$current_screen, 'render_screen_meta'));
 		
 		$this->public_route = RC_Hook::apply_filters('admin_access_public_route', config('system::public_route'));
-
+       
         $this->middleware(config('system::middlewares'));
 
 //		// 判断用户是否登录
@@ -145,12 +141,6 @@ abstract class EcjiaAdminController extends EcjiaController implements EcjiaTemp
 //                $this->redirectWithExited(RC_Uri::url('@privilege/login'));
 //		    }
 //		}
-        
-		if (RC_Config::get('system.debug')) {
-			error_reporting(E_ALL);
-		} else {
-			error_reporting(E_ALL ^ (E_NOTICE | E_WARNING));
-		}
 
 		$this->load_default_script_style();
 		
@@ -237,29 +227,29 @@ abstract class EcjiaAdminController extends EcjiaController implements EcjiaTemp
         echo '<meta name="csrf-token" content="' . csrf_token() . '">';
     }
 	
-	/**
-	 * 后台判断是否登录
-	 */
-	private function _check_login()
-    {
-        /* 验证公开路由 */
-		if ($this->isVerificationPublicRoute()) {
-		    return true;
-		}
-
-		/* 验证管理员身份 */
-		if ($this->authSession()) {
-		    return true;
-		}
-
-        return (new \Ecjia\System\Admins\RememberPassword\RememberPassword)->verification(function($model) {
-            $this->admin_session($model['user_id'], $model['user_name'], $model['action_list'], $model['last_time']);
-
-            $model->last_login = RC_Time::gmtime();
-            $model->last_ip = RC_Ip::client_ip();
-            $model->save();
-        });
-	}
+//	/**
+//	 * 后台判断是否登录
+//	 */
+//	private function _check_login()
+//    {
+//        /* 验证公开路由 */
+//		if ($this->isVerificationPublicRoute()) {
+//		    return true;
+//		}
+//
+//		/* 验证管理员身份 */
+//		if ($this->authSession()) {
+//		    return true;
+//		}
+//
+//        return (new \Ecjia\System\Admins\RememberPassword\RememberPassword)->verification(function($model) {
+//            $this->admin_session($model['user_id'], $model['user_name'], $model['action_list'], $model['last_time']);
+//
+//            $model->last_login = RC_Time::gmtime();
+//            $model->last_ip = RC_Ip::client_ip();
+//            $model->save();
+//        });
+//	}
 	
 	/**
 	 * 获得后台模板目录

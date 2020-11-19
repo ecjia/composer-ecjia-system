@@ -75,12 +75,6 @@ abstract class SimpleController extends EcjiaController implements EcjiaTemplate
     
         //title信息
         $this->assign_title();
-        
-        if (RC_Config::get('system.debug')) {
-            error_reporting(E_ALL);
-        } else {
-            error_reporting(E_ALL ^ (E_NOTICE | E_WARNING));
-        }
 
         $this->load_default_script_style();
     
