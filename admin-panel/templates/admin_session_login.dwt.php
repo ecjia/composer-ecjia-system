@@ -3,7 +3,7 @@
 
 <!-- {block name="footer"} -->
 <script type="text/javascript">
-	// ecjia.admin.admin_logs.init();
+	ecjia.admin.admin_logs.init();
 </script>
 <!-- {/block} -->
 
@@ -42,7 +42,7 @@
             </tr>
         </thead>
         <tbody>
-            <!-- {foreach $logs as $key => $item} -->
+            <!-- {foreach $logs.list as $key => $item} -->
             <tr>
                 <td class="first-cell" >{$item.id}</td>
                 <td align="left">{$item.user_type}</td>
@@ -57,7 +57,7 @@
             </tr>
             <!-- {foreachelse} -->
             <tr>
-                <td class="no-records" colspan="5">{t}没有找到任何记录{/t}</td>
+                <td class="no-records" colspan="8">{t}没有找到任何记录{/t}</td>
             </tr>
             <!-- {/foreach} -->
         </tbody>
