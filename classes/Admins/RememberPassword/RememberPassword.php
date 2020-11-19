@@ -9,7 +9,6 @@
 namespace Ecjia\System\Admins\RememberPassword;
 
 use Ecjia\System\Admins\Users\AdminUserModel;
-use Ecjia\System\Admins\Users\Password;
 use ecjia;
 use ecjia_password;
 use RC_Cookie;
