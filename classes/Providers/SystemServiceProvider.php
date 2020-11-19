@@ -79,6 +79,12 @@ class SystemServiceProvider extends AppParentServiceProvider
         define('VERSION', Ecjia::VERSION);
         define('RELEASE', Ecjia::RELEASE);
 
+        if (config('system.debug')) {
+            error_reporting(E_ALL);
+        } else {
+            error_reporting(E_ALL ^ (E_NOTICE | E_WARNING));
+        }
+
         // 加载扩展函数库
         RC_Loader::auto_load_func();
 
