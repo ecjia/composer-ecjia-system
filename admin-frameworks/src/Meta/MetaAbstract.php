@@ -71,7 +71,7 @@ class MetaAbstract
     protected function validateProperty()
     {
         if (!$this->meta_key || !$this->object_type || !$this->object_group || !$this->object_id) {
-            throw new Exception("The class property must be setted.");
+            throw new Exception("The class property must be set.");
         }
     }
 
@@ -82,7 +82,7 @@ class MetaAbstract
      */
     public function save($value)
     {
-        $this->validateProperty();
+         $this->validateProperty();
         
         //如果存在，则更新
         if ($this->exists())
@@ -119,12 +119,14 @@ class MetaAbstract
     public function exists()
     {
         $this->validateProperty();
-        
-        return TermMetaModel::select('meta_id')->where('object_type', $this->object_type)
+
+         $res = TermMetaModel::where('object_type', $this->object_type)
             ->where('object_group', $this->object_group)
             ->where('object_id', $this->object_id)
             ->where('meta_key', $this->meta_key)
-            ->pluck('meta_id');
+            ->first();
+
+        return $res;
     }
 
     /**
