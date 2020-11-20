@@ -19,13 +19,13 @@
 				<div class="formRow">
 					<div class="input-prepend">
 						<span class="add-on"><i class="icon-user"></i></span>
-						<input id="username" name="username" type="text" placeholder="{t}管理员姓名：{/t}" value="" autocomplete="off" />
+						<input id="username" name="username" type="text" placeholder="{t}管理员姓名{/t}" value="" autocomplete="off" />
 					</div>
 				</div>
 				<div class="formRow">
 					<div class="input-prepend">
 						<span class="add-on"><i class="icon-lock"></i></span>
-						<input id="password" name="password" type="password" placeholder="{t}管理员密码：{/t}" value="" autocomplete="off" />
+						<input id="password" name="password" type="password" placeholder="{t}管理员密码{/t}" value="" autocomplete="off" />
 					</div>
 				</div>
 				<!-- {ecjia:hook id=admin_login_captcha} -->
