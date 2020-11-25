@@ -119,19 +119,24 @@ class AdminCacheController extends ecjia_admin
 
         $cachekey = trim($_POST['cachekey']);
 
-        $result = ecjia_update_cache::clean($cachekey);
+        try {
+            $result = ecjia_update_cache::clean($cachekey);
 
-        if (!empty($result)) {
-            if (is_ecjia_error($result[$cachekey])) {
-                //返回错误
-                return $this->showmessage($result->get_error_message(), ecjia::MSGSTAT_ERROR | ecjia::MSGTYPE_JSON, ['error' => 1]);
-            } else {
-                //返回成功
-                return $this->showmessage('', ecjia::MSGSTAT_SUCCESS | ecjia::MSGTYPE_JSON, ['error' => 0]);
+            if (!empty($result)) {
+                if (is_ecjia_error($result[$cachekey])) {
+                    //返回错误
+                    return $this->showmessage($result[$cachekey]->get_error_message(), ecjia::MSGSTAT_ERROR | ecjia::MSGTYPE_JSON, ['error' => 1]);
+                } else {
+                    //返回成功
+                    return $this->showmessage('', ecjia::MSGSTAT_SUCCESS | ecjia::MSGTYPE_JSON, ['error' => 0]);
+                }
             }
-        }
 
-        return $this->showmessage('', ecjia::MSGSTAT_ERROR | ecjia::MSGTYPE_JSON, ['error' => 1]);
+            return $this->showmessage('', ecjia::MSGSTAT_ERROR | ecjia::MSGTYPE_JSON, ['error' => 1]);
+        }
+        catch (\Exception $exception) {
+            return $this->showmessage($exception->getMessage(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+        }
     }
 
 }

@@ -124,22 +124,27 @@ class UpgradeController extends ecjia_admin
 
     public function check_update()
     {
-        $this->admin_priv('admin_upgrade', ecjia::MSGTYPE_JSON);
+        try {
+            $this->admin_priv('admin_upgrade', ecjia::MSGTYPE_JSON);
 
-        $result = (new \Ecjia\Component\UpgradeCheck\CloudCheck)->checkCurrentVersion();
-        if (is_ecjia_error($result)) {
-            return $this->showmessage($result->get_error_message(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+            $result = (new \Ecjia\Component\UpgradeCheck\CloudCheck)->checkCurrentVersion();
+            if (is_ecjia_error($result)) {
+                return $this->showmessage($result->get_error_message(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+            }
+
+            $last_check_upgrade_time = RC_Time::gmtime();
+            ecjia_config::write('last_check_upgrade_time', $last_check_upgrade_time);
+
+            if (empty($result)) {
+                return $this->showmessage(__('你当前使用的已经是最新版本了。'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('@upgrade/init')));
+            }
+
+            $count = count($result);
+            return $this->showmessage(sprintf(__('已经检测到%s个新版本更新。'), $count), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('@upgrade/init')));
         }
-
-        $last_check_upgrade_time = RC_Time::gmtime();
-        ecjia_config::write('last_check_upgrade_time', $last_check_upgrade_time);
-
-        if (empty($result)) {
-            return $this->showmessage(__('你当前使用的已经是最新版本了。'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('@upgrade/init')));
+        catch (\Exception $exception) {
+            return $this->showmessage($exception->getMessage(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
         }
-
-        $count = count($result);
-        return $this->showmessage(sprintf(__('已经检测到%s个新版本更新。'), $count), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('@upgrade/init')));
     }
 
 }

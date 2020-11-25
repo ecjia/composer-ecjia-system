@@ -154,22 +154,27 @@ class AdminPluginController extends ecjia_admin
 
         $id = simple_remove_xss(trim($this->request->input('id')));
 
-        $result = ecjia_plugin::activate_plugin($id);
-        if (is_ecjia_error($result)) {
-            if ('unexpected_output' == $result->get_error_code()) {
-                return $this->showmessage($result->get_error_data(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
-            } elseif ('plugin_install_error' == $result->get_error_code()) {
-                return $this->showmessage($result->get_error_message(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
-            } else {
-                return $this->showmessage($result->get_error_message(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+        try {
+            $result = ecjia_plugin::activate_plugin($id);
+            if (is_ecjia_error($result)) {
+                if ('unexpected_output' == $result->get_error_code()) {
+                    return $this->showmessage($result->get_error_data(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+                } elseif ('plugin_install_error' == $result->get_error_code()) {
+                    return $this->showmessage($result->get_error_message(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+                } else {
+                    return $this->showmessage($result->get_error_message(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+                }
             }
+
+            $plugins = RC_Plugin::get_plugins();
+            $data    = $plugins[$id];
+
+            ecjia_admin::admin_log($data['Name'], 'install', 'plugin');
+            return $this->showmessage(sprintf(__('%s 插件安装成功！'), $data['Name']), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('@admin_plugin/init')));
         }
-
-        $plugins = RC_Plugin::get_plugins();
-        $data    = $plugins[$id];
-
-        ecjia_admin::admin_log($data['Name'], 'install', 'plugin');
-        return $this->showmessage(sprintf(__('%s 插件安装成功！'), $data['Name']), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('@admin_plugin/init')));
+        catch (\Exception $exception) {
+            return $this->showmessage($exception->getMessage(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+        }
     }
 
     /**
@@ -181,23 +186,28 @@ class AdminPluginController extends ecjia_admin
 
         $id = simple_remove_xss(trim($this->request->input('id')));
 
-        $result = ecjia_plugin::deactivate_plugins(array($id));
+        try {
+            $result = ecjia_plugin::deactivate_plugins(array($id));
 
-        if (is_ecjia_error($result)) {
-            if ('unexpected_output' == $result->get_error_code()) {
-                return $this->showmessage($result->get_error_data(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS);
-            } elseif ('plugin_uninstall_error' == $result->get_error_code()) {
-                return $this->showmessage($result->get_error_message(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
-            } else {
-                return $this->showmessage($result->get_error_message(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS);
+            if (is_ecjia_error($result)) {
+                if ('unexpected_output' == $result->get_error_code()) {
+                    return $this->showmessage($result->get_error_data(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS);
+                } elseif ('plugin_uninstall_error' == $result->get_error_code()) {
+                    return $this->showmessage($result->get_error_message(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+                } else {
+                    return $this->showmessage($result->get_error_message(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS);
+                }
             }
+
+            $plugins = RC_Plugin::get_plugins();
+            $data    = $plugins[$id];
+
+            ecjia_admin::admin_log($data['Name'], 'uninstall', 'plugin');
+            return $this->showmessage(sprintf(__('%s 插件卸载成功！'), $data['Name']), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('@admin_plugin/init')));
         }
-
-        $plugins = RC_Plugin::get_plugins();
-        $data    = $plugins[$id];
-
-        ecjia_admin::admin_log($data['Name'], 'uninstall', 'plugin');
-        return $this->showmessage(sprintf(__('%s 插件卸载成功！'), $data['Name']), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('@admin_plugin/init')));
+        catch (\Exception $exception) {
+            return $this->showmessage($exception->getMessage(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+        }
     }
 
     /**
@@ -205,7 +215,6 @@ class AdminPluginController extends ecjia_admin
      */
     public function config()
     {
-
         $this->assign('ur_here', __('插件配置'));
         ecjia_screen::get_current_screen()->remove_last_nav_here();
         ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here(__('插件配置')));

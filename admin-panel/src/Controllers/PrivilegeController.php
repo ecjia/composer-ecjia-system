@@ -213,7 +213,6 @@ class PrivilegeController extends ecjia_admin
      */
     public function logout()
     {
-
         RC_Hook::do_action('ecjia_admin_logout_before');
 
         /* 清除记住密码 */
@@ -230,79 +229,84 @@ class PrivilegeController extends ecjia_admin
      */
     public function signin()
     {
-        // 登录时验证
-        $validate_error = RC_Hook::apply_filters('admin_login_validate', $_POST);
-        if (!empty($validate_error) && is_string($validate_error)) {
-            return $this->showmessage($validate_error, ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
-        }
+        try {
+            // 登录时验证
+            $validate_error = RC_Hook::apply_filters('admin_login_validate', $_POST);
+            if (!empty($validate_error) && is_string($validate_error)) {
+                return $this->showmessage($validate_error, ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+            }
 
-        $username = remove_xss($this->request->input('username'));
-        $password = remove_xss($this->request->input('password'));
-        $remember = remove_xss($this->request->input('remember'));
+            $username = remove_xss($this->request->input('username'));
+            $password = remove_xss($this->request->input('password'));
+            $remember = remove_xss($this->request->input('remember'));
 
-        $model = AdminUserRepository::model()->where('user_name', $username)->first();
+            $model = AdminUserRepository::model()->where('user_name', $username)->first();
 
-        if (empty($model)) {
-            return $this->showmessage(__('您输入的帐号信息不正确。'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
-        }
+            if (empty($model)) {
+                return $this->showmessage(__('您输入的帐号信息不正确。'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+            }
 
-        $lock = new PasswordLock($model);
+            $lock = new PasswordLock($model);
 
-        //从数据库中的密码获取兼容驱动
-        $pm = ecjia_password::autoCompatibleDriver($model->password);
-        if (!$pm->verifySaltPassword($model->password, $password, $model->ec_salt)) {
+            //从数据库中的密码获取兼容驱动
+            $pm = ecjia_password::autoCompatibleDriver($model->password);
+            if (!$pm->verifySaltPassword($model->password, $password, $model->ec_salt)) {
 
-            if ($lock->isLoginLock()) {
-                return $this->showmessage(sprintf(__('您登录失败的次数过多，请等%s秒后再进行尝试。'), $lock->getUnLockTime()), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+                if ($lock->isLoginLock()) {
+                    return $this->showmessage(sprintf(__('您登录失败的次数过多，请等%s秒后再进行尝试。'), $lock->getUnLockTime()), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+                } else {
+                    RC_Hook::do_action('ecjia_admin_login_failed', $model);
+                    //记录一次失败
+                    $lock->failed();
+                }
+
+                return $this->showmessage(__('您输入的帐号信息不正确。'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+            }
+
+            RC_Hook::do_action('ecjia_admin_login_before', $model);
+
+            $this->admin_session($model->user_id, $model->user_name, $model->action_list, $model->last_login);
+
+            // 登录成功，清除密码错误锁定
+            $lock->clearTimes();
+            //有开启强制修改数据库32位非hash密码为64位hash密码
+            if (config('login.force_hash_password')) {
+                if (empty($model['ec_salt']) || !ecjia_password::isHashPassword($model->password)) {
+                    $ec_salt         = rand(1, 9999);
+                    $pm              = ecjia_password::driver('hash');
+                    $new_possword    = $pm->createSaltPassword($password, $ec_salt);
+                    $model->ec_salt  = $ec_salt;
+                    $model->password = $new_possword;
+                }
+            }
+
+            $model->last_login = RC_Time::gmtime();
+            $model->last_ip    = RC_Ip::client_ip();
+            $model->save();
+
+            if (!empty($remember)) {
+                (new \Ecjia\System\Admins\RememberPassword\RememberPassword)->remember($model->user_id, $model->password);
+            }
+
+            RC_Hook::do_action('ecjia_admin_login_after', $model);
+
+            if (array_get($_SESSION, 'shop_guide')) {
+                $back_url = RC_Uri::url('shopguide/admin/init');
             } else {
-                RC_Hook::do_action('ecjia_admin_login_failed', $model);
-                //记录一次失败
-                $lock->failed();
+                $back_url = RC_Cookie::get('admin_login_referer');
+
+                if ($back_url && !ecjia_compare_urls($back_url, RC_Uri::url('@privilege/login'))) {
+                    RC_Cookie::delete('admin_login_referer');
+                } else {
+                    $back_url = RC_Uri::url('@index/init');
+                }
             }
 
-            return $this->showmessage(__('您输入的帐号信息不正确。'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+            return $this->showmessage(__('登录成功'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('url' => $back_url));
         }
-
-        RC_Hook::do_action('ecjia_admin_login_before', $model);
-
-        $this->admin_session($model->user_id, $model->user_name, $model->action_list, $model->last_login);
-
-        // 登录成功，清除密码错误锁定
-        $lock->clearTimes();
-        //有开启强制修改数据库32位非hash密码为64位hash密码
-        if (config('login.force_hash_password')) {
-            if (empty($model['ec_salt']) || !ecjia_password::isHashPassword($model->password)) {
-                $ec_salt         = rand(1, 9999);
-                $pm              = ecjia_password::driver('hash');
-                $new_possword    = $pm->createSaltPassword($password, $ec_salt);
-                $model->ec_salt  = $ec_salt;
-                $model->password = $new_possword;
-            }
+        catch (\Exception $exception) {
+            return $this->showmessage($exception->getMessage(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
         }
-
-        $model->last_login = RC_Time::gmtime();
-        $model->last_ip    = RC_Ip::client_ip();
-        $model->save();
-
-        if (!empty($remember)) {
-            (new \Ecjia\System\Admins\RememberPassword\RememberPassword)->remember($model->user_id, $model->password);
-        }
-
-        RC_Hook::do_action('ecjia_admin_login_after', $model);
-
-        if (array_get($_SESSION, 'shop_guide')) {
-            $back_url = RC_Uri::url('shopguide/admin/init');
-        } else {
-            $back_url = RC_Cookie::get('admin_login_referer');
-
-            if ($back_url && !ecjia_compare_urls($back_url, RC_Uri::url('@privilege/login'))) {
-                RC_Cookie::delete('admin_login_referer');
-            } else {
-                $back_url = RC_Uri::url('@index/init');
-            }
-        }
-
-        return $this->showmessage(__('登录成功'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('url' => $back_url));
     }
 
     /**
@@ -352,66 +356,71 @@ class PrivilegeController extends ecjia_admin
      */
     public function update_self()
     {
-        $admin_id = intval($_SESSION['admin_id']);
-        if (empty($admin_id)) {
-            return $this->showmessage(__('非法操作！'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
-        }
-
-        $admin_email = remove_xss($this->request->input('email'));
-
-        $model = AdminUserRepository::model()->find($admin_id);
-
-        if (empty($model)) {
-            return $this->showmessage(__('非法操作！'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
-        }
-
-        /* Email地址是否有重复 */
-        if ($admin_email && $admin_email != $model->email && AdminUserRepository::model()->where('email', $admin_email)->count()) {
-            return $this->showmessage(sprintf(__('该Email地址 %s 已经存在！'), stripslashes($admin_email)), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
-        }
-
-        $new_password = remove_xss($this->request->input('new_password'));
-
-        $model->email = $admin_email;
-
-        if (empty($new_password)) {
-            $msg = __('修改个人资料成功！');
-        } else {
-            /* 旧密与输入的密码比较是否相同 */
-            $old_password = remove_xss($this->request->input('old_password'));
-            $pm           = ecjia_password::autoCompatibleDriver($model->password);
-            if (!$pm->verifySaltPassword($old_password, $model->ec_salt, $model->password)) {
-                return $this->showmessage(__('输入的旧密码错误！'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+        try {
+            $admin_id = intval($_SESSION['admin_id']);
+            if (empty($admin_id)) {
+                return $this->showmessage(__('非法操作！'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
             }
 
-            /* 比较新密码和确认密码是否相同 */
-            if ($new_password != remove_xss($this->request->input('pwd_confirm'))) {
-                return $this->showmessage(__('两次输入的密码不一致！'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+            $admin_email = remove_xss($this->request->input('email'));
+
+            $model = AdminUserRepository::model()->find($admin_id);
+
+            if (empty($model)) {
+                return $this->showmessage(__('非法操作！'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
             }
 
-            $pm = ecjia_password::driver('hash');
+            /* Email地址是否有重复 */
+            if ($admin_email && $admin_email != $model->email && AdminUserRepository::model()->where('email', $admin_email)->count()) {
+                return $this->showmessage(sprintf(__('该Email地址 %s 已经存在！'), stripslashes($admin_email)), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+            }
 
-            $ec_salt         = rand(1, 9999);
-            $model->ec_salt  = $ec_salt;
-            $model->password = $pm->createSaltPassword($new_password, $ec_salt);
+            $new_password = remove_xss($this->request->input('new_password'));
 
-            /* 如果修改密码，则需要将session中该管理员的数据清空 */
-            RC_Session::session()->deleteSpecSession($_SESSION['admin_id'], 'admin'); // 删除session中该管理员的记录
-            $msg = __('您已经成功的修改了密码，因此您必须重新登录！');
+            $model->email = $admin_email;
+
+            if (empty($new_password)) {
+                $msg = __('修改个人资料成功！');
+            } else {
+                /* 旧密与输入的密码比较是否相同 */
+                $old_password = remove_xss($this->request->input('old_password'));
+                $pm           = ecjia_password::autoCompatibleDriver($model->password);
+                if (!$pm->verifySaltPassword($old_password, $model->ec_salt, $model->password)) {
+                    return $this->showmessage(__('输入的旧密码错误！'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+                }
+
+                /* 比较新密码和确认密码是否相同 */
+                if ($new_password != remove_xss($this->request->input('pwd_confirm'))) {
+                    return $this->showmessage(__('两次输入的密码不一致！'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+                }
+
+                $pm = ecjia_password::driver('hash');
+
+                $ec_salt         = rand(1, 9999);
+                $model->ec_salt  = $ec_salt;
+                $model->password = $pm->createSaltPassword($new_password, $ec_salt);
+
+                /* 如果修改密码，则需要将session中该管理员的数据清空 */
+                RC_Session::session()->deleteSpecSession($_SESSION['admin_id'], 'admin'); // 删除session中该管理员的记录
+                $msg = __('您已经成功的修改了密码，因此您必须重新登录！');
+            }
+
+            $model->save();
+
+            /* 记录管理员操作 */
+            ecjia_admin_log::instance()->add_object('admin_modif', __('个人资料'));
+            ecjia_admin::admin_log($_SESSION['admin_name'], 'edit', 'admin_modif');
+
+            /* 清除用户缓存 */
+            RC_Cache::userdata_cache_delete('admin_navlist', $admin_id, true);
+
+            return $this->showmessage($msg, ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS,
+                (new PjaxShowMessageOption())->setPjaxurl(RC_Uri::url('@privilege/modif'))
+            );
         }
-
-        $model->save();
-
-        /* 记录管理员操作 */
-        ecjia_admin_log::instance()->add_object('admin_modif', __('个人资料'));
-        ecjia_admin::admin_log($_SESSION['admin_name'], 'edit', 'admin_modif');
-
-        /* 清除用户缓存 */
-        RC_Cache::userdata_cache_delete('admin_navlist', $admin_id, true);
-
-        return $this->showmessage($msg, ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS,
-            (new PjaxShowMessageOption())->setPjaxurl(RC_Uri::url('@privilege/modif'))
-        );
+        catch (\Exception $exception) {
+            return $this->showmessage($exception->getMessage(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+        }
     }
 
     /**
@@ -459,32 +468,37 @@ class PrivilegeController extends ecjia_admin
      */
     public function quick_nav_save()
     {
-        $admin_id = intval($_SESSION['admin_id']);
-        if (empty($admin_id)) {
-            return $this->showmessage(__('非法操作！'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+        try {
+            $admin_id = intval($_SESSION['admin_id']);
+            if (empty($admin_id)) {
+                return $this->showmessage(__('非法操作！'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+            }
+
+            $model = AdminUserRepository::model()->find($admin_id);
+
+            if (empty($model)) {
+                return $this->showmessage(__('非法操作！'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+            }
+
+            $nav_list = $this->request->input('nav_list', []);
+
+            $nav = new QuickNav($model);
+            $nav->save($nav_list);
+
+            /* 记录管理员操作 */
+            ecjia_admin_log::instance()->add_object('admin_quick_nav', __('个人导航'));
+            ecjia_admin::admin_log($_SESSION['admin_name'], 'edit', 'admin_quick_nav');
+
+            /* 清除用户缓存 */
+            RC_Cache::userdata_cache_delete('admin_navlist', $admin_id, 'admin');
+
+            return $this->showmessage('更新成功！', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS,
+                (new PjaxShowMessageOption())->setPjaxurl(RC_Uri::url('@privilege/quick_nav'))
+            );
         }
-
-        $model = AdminUserRepository::model()->find($admin_id);
-
-        if (empty($model)) {
-            return $this->showmessage(__('非法操作！'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+        catch (\Exception $exception) {
+            return $this->showmessage($exception->getMessage(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
         }
-
-        $nav_list = $this->request->input('nav_list', []);
-
-        $nav = new QuickNav($model);
-        $nav->save($nav_list);
-
-        /* 记录管理员操作 */
-        ecjia_admin_log::instance()->add_object('admin_quick_nav', __('个人导航'));
-        ecjia_admin::admin_log($_SESSION['admin_name'], 'edit', 'admin_quick_nav');
-
-        /* 清除用户缓存 */
-        RC_Cache::userdata_cache_delete('admin_navlist', $admin_id, 'admin');
-
-        return $this->showmessage('更新成功！', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS,
-            (new PjaxShowMessageOption())->setPjaxurl(RC_Uri::url('@privilege/quick_nav'))
-        );
     }
 
 }

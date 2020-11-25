@@ -194,62 +194,68 @@ class GetPasswordController extends ecjia_admin
 
     public function reset_pwd_mail()
     {
-        $validator = RC_Validator::make($_POST, array(
-            'email'    => 'required|email',
-            'username' => 'required',
-        ));
-        if ($validator->fails()) {
-            return $this->showmessage(__('输入的信息不正确！'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+        try {
+            $validator = RC_Validator::make($_POST, array(
+                'email'    => 'required|email',
+                'username' => 'required',
+            ));
+            if ($validator->fails()) {
+                return $this->showmessage(__('输入的信息不正确！'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+            }
+
+            $admin_username = remove_xss($this->request->input('username'));
+            $admin_email    = remove_xss($this->request->input('email'));
+
+            /* 管理员用户名和邮件地址是否匹配，并取得原密码 */
+            $admin_model = AdminUserRepository::model()->where('user_name', $admin_username)->where('email', $admin_email)->first();
+
+            if (empty($admin_model)) {
+                return $this->showmessage(__('用户名与Email地址不匹配,请返回！'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+            }
+
+            /* 生成验证的code */
+            $rand_code = str_random(10);
+
+            $admin_model->setMeta('forget_password_hash', $rand_code);
+
+            $admin_id   = $admin_model['user_id'];
+            $admin_pass = $admin_model['password'];
+
+            $pm = ecjia_password::autoCompatibleDriver($admin_pass);
+
+            $code        = $pm->generateResetPasswordHash($admin_id, $admin_pass, $rand_code);
+            $reset_email = RC_Uri::url('@get_password/reset_pwd_form', array('uid' => $admin_id, 'code' => $code));
+
+            /* 设置重置邮件模板所需要的内容信息 */
+            //$template    = get_mail_template('send_password');
+            $tpl_name = 'send_password';
+            $template = RC_Api::api('mail', 'mail_template', $tpl_name);
+
+            $this->assign('user_name', $admin_username);
+            $this->assign('reset_email', $reset_email);
+            $this->assign('shop_name', ecjia::config('shop_name'));
+            $this->assign('send_date', RC_Time::local_date(ecjia::config('date_format')));
+            $this->assign('sent_date', RC_Time::local_date(ecjia::config('date_format')));
+
+            if (RC_Mail::send_mail('', $admin_email, $template['template_subject'], $this->fetch_string($template['template_content']), $template['is_html'])) {
+                $msg   = __('重置密码的邮件已经发到您的邮箱：') . $admin_email;
+                $state = ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS;
+            } else {
+                $msg   = __('重置密码邮件发送失败!请与管理员联系');
+                $state = ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR;
+            }
+
+            //提示信息
+            $links = ecjia_alert_links([
+                'text' => __('返回'),
+                'href' => RC_Uri::url('@privilege/login'),
+            ]);
+            return $this->showmessage($msg, $state, array('links' => $links));
+        }
+        catch (\Exception $exception) {
+            return $this->showmessage($exception->getMessage(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
         }
 
-        $admin_username = remove_xss($this->request->input('username'));
-        $admin_email    = remove_xss($this->request->input('email'));
-
-        /* 管理员用户名和邮件地址是否匹配，并取得原密码 */
-        $admin_model = AdminUserRepository::model()->where('user_name', $admin_username)->where('email', $admin_email)->first();
-
-        if (empty($admin_model)) {
-            return $this->showmessage(__('用户名与Email地址不匹配,请返回！'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
-        }
-
-        /* 生成验证的code */
-        $rand_code = str_random(10);
-
-        $admin_model->setMeta('forget_password_hash', $rand_code);
-
-        $admin_id   = $admin_model['user_id'];
-        $admin_pass = $admin_model['password'];
-
-        $pm = ecjia_password::autoCompatibleDriver($admin_pass);
-
-        $code        = $pm->generateResetPasswordHash($admin_id, $admin_pass, $rand_code);
-        $reset_email = RC_Uri::url('@get_password/reset_pwd_form', array('uid' => $admin_id, 'code' => $code));
-
-        /* 设置重置邮件模板所需要的内容信息 */
-        //$template    = get_mail_template('send_password');
-        $tpl_name = 'send_password';
-        $template = RC_Api::api('mail', 'mail_template', $tpl_name);
-
-        $this->assign('user_name', $admin_username);
-        $this->assign('reset_email', $reset_email);
-        $this->assign('shop_name', ecjia::config('shop_name'));
-        $this->assign('send_date', RC_Time::local_date(ecjia::config('date_format')));
-        $this->assign('sent_date', RC_Time::local_date(ecjia::config('date_format')));
-
-        if (RC_Mail::send_mail('', $admin_email, $template['template_subject'], $this->fetch_string($template['template_content']), $template['is_html'])) {
-            $msg   = __('重置密码的邮件已经发到您的邮箱：') . $admin_email;
-            $state = ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS;
-        } else {
-            $msg   = __('重置密码邮件发送失败!请与管理员联系');
-            $state = ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR;
-        }
-
-        //提示信息
-        $links = ecjia_alert_links([
-            'text' => __('返回'),
-            'href' => RC_Uri::url('@privilege/login'),
-        ]);
-        return $this->showmessage($msg, $state, array('links' => $links));
     }
 
     public function reset_pwd_form()
@@ -293,45 +299,50 @@ class GetPasswordController extends ecjia_admin
 
     public function reset_pwd()
     {
-        $new_password = remove_xss($this->request->input('password'));
-        $adminid      = intval($this->request->input('adminid', 0));
-        $code         = remove_xss($this->request->input('code'));
+        try {
+            $new_password = remove_xss($this->request->input('password'));
+            $adminid      = intval($this->request->input('adminid', 0));
+            $code         = remove_xss($this->request->input('code'));
 
-        if (empty($new_password) || empty($code) || $adminid === 0) {
-            return $this->redirect(RC_Uri::url('@privilege/login'));
+            if (empty($new_password) || empty($code) || $adminid === 0) {
+                return $this->redirect(RC_Uri::url('@privilege/login'));
+            }
+
+            /* 以用户的原密码，与code的值匹配 */
+            $model     = AdminUserRepository::model()->find($adminid);
+            $password  = $model['password'];
+            $hash_code = $model->getMeta('forget_password_hash');
+
+            $pm     = ecjia_password::autoCompatibleDriver($password);
+            $status = $pm->verifyResetPasswordHash($code, $adminid, $password, $hash_code);
+
+            $links = ecjia_alert_links([
+                'text' => __('返回'),
+                'href' => RC_Uri::url('@privilege/login'),
+            ]);
+
+            // 此链接不合法
+            if (empty($status)) {
+                return $this->showmessage(__('此链接不合法!'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR, ['links' => $links]);
+            }
+
+            $model->removeMeta('forget_password_hash');
+
+            // 更新管理员的密码
+            $ec_salt         = rand(1, 9999);
+            $model->password = $pm->createSaltPassword($new_password, $ec_salt);
+            $model->ec_salt  = $ec_salt;
+            $result          = $model->save();
+
+            if (!$result) {
+                return $this->showmessage(__('密码修改失败!'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+            }
+
+            return $this->showmessage(__('密码修改成功!'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, ['links' => $links]);
         }
-
-        /* 以用户的原密码，与code的值匹配 */
-        $model     = AdminUserRepository::model()->find($adminid);
-        $password  = $model['password'];
-        $hash_code = $model->getMeta('forget_password_hash');
-
-        $pm     = ecjia_password::autoCompatibleDriver($password);
-        $status = $pm->verifyResetPasswordHash($code, $adminid, $password, $hash_code);
-
-        $links = ecjia_alert_links([
-            'text' => __('返回'),
-            'href' => RC_Uri::url('@privilege/login'),
-        ]);
-
-        // 此链接不合法
-        if (empty($status)) {
-            return $this->showmessage(__('此链接不合法!'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR, ['links' => $links]);
+        catch (\Exception $exception) {
+            return $this->showmessage($exception->getMessage(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
         }
-
-        $model->removeMeta('forget_password_hash');
-
-        // 更新管理员的密码
-        $ec_salt         = rand(1, 9999);
-        $model->password = $pm->createSaltPassword($new_password, $ec_salt);
-        $model->ec_salt  = $ec_salt;
-        $result          = $model->save();
-
-        if (!$result) {
-            return $this->showmessage(__('密码修改失败!'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
-        }
-
-        return $this->showmessage(__('密码修改成功!'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, ['links' => $links]);
     }
 
 }

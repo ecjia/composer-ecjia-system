@@ -182,71 +182,76 @@ class AdminUserController extends ecjia_admin
     {
         $this->admin_priv('admin_manage');
 
-        $user_name = remove_xss($this->request->input('user_name'));
-        $email     = remove_xss($this->request->input('email'));
-        $password  = remove_xss($this->request->input('password'));
+        try {
+            $user_name = remove_xss($this->request->input('user_name'));
+            $email     = remove_xss($this->request->input('email'));
+            $password  = remove_xss($this->request->input('password'));
 
-        if (empty($user_name) || empty($email) || empty($password)) {
-            return $this->showmessage(__('数据不完整'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
-        }
-
-        /* 判断用户名和密码是否相等 */
-        if ($user_name == $password) {
-            return $this->showmessage(__('该管理员密码不能和管理员账号一样！'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
-        }
-
-        /* 判断管理员是否已经存在 */
-        if ($user_name && AdminUserRepository::model()->where('user_name', $user_name)->count()) {
-            return $this->showmessage(sprintf(__('该管理员 %s 已经存在！'), $user_name), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
-        }
-
-        /* Email地址是否有重复 */
-        if ($email && AdminUserRepository::model()->where('email', $email)->count()) {
-            return $this->showmessage(sprintf(__('该Email地址 %s 已经存在！'), $email), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
-        }
-
-        $role_id = remove_xss($this->request->input('select_role', 0));
-
-        /* 获取添加日期及密码 */
-        $add_time    = RC_Time::gmtime();
-        $ec_salt     = rand(1, 9999);
-        $password    = ecjia_password::driver('hash')->createSaltPassword($password, $ec_salt);
-
-        $insert_data = [
-            'user_name'   => $user_name,
-            'email'       => $email,
-            'password'    => $password,
-            'ec_salt'     => $ec_salt,
-            'add_time'    => $add_time,
-            'role_id'     => $role_id,
-            'action_list' => '',
-        ];
-
-        $new_id = AdminUserRepository::model()->insertGetId($insert_data);
-
-        if (!empty($new_id)) {
-            $role_model = RoleModel::find($role_id);
-            if (!empty($role_model)) {
-                $user = new \Ecjia\System\Admins\Users\AdminUser($new_id);
-                $user->setActionList($role_model->action_list);
+            if (empty($user_name) || empty($email) || empty($password)) {
+                return $this->showmessage(__('数据不完整'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
             }
+
+            /* 判断用户名和密码是否相等 */
+            if ($user_name == $password) {
+                return $this->showmessage(__('该管理员密码不能和管理员账号一样！'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+            }
+
+            /* 判断管理员是否已经存在 */
+            if ($user_name && AdminUserRepository::model()->where('user_name', $user_name)->count()) {
+                return $this->showmessage(sprintf(__('该管理员 %s 已经存在！'), $user_name), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+            }
+
+            /* Email地址是否有重复 */
+            if ($email && AdminUserRepository::model()->where('email', $email)->count()) {
+                return $this->showmessage(sprintf(__('该Email地址 %s 已经存在！'), $email), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+            }
+
+            $role_id = remove_xss($this->request->input('select_role', 0));
+
+            /* 获取添加日期及密码 */
+            $add_time    = RC_Time::gmtime();
+            $ec_salt     = rand(1, 9999);
+            $password    = ecjia_password::driver('hash')->createSaltPassword($password, $ec_salt);
+
+            $insert_data = [
+                'user_name'   => $user_name,
+                'email'       => $email,
+                'password'    => $password,
+                'ec_salt'     => $ec_salt,
+                'add_time'    => $add_time,
+                'role_id'     => $role_id,
+                'action_list' => '',
+            ];
+
+            $new_id = AdminUserRepository::model()->insertGetId($insert_data);
+
+            if (!empty($new_id)) {
+                $role_model = RoleModel::find($role_id);
+                if (!empty($role_model)) {
+                    $user = new \Ecjia\System\Admins\Users\AdminUser($new_id);
+                    $user->setActionList($role_model->action_list);
+                }
+            }
+
+            /*添加链接*/
+            $links = ecjia_alert_links(
+                [
+                    'text' => __('设置管理员权限'),
+                    'href' => RC_Uri::url('@admin_user/allot', ['id' => $new_id, 'user' => $user_name]),
+                ],
+                [
+                    'text' => __('继续添加管理员'),
+                    'href' => RC_Uri::url('@admin_user/add'),
+                ]
+            );
+
+            /* 记录管理员操作 */
+            ecjia_admin::admin_log($user_name, 'add', 'privilege');
+            return $this->showmessage(sprintf(__('添加 %s 操作成功'), $user_name), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('links' => $links, 'id' => $new_id));
         }
-
-        /*添加链接*/
-        $links = ecjia_alert_links(
-            [
-                'text' => __('设置管理员权限'),
-                'href' => RC_Uri::url('@admin_user/allot', ['id' => $new_id, 'user' => $user_name]),
-            ],
-            [
-                'text' => __('继续添加管理员'),
-                'href' => RC_Uri::url('@admin_user/add'),
-            ]
-        );
-
-        /* 记录管理员操作 */
-        ecjia_admin::admin_log($user_name, 'add', 'privilege');
-        return $this->showmessage(sprintf(__('添加 %s 操作成功'), $user_name), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('links' => $links, 'id' => $new_id));
+        catch (\Exception $exception) {
+            return $this->showmessage($exception->getMessage(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+        }
     }
 
     /**
@@ -318,79 +323,84 @@ class AdminUserController extends ecjia_admin
      */
     public function update()
     {
-        /* 变量初始化 */
-        $admin_id     = intval($this->request->input('id'));
-        $admin_name   = remove_xss($this->request->input('user_name', ''));
-        $admin_email  = remove_xss($this->request->input('email', ''));
-        $new_password = remove_xss($this->request->input('new_password'));
+        try {
+            /* 变量初始化 */
+            $admin_id     = intval($this->request->input('id'));
+            $admin_name   = remove_xss($this->request->input('user_name', ''));
+            $admin_email  = remove_xss($this->request->input('email', ''));
+            $new_password = remove_xss($this->request->input('new_password'));
 
-        /* 查看是否有权限编辑其他管理员的信息 */
-        if ($_SESSION['admin_id'] != $admin_id) {
-            $this->admin_priv('admin_manage');
-        }
+            /* 查看是否有权限编辑其他管理员的信息 */
+            if ($_SESSION['admin_id'] != $admin_id) {
+                $this->admin_priv('admin_manage');
+            }
 
-        /* 判断管理员是否已经存在 */
-        if ($admin_name && AdminUserRepository::model()->where('user_name', $admin_name)->where('user_id', '!=', $admin_id)->count()) {
-            return $this->showmessage(sprintf(__('该管理员 %s 已经存在！'), $admin_name), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
-        }
+            /* 判断管理员是否已经存在 */
+            if ($admin_name && AdminUserRepository::model()->where('user_name', $admin_name)->where('user_id', '!=', $admin_id)->count()) {
+                return $this->showmessage(sprintf(__('该管理员 %s 已经存在！'), $admin_name), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+            }
 
-        /* Email地址是否有重复 */
-        if ($admin_email && AdminUserRepository::model()->where('email', $admin_email)->where('user_id', '!=', $admin_id)->count()) {
-            return $this->showmessage(sprintf(__('该Email地址 %s 已经存在！'), $admin_email), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
-        }
+            /* Email地址是否有重复 */
+            if ($admin_email && AdminUserRepository::model()->where('email', $admin_email)->where('user_id', '!=', $admin_id)->count()) {
+                return $this->showmessage(sprintf(__('该Email地址 %s 已经存在！'), $admin_email), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+            }
 
-        $user_model = AdminUserRepository::model()->find($admin_id);
-        if ($user_model->action_list == 'all') {
-            return $this->showmessage(sprintf(__('超级管理员 %s 不可被修改！'), $admin_name), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
-        }
+            $user_model = AdminUserRepository::model()->find($admin_id);
+            if ($user_model->action_list == 'all') {
+                return $this->showmessage(sprintf(__('超级管理员 %s 不可被修改！'), $admin_name), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+            }
 
-        if (!empty($new_password)) {
+            if (!empty($new_password)) {
+                $links = ecjia_alert_links([
+                    'text' => __('返回上一页'),
+                    'href' => 'javascript:history.back(-1)',
+                ]);
+
+                /* 判断用户名和密码是否相等 */
+                if ($admin_name == $new_password) {
+                    return $this->showmessage(__('该管理员密码不能和管理员账号一样！'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+                }
+
+                /* 比较新密码和确认密码是否相同 */
+                if ($new_password != remove_xss($this->request->input('pwd_confirm'))) {
+                    return $this->showmessage(__('两次输入的密码不一致！'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR, ['links' => $links]);
+                }
+
+                $pm = ecjia_password::driver('hash');
+
+                $user_model->ec_salt  = rand(1, 9999);
+                $user_model->password = $pm->createSaltPassword($new_password, $user_model->ec_salt);
+            }
+
+            $role_id    = remove_xss($this->request->input('select_role'));
+            $role_model = RoleModel::find($role_id);
+            if (!empty($role_model)) {
+                $user_model->role_id = $role_id;
+
+                $user = new \Ecjia\System\Admins\Users\AdminUser($admin_id);
+                $user->setActionList($role_model->action_list);
+            }
+
+            //更新管理员信息
+            $user_model->user_name = $admin_name;
+            $user_model->email     = $admin_email;
+            $user_model->save();
+
+            /* 记录日志 */
+            ecjia_admin_log::instance()->add_object('admin_user', __('管理员账号'));
+            ecjia_admin::admin_log($admin_name, 'edit', 'admin_user');
+            $msg = __('您已经成功的修改了该用户信息！');
+
+            /* 提示信息 */
             $links = ecjia_alert_links([
-                'text' => __('返回上一页'),
-                'href' => 'javascript:history.back(-1)',
+                'text' => __('返回管理员列表'),
+                'href' => RC_Uri::url('@admin_user/init'),
             ]);
-
-            /* 判断用户名和密码是否相等 */
-            if ($admin_name == $new_password) {
-                return $this->showmessage(__('该管理员密码不能和管理员账号一样！'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
-            }
-
-            /* 比较新密码和确认密码是否相同 */
-            if ($new_password != remove_xss($this->request->input('pwd_confirm'))) {
-                return $this->showmessage(__('两次输入的密码不一致！'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR, ['links' => $links]);
-            }
-
-            $pm = ecjia_password::driver('hash');
-
-            $user_model->ec_salt  = rand(1, 9999);
-            $user_model->password = $pm->createSaltPassword($new_password, $user_model->ec_salt);
+            return $this->showmessage($msg, ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, ['links' => $links]);
         }
-
-        $role_id    = remove_xss($this->request->input('select_role'));
-        $role_model = RoleModel::find($role_id);
-        if (!empty($role_model)) {
-            $user_model->role_id = $role_id;
-
-            $user = new \Ecjia\System\Admins\Users\AdminUser($admin_id);
-            $user->setActionList($role_model->action_list);
+        catch (\Exception $exception) {
+            return $this->showmessage($exception->getMessage(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
         }
-
-        //更新管理员信息
-        $user_model->user_name = $admin_name;
-        $user_model->email     = $admin_email;
-        $user_model->save();
-
-        /* 记录日志 */
-        ecjia_admin_log::instance()->add_object('admin_user', __('管理员账号'));
-        ecjia_admin::admin_log($admin_name, 'edit', 'admin_user');
-        $msg = __('您已经成功的修改了该用户信息！');
-
-        /* 提示信息 */
-        $links = ecjia_alert_links([
-            'text' => __('返回管理员列表'),
-            'href' => RC_Uri::url('@admin_user/init'),
-        ]);
-        return $this->showmessage($msg, ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, ['links' => $links]);
     }
 
     /**
@@ -442,31 +452,36 @@ class AdminUserController extends ecjia_admin
     {
         $this->admin_priv('admin_manage');
 
-        $userid = intval($this->request->input('id'));
+        try {
+            $userid = intval($this->request->input('id'));
 
-        /* 取得当前管理员用户名 */
-        $user       = new \Ecjia\System\Admins\Users\AdminUser($userid);
-        $admin_name = $user->getUserName();
+            /* 取得当前管理员用户名 */
+            $user       = new \Ecjia\System\Admins\Users\AdminUser($userid);
+            $admin_name = $user->getUserName();
 
-        /* 更新管理员的权限 */
-        $action_code = array_map('remove_xss', $this->request->input('action_code', []));
-        $act_list    = join(',', $action_code);
-        $user->setActionList($act_list);
+            /* 更新管理员的权限 */
+            $action_code = array_map('remove_xss', $this->request->input('action_code', []));
+            $act_list    = join(',', $action_code);
+            $user->setActionList($act_list);
 
-        /* 动态更新管理员的SESSION */
-        if ($_SESSION['admin_id'] == $userid) {
-            $_SESSION['action_list'] = $act_list;
+            /* 动态更新管理员的SESSION */
+            if ($_SESSION['admin_id'] == $userid) {
+                $_SESSION['action_list'] = $act_list;
+            }
+
+            /* 记录管理员操作 */
+            ecjia_admin::admin_log(addslashes($admin_name), 'edit', 'privilege');
+
+            /* 提示信息 */
+            $links = ecjia_alert_links([
+                'text' => __('返回管理员列表'),
+                'href' => RC_Uri::url('@admin_user/init'),
+            ]);
+            return $this->showmessage(sprintf(__('编辑 %s 操作成功！'), $admin_name), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, ['links' => $links]);
         }
-
-        /* 记录管理员操作 */
-        ecjia_admin::admin_log(addslashes($admin_name), 'edit', 'privilege');
-
-        /* 提示信息 */
-        $links = ecjia_alert_links([
-            'text' => __('返回管理员列表'),
-            'href' => RC_Uri::url('@admin_user/init'),
-        ]);
-        return $this->showmessage(sprintf(__('编辑 %s 操作成功！'), $admin_name), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, ['links' => $links]);
+        catch (\Exception $exception) {
+            return $this->showmessage($exception->getMessage(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+        }
     }
 
     /**
@@ -475,38 +490,44 @@ class AdminUserController extends ecjia_admin
     public function remove()
     {
         $this->admin_priv('admin_drop', ecjia::MSGTYPE_JSON);
-        $id = intval($this->request->input('id'));
 
-        /* ID为1的不允许删除 */
-        if ($id === 1) {
-            return $this->showmessage(__('此管理员您不能进行删除操作！'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+        try {
+            $id = intval($this->request->input('id'));
+
+            /* ID为1的不允许删除 */
+            if ($id === 1) {
+                return $this->showmessage(__('此管理员您不能进行删除操作！'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+            }
+
+            /* 管理员不能删除自己 */
+            if ($id == $_SESSION['admin_id']) {
+                return $this->showmessage(__('您不能删除自己！'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+            }
+
+            /* 获得管理员用户名 */
+            $model = AdminUserRepository::model()->find($id);
+            if (empty($model)) {
+                return $this->showmessage(__('您不能删除这个管理员！'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+            }
+
+            /* demo这个管理员不允许删除 */
+            if ($model->user_name == 'demo') {
+                return $this->showmessage(__('您不能删除demo这个管理员！'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+            }
+
+            if (!$model->delete()) {
+                return $this->showmessage(__('操作失败！'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+            }
+
+            RC_Session::session()->deleteSpecSession($id, 'admin'); // 删除session中该管理员的记录
+            /* 记录日志 */
+            ecjia_admin_log::instance()->add_object('admin_user', __('管理员账号'));
+            ecjia_admin::admin_log(addslashes($model->user_name), 'remove', 'admin_user');
+            return $this->showmessage(__('删除成功！'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS);
         }
-
-        /* 管理员不能删除自己 */
-        if ($id == $_SESSION['admin_id']) {
-            return $this->showmessage(__('您不能删除自己！'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+        catch (\Exception $exception) {
+            return $this->showmessage($exception->getMessage(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
         }
-
-        /* 获得管理员用户名 */
-        $model = AdminUserRepository::model()->find($id);
-        if (empty($model)) {
-            return $this->showmessage(__('您不能删除这个管理员！'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
-        }
-
-        /* demo这个管理员不允许删除 */
-        if ($model->user_name == 'demo') {
-            return $this->showmessage(__('您不能删除demo这个管理员！'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
-        }
-
-        if (!$model->delete()) {
-            return $this->showmessage(__('操作失败！'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
-        }
-
-        RC_Session::session()->deleteSpecSession($id, 'admin'); // 删除session中该管理员的记录
-        /* 记录日志 */
-        ecjia_admin_log::instance()->add_object('admin_user', __('管理员账号'));
-        ecjia_admin::admin_log(addslashes($model->user_name), 'remove', 'admin_user');
-        return $this->showmessage(__('删除成功！'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS);
     }
 
 

@@ -162,9 +162,12 @@ class AdminApplicationController extends ecjia_admin
 
     public function clear_cache()
     {
-        RC_App::clean_applications_cache();
-
-
+        try {
+            RC_App::clean_applications_cache();
+        }
+        catch (\Exception $exception) {
+            return $this->showmessage($exception->getMessage(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+        }
     }
 
 
@@ -208,27 +211,32 @@ class AdminApplicationController extends ecjia_admin
 
         $id = $_GET['id'];
 
-        $result = ecjia_app::install_application($id);
+        try {
+            $result = ecjia_app::install_application($id);
 
-        if (is_ecjia_error($result)) {
-            if ('unexpected_output' == $result->get_error_code()) {
-                return $this->showmessage($result->get_error_data(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
-            } else {
-                return $this->showmessage($result->get_error_message(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+            if (is_ecjia_error($result)) {
+                if ('unexpected_output' == $result->get_error_code()) {
+                    return $this->showmessage($result->get_error_data(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+                } else {
+                    return $this->showmessage($result->get_error_message(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+                }
             }
+
+            $app_dir = ecjia_app::get_app_dir($id);
+            $package = RC_App::get_app_package($app_dir);
+
+            /* 清除缓存 */
+            (new HeaderMenuGroup())->cleanMenuCache();
+            (new SidebarMenuGroup())->cleanMenuCache();
+
+            /* 记录日志 */
+            ecjia_admin::admin_log($package['format_name'], 'install', 'app');
+
+            return $this->showmessage(sprintf(__('%s 应用安装成功'), $package['format_name']), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS);
         }
-
-        $app_dir = ecjia_app::get_app_dir($id);
-        $package = RC_App::get_app_package($app_dir);
-
-        /* 清除缓存 */
-        (new HeaderMenuGroup())->cleanMenuCache();
-        (new SidebarMenuGroup())->cleanMenuCache();
-
-        /* 记录日志 */
-        ecjia_admin::admin_log($package['format_name'], 'install', 'app');
-
-        return $this->showmessage(sprintf(__('%s 应用安装成功'), $package['format_name']), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS);
+        catch (\Exception $exception) {
+            return $this->showmessage($exception->getMessage(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+        }
     }
 
     /**
@@ -240,22 +248,27 @@ class AdminApplicationController extends ecjia_admin
 
         $id = $_GET['id'];
 
-        $result = ecjia_app::uninstall_application($id);
+        try {
+            $result = ecjia_app::uninstall_application($id);
 
-        if (is_ecjia_error($result)) {
-            if ('unexpected_output' == $result->get_error_code()) {
-                return $this->showmessage($result->get_error_data(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
-            } else {
-                return $this->showmessage($result->get_error_message(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+            if (is_ecjia_error($result)) {
+                if ('unexpected_output' == $result->get_error_code()) {
+                    return $this->showmessage($result->get_error_data(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+                } else {
+                    return $this->showmessage($result->get_error_message(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+                }
             }
+
+            $app_dir = ecjia_app::get_app_dir($id);
+            $package = RC_App::get_app_package($app_dir);
+            /* 记录日志 */
+            ecjia_admin::admin_log($package['format_name'], 'uninstall', 'app');
+
+            return $this->showmessage(sprintf(__('%s 应用卸载成功'), $package['format_name']), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('@admin_application/init')));
         }
-
-        $app_dir = ecjia_app::get_app_dir($id);
-        $package = RC_App::get_app_package($app_dir);
-        /* 记录日志 */
-        ecjia_admin::admin_log($package['format_name'], 'uninstall', 'app');
-
-        return $this->showmessage(sprintf(__('%s 应用卸载成功'), $package['format_name']), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('@admin_application/init')));
+        catch (\Exception $exception) {
+            return $this->showmessage($exception->getMessage(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+        }
     }
 
 }

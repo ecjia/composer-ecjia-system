@@ -200,29 +200,34 @@ class AdminLogsController extends ecjia_admin
     {
         $this->admin_priv('logs_drop');
 
-        $drop_type_date = remove_xss($this->request->input('drop_type_date', ''));
+        try {
+            $drop_type_date = remove_xss($this->request->input('drop_type_date', ''));
 
-        /* 按日期删除日志 */
-        if (empty($drop_type_date)) {
-            return $this->redirect(RC_Uri::url('@admin_logs/init'));
+            /* 按日期删除日志 */
+            if (empty($drop_type_date)) {
+                return $this->redirect(RC_Uri::url('@admin_logs/init'));
+            }
+
+            $log_date_select = intval($this->request->input('log_date', 5));
+            if (empty($log_date_select)) {
+                return $this->redirect(RC_Uri::url('@admin_logs/init'));
+            }
+
+            $log_dates = $this->buildDropLogDate();
+            $log_date  = collect($log_dates)->where('value', $log_date_select)->first();
+            if (empty($log_date)) {
+                return $this->redirect(RC_Uri::url('@admin_logs/init'));
+            }
+
+            AdminLogModel::where('log_time', '<=', $log_date['log_time'])->delete();
+            /* 记录日志 */
+            ecjia_admin::admin_log(sprintf(__('删除 %s 的日志。'), $log_date['lable']), 'remove', 'adminlog');
+
+            return $this->showmessage(sprintf(__('%s 的日志成功删除。'), $log_date['lable']), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('@admin_logs/init')));
         }
-
-        $log_date_select = intval($this->request->input('log_date', 5));
-        if (empty($log_date_select)) {
-            return $this->redirect(RC_Uri::url('@admin_logs/init'));
+        catch (\Exception $exception) {
+            return $this->showmessage($exception->getMessage(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
         }
-
-        $log_dates = $this->buildDropLogDate();
-        $log_date  = collect($log_dates)->where('value', $log_date_select)->first();
-        if (empty($log_date)) {
-            return $this->redirect(RC_Uri::url('@admin_logs/init'));
-        }
-
-        AdminLogModel::where('log_time', '<=', $log_date['log_time'])->delete();
-        /* 记录日志 */
-        ecjia_admin::admin_log(sprintf(__('删除 %s 的日志。'), $log_date['lable']), 'remove', 'adminlog');
-
-        return $this->showmessage(sprintf(__('%s 的日志成功删除。'), $log_date['lable']), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('@admin_logs/init')));
     }
 
     /**

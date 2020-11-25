@@ -138,25 +138,27 @@ class LicenseController extends ecjia_admin
     {
         $this->admin_priv('shop_authorized');
 
-        /* 接收上传文件 */
-        $upload = RC_Upload::uploader('file', array('save_path' => 'data/certificate', 'auto_sub_dirs' => false));
-        $upload->allowed_type('cer,pem');
-        $upload->allowed_mime('application/x-x509-ca-cert,application/octet-stream');
+        try {
+            /* 接收上传文件 */
+            $upload = RC_Upload::uploader('file', array('save_path' => 'data/certificate', 'auto_sub_dirs' => false));
+            $upload->allowed_type('cer,pem');
+            $upload->allowed_mime('application/x-x509-ca-cert,application/octet-stream');
 
-        if (!$upload->check_upload_file($_FILES['license'])) {
-            return $this->showmessage($upload->error(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
-        }
-        $info              = $upload->upload($_FILES['license']);
-        $license_file      = $upload->get_position($info);
-        $license_full_file = RC_Upload::upload_path(str_replace('/', DS, $license_file));
+            if (!$upload->check_upload_file($_FILES['license'])) {
+                return $this->showmessage($upload->error(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+            }
+            $info              = $upload->upload($_FILES['license']);
+            $license_file      = $upload->get_position($info);
+            $license_full_file = RC_Upload::upload_path(str_replace('/', DS, $license_file));
 
-        /* 取出证书内容 */
-        $license_arr = ecjia_license::instance()->parse_certificate($license_full_file);
+            /* 取出证书内容 */
+            $license_arr = ecjia_license::instance()->parse_certificate($license_full_file);
 
-        /* 恢复证书 */
-        if (empty($license_arr)) {
-            return $this->showmessage(__('证书内容不全。请先确定证书是否正确然后重新上传！'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
-        } else {
+            /* 恢复证书 */
+            if (empty($license_arr)) {
+                return $this->showmessage(__('证书内容不全。请先确定证书是否正确然后重新上传！'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+            }
+
             // 证书在线验证
             $isLicense = with(new ecjia_license($license_arr['serialNumber'], $license_file))->license_online_check();
             if ($isLicense) {
@@ -173,6 +175,9 @@ class LicenseController extends ecjia_admin
 
                 return $this->showmessage(__('授权证书连接服务器校验失败，请检查授权证书的合法性。'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR, array('pjaxurl' => RC_Uri::url('@license/license')));
             }
+        }
+        catch (\Exception $exception) {
+            return $this->showmessage($exception->getMessage(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
         }
     }
 

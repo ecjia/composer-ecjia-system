@@ -46,6 +46,11 @@
 //
 namespace Ecjia\System\AdminPanel\Controllers;
 
+use ecjia;
+use Ecjia\Component\FileHash\CloudCheck;
+use Ecjia\Component\FileHash\FileCheck;
+use Ecjia\Component\FileHash\FormatterResult;
+use Ecjia\Component\FileHash\Menu;
 use ecjia_admin;
 use RC_Script;
 use RC_Uri;
@@ -68,7 +73,7 @@ class AdminFilehashController extends ecjia_admin
         RC_Script::enqueue_script('jquery-dataTables');
         RC_Script::enqueue_script('smoke');
 
-        $this->sidebar_menus = (new \Ecjia\System\Admins\FileHash\Menu())->getMenus();
+        $this->sidebar_menus = (new Menu())->getMenus();
 
         $this->assign('sidebar_menus', $this->sidebar_menus);
     }
@@ -91,18 +96,18 @@ class AdminFilehashController extends ecjia_admin
             $item = $this->sidebar_menus->where('name', $group)->first();
         }
 
-        $hash = new \Ecjia\System\Admins\FileHash\FileCheck($item['dir']);
+        $hash = new FileCheck($item['dir']);
 
         $hashstatus = $hash->readHashFileStatus();
         if (!empty($hashstatus)) {
-            $hashdata = (new \Ecjia\System\Admins\FileHash\CloudCheck())->checkCurrentVersion($item['dir']);
+            $hashdata = (new CloudCheck())->checkCurrentVersion($item['dir']);
 
             $new_result = $hash->readXmlFileHash();
             $old_result = $hash->readXmlStringHash($hashdata);
 
             if ($old_result && $new_result) {
-                $result          = (new \Ecjia\System\Admins\FileHash\FileCheck($item['dir']))->compareHash($old_result, $new_result);
-                $formatterResult = new \Ecjia\System\Admins\FileHash\FormatterResult($result);
+                $result          = (new FileCheck($item['dir']))->compareHash($old_result, $new_result);
+                $formatterResult = new FormatterResult($result);
                 $dirlog          = $formatterResult->formatter();
                 $counter         = $formatterResult->counter();
                 $counterLabel    = $formatterResult->counterLabel();
@@ -130,28 +135,33 @@ class AdminFilehashController extends ecjia_admin
     {
         $this->admin_priv('file_check');
 
-        $group = $this->request->query('group');
-        if (empty($group)) {
-            $item  = $this->sidebar_menus->first();
-            $group = $item['name'];
-        } else {
-            $item = $this->sidebar_menus->where('name', $group)->first();
+        try {
+            $group = $this->request->query('group');
+            if (empty($group)) {
+                $item  = $this->sidebar_menus->first();
+                $group = $item['name'];
+            } else {
+                $item = $this->sidebar_menus->where('name', $group)->first();
+            }
+
+            $hash   = new FileCheck($item['dir']);
+            $result = $hash->builder();
+            $hash->writeFile($result);
+
+            $hashdata = (new CloudCheck())->checkCurrentVersion($item['dir']);
+
+            $new_result = $hash->readXmlFileHash();
+            $old_result = $hash->readXmlStringHash($hashdata);
+
+            if ($old_result && $new_result) {
+                $result = (new FileCheck($item['dir']))->compareHash($old_result, $new_result, true);
+            }
+
+            return $this->redirect(RC_Uri::url('@admin_filehash/init', ['group' => $group]));
         }
-
-        $hash   = new \Ecjia\System\Admins\FileHash\FileCheck($item['dir']);
-        $result = $hash->builder();
-        $hash->writeFile($result);
-
-        $hashdata = (new \Ecjia\System\Admins\FileHash\CloudCheck())->checkCurrentVersion($item['dir']);
-
-        $new_result = $hash->readXmlFileHash();
-        $old_result = $hash->readXmlStringHash($hashdata);
-
-        if ($old_result && $new_result) {
-            $result = (new \Ecjia\System\Admins\FileHash\FileCheck($item['dir']))->compareHash($old_result, $new_result, true);
+        catch (\Exception $exception) {
+            return $this->showmessage($exception->getMessage(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
         }
-
-        return $this->redirect(RC_Uri::url('@admin_filehash/init', ['group' => $group]));
     }
 
 }

@@ -56,11 +56,16 @@ class AdminSessionLoginController extends ecjia_admin
     {
         $this->admin_priv('session_manage');
 
-        $key = trim($this->request->input('key'));
+        try {
+            $key = trim($this->request->input('key'));
 
-        SessionLoginsModel::where('id', $key)->delete();
+            SessionLoginsModel::where('id', $key)->delete();
 
-        return $this->showmessage('删除成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS);
+            return $this->showmessage('删除成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS);
+        }
+        catch (\Exception $exception) {
+            return $this->showmessage($exception->getMessage(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+        }
     }
 
 

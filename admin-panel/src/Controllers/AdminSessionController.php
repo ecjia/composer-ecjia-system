@@ -144,15 +144,20 @@ class AdminSessionController extends ecjia_admin
     {
         $this->admin_priv('session_manage');
 
-        $key = trim($this->request->input('key'));
+        try {
+            $key = trim($this->request->input('key'));
 
-        $session = (new SessionManager())->getSessionKey($key);
+            $session = (new SessionManager())->getSessionKey($key);
 
-        $this->assign('session_info', $session);
+            $this->assign('session_info', $session);
 
-        $data = $this->fetch('admin_session_detail.dwt');
+            $data = $this->fetch('admin_session_detail.dwt');
 
-        return $this->showmessage('', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('data' => $data));
+            return $this->showmessage('', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('data' => $data));
+        }
+        catch (\Exception $exception) {
+            return $this->showmessage($exception->getMessage(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+        }
     }
 
     /**
@@ -162,11 +167,16 @@ class AdminSessionController extends ecjia_admin
     {
         $this->admin_priv('session_manage');
 
-        $key = trim($this->request->input('key'));
+        try {
+            $key = trim($this->request->input('key'));
 
-        (new SessionManager())->deleteSessionKey($key);
+            (new SessionManager())->deleteSessionKey($key);
 
-        return $this->showmessage('删除成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS);
+            return $this->showmessage('删除成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS);
+        }
+        catch (\Exception $exception) {
+            return $this->showmessage($exception->getMessage(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+        }
     }
 
 }

@@ -140,28 +140,33 @@ class AdminRoleController extends ecjia_admin
     {
         $this->admin_priv('admin_manage');
 
-        $username = remove_xss($this->request->input('user_name', ''));
-        $act_list = join(',', array_map('remove_xss', $this->request->input('action_code', [])));
+        try {
+            $username = remove_xss($this->request->input('user_name', ''));
+            $act_list = join(',', array_map('remove_xss', $this->request->input('action_code', [])));
 
-        $role_data = [
-            'role_name'     => $username,
-            'role_describe' => remove_xss($this->request->input('role_describe', '')),
-            'action_list'   => $act_list
-        ];
+            $role_data = [
+                'role_name'     => $username,
+                'role_describe' => remove_xss($this->request->input('role_describe', '')),
+                'action_list'   => $act_list
+            ];
 
-        $new_id = RoleModel::insertGetId($role_data);
+            $new_id = RoleModel::insertGetId($role_data);
 
-        /* 记录日志 */
-        ecjia_admin_log::instance()->add_object('role', __('管理员角色'));
-        ecjia_admin::admin_log($username, 'add', 'role');
+            /* 记录日志 */
+            ecjia_admin_log::instance()->add_object('role', __('管理员角色'));
+            ecjia_admin::admin_log($username, 'add', 'role');
 
-        /*添加链接*/
-        $links = ecjia_alert_links([
-            'text' => __('角色列表'),
-            'href' => RC_Uri::url('@admin_role/init'),
-        ]);
+            /*添加链接*/
+            $links = ecjia_alert_links([
+                'text' => __('角色列表'),
+                'href' => RC_Uri::url('@admin_role/init'),
+            ]);
 
-        return $this->showmessage(sprintf(__('添加 %s 操作成功'), $username), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('links' => $links, 'id' => $new_id));
+            return $this->showmessage(sprintf(__('添加 %s 操作成功'), $username), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('links' => $links, 'id' => $new_id));
+        }
+        catch (\Exception $exception) {
+            return $this->showmessage($exception->getMessage(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+        }
     }
 
     /**
@@ -206,28 +211,34 @@ class AdminRoleController extends ecjia_admin
     public function update()
     {
         $this->admin_priv('admin_manage');
-        $act_list  = join(',', array_map('remove_xss', $this->request->input('action_code', [])));
-        $role_id   = remove_xss($this->request->input('id'));
-        $username  = remove_xss($this->request->input('user_name', ''));
-        $role_data = [
-            'role_name'     => $username,
-            'role_describe' => remove_xss($this->request->input('role_describe', '')),
-            'action_list'   => $act_list
-        ];
 
-        RoleModel::where('role_id', $role_id)->update($role_data);
-        AdminUserRepository::model()->where('role_id', $role_id)->update(['action_list' => $act_list]);
+        try {
+            $act_list  = join(',', array_map('remove_xss', $this->request->input('action_code', [])));
+            $role_id   = remove_xss($this->request->input('id'));
+            $username  = remove_xss($this->request->input('user_name', ''));
+            $role_data = [
+                'role_name'     => $username,
+                'role_describe' => remove_xss($this->request->input('role_describe', '')),
+                'action_list'   => $act_list
+            ];
 
-        /* 记录日志 */
-        ecjia_admin_log::instance()->add_object('role', __('管理员角色'));
-        ecjia_admin::admin_log($username, 'edit', 'role');
+            RoleModel::where('role_id', $role_id)->update($role_data);
+            AdminUserRepository::model()->where('role_id', $role_id)->update(['action_list' => $act_list]);
 
-        /* 提示信息 */
-        $links = ecjia_alert_links([
-            'text' => __('返回角色列表'),
-            'href' => RC_Uri::url('@admin_role/init'),
-        ]);
-        return $this->showmessage(sprintf(__('编辑 %s 操作成功'), $username), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('links' => $links));
+            /* 记录日志 */
+            ecjia_admin_log::instance()->add_object('role', __('管理员角色'));
+            ecjia_admin::admin_log($username, 'edit', 'role');
+
+            /* 提示信息 */
+            $links = ecjia_alert_links([
+                'text' => __('返回角色列表'),
+                'href' => RC_Uri::url('@admin_role/init'),
+            ]);
+            return $this->showmessage(sprintf(__('编辑 %s 操作成功'), $username), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('links' => $links));
+        }
+        catch (\Exception $exception) {
+            return $this->showmessage($exception->getMessage(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+        }
     }
 
     /**
@@ -237,23 +248,27 @@ class AdminRoleController extends ecjia_admin
     {
         $this->admin_priv('admin_drop', ecjia::MSGTYPE_JSON);
 
-        $role_id = intval($this->request->input('id'));
+        try {
+            $role_id = intval($this->request->input('id'));
 
-        $remove_num = AdminUserRepository::model()->where('role_id', $role_id)->count();
-        if ($remove_num > 0) {
-            return $this->showmessage(__('此角色有管理员在使用，暂时不能删除！'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+            $remove_num = AdminUserRepository::model()->where('role_id', $role_id)->count();
+            if ($remove_num > 0) {
+                return $this->showmessage(__('此角色有管理员在使用，暂时不能删除！'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+            }
+
+            $role      = RoleModel::select('role_id', 'role_name')->find($role_id);
+            $role_name = $role->role_name;
+            $role->delete();
+
+            /* 记录日志 */
+            ecjia_admin_log::instance()->add_object('role', __('管理员角色'));
+            ecjia_admin::admin_log($role_name, 'remove', 'role');
+
+            return $this->showmessage(sprintf(__('成功删除管理员角色 %s'), $role_name), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS);
         }
-
-        $role      = RoleModel::select('role_id', 'role_name')->find($role_id);
-        $role_name = $role->role_name;
-        $role->delete();
-
-        /* 记录日志 */
-        ecjia_admin_log::instance()->add_object('role', __('管理员角色'));
-        ecjia_admin::admin_log($role_name, 'remove', 'role');
-
-        return $this->showmessage(sprintf(__('成功删除管理员角色 %s'), $role_name), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS);
-
+        catch (\Exception $exception) {
+            return $this->showmessage($exception->getMessage(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+        }
     }
 
     /**
