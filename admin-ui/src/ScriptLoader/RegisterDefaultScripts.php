@@ -20,7 +20,7 @@ class RegisterDefaultScripts
         RC_Script::add( 'ecjia', 				        $url."/lib/ecjia_js/ecjia$suffix.js", array('jquery') );
         RC_Script::add( 'ecjia-collect', 		        $url."/lib/ecjia_js/ecjia.collect.js", array('ecjia'), false, 1 );
         RC_Script::add( 'ecjia-hook', 		            $url."/lib/ecjia_js/ecjia.hook$suffix.js", array('ecjia'), false, 1 );
-        RC_Script::add( 'ecjia-middleware', 		        $url."/lib/ecjia_js/ecjia.middleware$suffix.js", array('ecjia'), false, 1 );
+        RC_Script::add( 'ecjia-middleware', 		        $url."/lib/ecjia_js/ecjia.middleware.js", array('ecjia'), false, 1 );
         RC_Script::add( 'ecjia-utils', 			        $url."/lib/ecjia_js/ecjia.utils$suffix.js", array('ecjia'), false, 1 );
         RC_Script::add( 'ecjia-region', 			        $url."/lib/ecjia_js/ecjia.region$suffix.js", array('ecjia'), false, 1 );
         RC_Script::add( 'ecjia-ui', 				        $url."/lib/ecjia_js/ecjia.ui$suffix.js", array('ecjia') );
