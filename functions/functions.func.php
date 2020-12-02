@@ -45,3 +45,17 @@
 //  ---------------------------------------------------------------------------------
 //
 
+if (! function_exists('is_installed_ecjia'))
+{
+    /**
+     * 检测是否安装ecjia
+     */
+    function is_installed_ecjia()
+    {
+        $install_lock = storage_path() . '/data/install.lock';
+        if (file_exists($install_lock) || defined('NO_CHECK_INSTALL')) {
+            return true;
+        }
+        return false;
+    }
+}
