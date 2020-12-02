@@ -18,6 +18,9 @@ class EcjiaLoadGlobalPluginsAction
      */
     public function handle()
     {
+        if (! is_installed_ecjia()) {
+            return ;
+        }
 
         $global_plugins = ecjia_config::instance()->get_addon_config('global_plugins', true);
         if (is_array($global_plugins)) {
