@@ -448,7 +448,7 @@ abstract class EcjiaController extends RoyalcmsController
      * @param       string      $message      	消息内容
      * @param       int         $type        	消息类型， (0:html, 1:alert, 2:json, 3:xml)(0:错误，1:成功，2:消息, 3:询问)
      * @param		array		$options		消息可选参数
-     * @return      string | \Royalcms\Component\HttpKernel\Response
+     * @return      string | \Royalcms\Component\Http\Response
      */
     public function showmessage($message, $msgtype = ecjia::MSGTYPE_HTML, $options = array()) {
         $state = $msgtype & 0x0F;
