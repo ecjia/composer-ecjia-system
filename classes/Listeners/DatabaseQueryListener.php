@@ -33,6 +33,13 @@ class DatabaseQueryListener
             $bindings = $event->bindings;
             $time = $event->time;
 
+            $bindings = collect($bindings)->map(function ($item) {
+                if ($item instanceof \DateTime) {
+                    return $item->format('Y-m-d H:i:s');
+                }
+                return $item;
+            });
+
             $query = str_replace('?', '"'.'%s'.'"', $query);
             $sql = vsprintf($query, $bindings);
             RC_Logger::getLogger('sql')->info('sql:'.$sql);
