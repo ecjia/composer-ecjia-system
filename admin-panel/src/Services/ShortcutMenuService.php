@@ -41,7 +41,7 @@ class ShortcutMenuService
                 $submenus[] = ecjia_admin::make_admin_menu('divider', '', '', 99);
             }
 
-            $submenus[] = ecjia_admin::make_admin_menu('shortcut_100', __('设置快捷菜单'), RC_Uri::url('@privilege/quick_nav'), 100);
+            $submenus[] = ecjia_admin::make_admin_menu('shortcut_100', __('设置快捷菜单'), RC_Uri::url('@admin_quick_nav/init'), 100);
 
             $shortcut->add_submenu($submenus);
 
