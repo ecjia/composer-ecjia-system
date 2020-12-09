@@ -58,99 +58,101 @@
 return [
 
     //index
-    'admincp/index/init'                    => 'Ecjia\System\AdminPanel\Controllers\IndexController@init', //后台控制面板首页
-    'admincp/admin_auto_login/init'         => 'Ecjia\System\AdminPanel\Controllers\AdminAutoLoginController@init', //后台自动登录验证
+    'admincp/index/init'                     => 'Ecjia\System\AdminPanel\Controllers\IndexController@init', //后台控制面板首页
+    'admincp/admin_auto_login/init'          => 'Ecjia\System\AdminPanel\Controllers\AdminAutoLoginController@init', //后台自动登录验证
 
     //about
-    'admincp/about/about_us'                => 'Ecjia\System\AdminPanel\Controllers\AboutController@about_us', //关于 ECJIA
-    'admincp/about/about_team'              => 'Ecjia\System\AdminPanel\Controllers\AboutController@about_team', //ECJIA团队
-    'admincp/about/about_system'            => 'Ecjia\System\AdminPanel\Controllers\AboutController@about_system', //ECJIA系统检测
+    'admincp/about/about_us'                 => 'Ecjia\System\AdminPanel\Controllers\AboutController@about_us', //关于 ECJIA
+    'admincp/about/about_team'               => 'Ecjia\System\AdminPanel\Controllers\AboutController@about_team', //ECJIA团队
+    'admincp/about/about_system'             => 'Ecjia\System\AdminPanel\Controllers\AboutController@about_system', //ECJIA系统检测
 
     //admin_application
-    'admincp/admin_application/init'        => 'Ecjia\System\AdminPanel\Controllers\AdminApplicationController@init', //应用列表
-    'admincp/admin_application/clear_cache' => 'Ecjia\System\AdminPanel\Controllers\AdminApplicationController@clear_cache', //
-    'admincp/admin_application/detail'      => 'Ecjia\System\AdminPanel\Controllers\AdminApplicationController@detail', //查看应用
-    'admincp/admin_application/install'     => 'Ecjia\System\AdminPanel\Controllers\AdminApplicationController@install', //安装应用
-    'admincp/admin_application/uninstall'   => 'Ecjia\System\AdminPanel\Controllers\AdminApplicationController@uninstall', //卸载应用
+    'admincp/admin_application/init'         => 'Ecjia\System\AdminPanel\Controllers\AdminApplicationController@init', //应用列表
+    'admincp/admin_application/clear_cache'  => 'Ecjia\System\AdminPanel\Controllers\AdminApplicationController@clear_cache', //
+    'admincp/admin_application/detail'       => 'Ecjia\System\AdminPanel\Controllers\AdminApplicationController@detail', //查看应用
+    'admincp/admin_application/install'      => 'Ecjia\System\AdminPanel\Controllers\AdminApplicationController@install', //安装应用
+    'admincp/admin_application/uninstall'    => 'Ecjia\System\AdminPanel\Controllers\AdminApplicationController@uninstall', //卸载应用
 
     //admin_cache
-    'admincp/admin_cache/init'              => 'Ecjia\System\AdminPanel\Controllers\AdminCacheController@init', //更新缓存
-    'admincp/admin_cache/update_cache'      => 'Ecjia\System\AdminPanel\Controllers\AdminCacheController@update_cache', //更新缓存
+    'admincp/admin_cache/init'               => 'Ecjia\System\AdminPanel\Controllers\AdminCacheController@init', //更新缓存
+    'admincp/admin_cache/update_cache'       => 'Ecjia\System\AdminPanel\Controllers\AdminCacheController@update_cache', //更新缓存
 
     //admin_filehash
-    'admincp/admin_filehash/init'           => 'Ecjia\System\AdminPanel\Controllers\AdminFilehashController@init', //文件校验结果显示
-    'admincp/admin_filehash/check'          => 'Ecjia\System\AdminPanel\Controllers\AdminFilehashController@check', //文件校验，是否变动
+    'admincp/admin_filehash/init'            => 'Ecjia\System\AdminPanel\Controllers\AdminFilehashController@init', //文件校验结果显示
+    'admincp/admin_filehash/check'           => 'Ecjia\System\AdminPanel\Controllers\AdminFilehashController@check', //文件校验，是否变动
 
     //admin_file_permission
-    'admincp/admin_file_permission/init'    => 'Ecjia\System\AdminPanel\Controllers\AdminFilePermissionController@init', //文件权限检测
+    'admincp/admin_file_permission/init'     => 'Ecjia\System\AdminPanel\Controllers\AdminFilePermissionController@init', //文件权限检测
 
     //admin_logs
-    'admincp/admin_logs/init'               => 'Ecjia\System\AdminPanel\Controllers\AdminLogsController@init', //
-    'admincp/admin_logs/batch_drop'         => 'Ecjia\System\AdminPanel\Controllers\AdminLogsController@batch_drop', //批量删除日志记录
+    'admincp/admin_logs/init'                => 'Ecjia\System\AdminPanel\Controllers\AdminLogsController@init', //
+    'admincp/admin_logs/batch_drop'          => 'Ecjia\System\AdminPanel\Controllers\AdminLogsController@batch_drop', //批量删除日志记录
 
     //admin_plugin
-    'admincp/admin_plugin/init'             => 'Ecjia\System\AdminPanel\Controllers\AdminPluginController@init', //插件列表
-    'admincp/admin_plugin/install'          => 'Ecjia\System\AdminPanel\Controllers\AdminPluginController@install', //安装插件
-    'admincp/admin_plugin/uninstall'        => 'Ecjia\System\AdminPanel\Controllers\AdminPluginController@uninstall', //卸载插件
-    'admincp/admin_plugin/config'           => 'Ecjia\System\AdminPanel\Controllers\AdminPluginController@config', //插件配置
+    'admincp/admin_plugin/init'              => 'Ecjia\System\AdminPanel\Controllers\AdminPluginController@init', //插件列表
+    'admincp/admin_plugin/install'           => 'Ecjia\System\AdminPanel\Controllers\AdminPluginController@install', //安装插件
+    'admincp/admin_plugin/uninstall'         => 'Ecjia\System\AdminPanel\Controllers\AdminPluginController@uninstall', //卸载插件
+    'admincp/admin_plugin/config'            => 'Ecjia\System\AdminPanel\Controllers\AdminPluginController@config', //插件配置
 
     //admin_role
-    'admincp/admin_role/init'               => 'Ecjia\System\AdminPanel\Controllers\AdminRoleController@init', //
-    'admincp/admin_role/add'                => 'Ecjia\System\AdminPanel\Controllers\AdminRoleController@add', //添加角色页面
-    'admincp/admin_role/insert'             => 'Ecjia\System\AdminPanel\Controllers\AdminRoleController@insert', //添加角色的处理
-    'admincp/admin_role/edit'               => 'Ecjia\System\AdminPanel\Controllers\AdminRoleController@edit', //编辑角色信息
-    'admincp/admin_role/update'             => 'Ecjia\System\AdminPanel\Controllers\AdminRoleController@update', //更新角色信息
-    'admincp/admin_role/remove'             => 'Ecjia\System\AdminPanel\Controllers\AdminRoleController@remove', //删除一个角色
+    'admincp/admin_role/init'                => 'Ecjia\System\AdminPanel\Controllers\AdminRoleController@init', //
+    'admincp/admin_role/add'                 => 'Ecjia\System\AdminPanel\Controllers\AdminRoleController@add', //添加角色页面
+    'admincp/admin_role/insert'              => 'Ecjia\System\AdminPanel\Controllers\AdminRoleController@insert', //添加角色的处理
+    'admincp/admin_role/edit'                => 'Ecjia\System\AdminPanel\Controllers\AdminRoleController@edit', //编辑角色信息
+    'admincp/admin_role/update'              => 'Ecjia\System\AdminPanel\Controllers\AdminRoleController@update', //更新角色信息
+    'admincp/admin_role/remove'              => 'Ecjia\System\AdminPanel\Controllers\AdminRoleController@remove', //删除一个角色
 
     //admin_session
-    'admincp/admin_session/init'            => 'Ecjia\System\AdminPanel\Controllers\AdminSessionController@init', //
-    'admincp/admin_session/detail'          => 'Ecjia\System\AdminPanel\Controllers\AdminSessionController@detail', //查看详情
-    'admincp/admin_session/remove'          => 'Ecjia\System\AdminPanel\Controllers\AdminSessionController@remove', //删除
+    'admincp/admin_session/init'             => 'Ecjia\System\AdminPanel\Controllers\AdminSessionController@init', //
+    'admincp/admin_session/detail'           => 'Ecjia\System\AdminPanel\Controllers\AdminSessionController@detail', //查看详情
+    'admincp/admin_session/remove'           => 'Ecjia\System\AdminPanel\Controllers\AdminSessionController@remove', //删除
 
     //admin_session_login
-    'admincp/admin_session_login/init'      => 'Ecjia\System\AdminPanel\Controllers\AdminSessionLoginController@init', //
-    'admincp/admin_session_login/remove'    => 'Ecjia\System\AdminPanel\Controllers\AdminSessionLoginController@remove', //删除
+    'admincp/admin_session_login/init'       => 'Ecjia\System\AdminPanel\Controllers\AdminSessionLoginController@init', //
+    'admincp/admin_session_login/remove'     => 'Ecjia\System\AdminPanel\Controllers\AdminSessionLoginController@remove', //删除
 
     //admin_user
-    'admincp/admin_user/init'               => 'Ecjia\System\AdminPanel\Controllers\AdminUserController@init', //管理员列表页面
-    'admincp/admin_user/add'                => 'Ecjia\System\AdminPanel\Controllers\AdminUserController@add', //添加管理员页面
-    'admincp/admin_user/insert'             => 'Ecjia\System\AdminPanel\Controllers\AdminUserController@insert', //添加管理员的处理
-    'admincp/admin_user/edit'               => 'Ecjia\System\AdminPanel\Controllers\AdminUserController@edit', //编辑管理员信息
-    'admincp/admin_user/update'             => 'Ecjia\System\AdminPanel\Controllers\AdminUserController@update', //更新管理员信息
-    'admincp/admin_user/allot'              => 'Ecjia\System\AdminPanel\Controllers\AdminUserController@allot', //为管理员分配权限
-    'admincp/admin_user/update_allot'       => 'Ecjia\System\AdminPanel\Controllers\AdminUserController@update_allot', //更新管理员的权限
-    'admincp/admin_user/remove'             => 'Ecjia\System\AdminPanel\Controllers\AdminUserController@remove', //删除一个管理员
+    'admincp/admin_user/init'                => 'Ecjia\System\AdminPanel\Controllers\AdminUserController@init', //管理员列表页面
+    'admincp/admin_user/add'                 => 'Ecjia\System\AdminPanel\Controllers\AdminUserController@add', //添加管理员页面
+    'admincp/admin_user/insert'              => 'Ecjia\System\AdminPanel\Controllers\AdminUserController@insert', //添加管理员的处理
+    'admincp/admin_user/edit'                => 'Ecjia\System\AdminPanel\Controllers\AdminUserController@edit', //编辑管理员信息
+    'admincp/admin_user/update'              => 'Ecjia\System\AdminPanel\Controllers\AdminUserController@update', //更新管理员信息
+    'admincp/admin_user/allot'               => 'Ecjia\System\AdminPanel\Controllers\AdminUserController@allot', //为管理员分配权限
+    'admincp/admin_user/update_allot'        => 'Ecjia\System\AdminPanel\Controllers\AdminUserController@update_allot', //更新管理员的权限
+    'admincp/admin_user/remove'              => 'Ecjia\System\AdminPanel\Controllers\AdminUserController@remove', //删除一个管理员
 
     //get_password
-    'admincp/get_password/forget_pwd'       => 'Ecjia\System\AdminPanel\Controllers\GetPasswordController@forget_pwd', //
-    'admincp/get_password/reset_pwd_mail'   => 'Ecjia\System\AdminPanel\Controllers\GetPasswordController@reset_pwd_mail', //
-    'admincp/get_password/reset_pwd_form'   => 'Ecjia\System\AdminPanel\Controllers\GetPasswordController@reset_pwd_form', //
-    'admincp/get_password/reset_pwd'        => 'Ecjia\System\AdminPanel\Controllers\GetPasswordController@reset_pwd', //
+    'admincp/get_password/forget_pwd'        => 'Ecjia\System\AdminPanel\Controllers\GetPasswordController@forget_pwd', //
+    'admincp/get_password/reset_pwd_mail'    => 'Ecjia\System\AdminPanel\Controllers\GetPasswordController@reset_pwd_mail', //
+    'admincp/get_password/reset_pwd_form'    => 'Ecjia\System\AdminPanel\Controllers\GetPasswordController@reset_pwd_form', //
+    'admincp/get_password/reset_pwd'         => 'Ecjia\System\AdminPanel\Controllers\GetPasswordController@reset_pwd', //
 
     //license
-    'admincp/license/license'               => 'Ecjia\System\AdminPanel\Controllers\LicenseController@license', //证书编辑页
-    'admincp/license/license_upload'        => 'Ecjia\System\AdminPanel\Controllers\LicenseController@license_upload', //证书上传
-    'admincp/license/license_download'      => 'Ecjia\System\AdminPanel\Controllers\LicenseController@license_download', //证书下载
-    'admincp/license/license_delete'        => 'Ecjia\System\AdminPanel\Controllers\LicenseController@license_delete', //证书删除
+    'admincp/license/license'                => 'Ecjia\System\AdminPanel\Controllers\LicenseController@license', //证书编辑页
+    'admincp/license/license_upload'         => 'Ecjia\System\AdminPanel\Controllers\LicenseController@license_upload', //证书上传
+    'admincp/license/license_download'       => 'Ecjia\System\AdminPanel\Controllers\LicenseController@license_download', //证书下载
+    'admincp/license/license_delete'         => 'Ecjia\System\AdminPanel\Controllers\LicenseController@license_delete', //证书删除
 
     //load_scripts
-    'admincp/load_scripts/init'             => 'Ecjia\System\AdminPanel\Controllers\LoadScriptsController@init', //
+    'admincp/load_scripts/init'              => 'Ecjia\System\AdminPanel\Controllers\LoadScriptsController@init', //
 
     //load_styles
-    'admincp/load_styles/init'              => 'Ecjia\System\AdminPanel\Controllers\LoadStylesController@init', //
+    'admincp/load_styles/init'               => 'Ecjia\System\AdminPanel\Controllers\LoadStylesController@init', //
 
     //privilege
-    'admincp/privilege/login'               => 'Ecjia\System\AdminPanel\Controllers\PrivilegeController@login', //登录界面
-    'admincp/privilege/logout'              => 'Ecjia\System\AdminPanel\Controllers\PrivilegeController@logout', //退出登录
-    'admincp/privilege/signin'              => 'Ecjia\System\AdminPanel\Controllers\PrivilegeController@signin', //验证登录信息
-    'admincp/privilege/modif'               => 'Ecjia\System\AdminPanel\Controllers\PrivilegeController@modif', //编辑个人资料
-    'admincp/privilege/update_self'         => 'Ecjia\System\AdminPanel\Controllers\PrivilegeController@update_self', //更新管理员信息
-    'admincp/privilege/quick_nav'           => 'Ecjia\System\AdminPanel\Controllers\PrivilegeController@quick_nav', //个人快捷导航菜单修改
-    'admincp/privilege/quick_nav_save'      => 'Ecjia\System\AdminPanel\Controllers\PrivilegeController@quick_nav_save', //个人快捷导航菜单修改 - 保存
+    'admincp/privilege/login'                => 'Ecjia\System\AdminPanel\Controllers\PrivilegeController@login', //登录界面
+    'admincp/privilege/logout'               => 'Ecjia\System\AdminPanel\Controllers\PrivilegeController@logout', //退出登录
+    'admincp/privilege/signin'               => 'Ecjia\System\AdminPanel\Controllers\PrivilegeController@signin', //验证登录信息
+    'admincp/privilege/modif'                => 'Ecjia\System\AdminPanel\Controllers\PrivilegeController@modif', //编辑个人资料
+    'admincp/privilege/update_self'          => 'Ecjia\System\AdminPanel\Controllers\PrivilegeController@update_self', //更新管理员信息
+
+    //quick_nav
+    'admincp/admin_quick_nav/init'           => 'Ecjia\System\AdminPanel\Controllers\AdminQuickNavController@init', //个人快捷导航菜单修改
+    'admincp/admin_quick_nav/quick_nav_save' => 'Ecjia\System\AdminPanel\Controllers\AdminQuickNavController@quick_nav_save', //个人快捷导航菜单修改 - 保存
 
     //upgrade
-    'admincp/upgrade/init'                  => 'Ecjia\System\AdminPanel\Controllers\UpgradeController@init', //
-    'admincp/upgrade/check_update'          => 'Ecjia\System\AdminPanel\Controllers\UpgradeController@check_update', //
+    'admincp/upgrade/init'                   => 'Ecjia\System\AdminPanel\Controllers\UpgradeController@init', //
+    'admincp/upgrade/check_update'           => 'Ecjia\System\AdminPanel\Controllers\UpgradeController@check_update', //
 
 
 ];
