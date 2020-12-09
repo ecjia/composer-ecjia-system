@@ -12,7 +12,7 @@ class XXSSProtectionMiddleware
     public function handle($request, Closure $next)
     {
         $response = $next($request);
-        $response->header('X-XSS-Protection', '1; mode=block');
+        $response->headers->set('X-XSS-Protection', '1; mode=block');
 
         return $response;
     }

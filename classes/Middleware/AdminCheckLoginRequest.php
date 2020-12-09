@@ -26,13 +26,9 @@ class AdminCheckLoginRequest
             if (is_pjax()) {
                 ecjia_screen::$current_screen->add_nav_here(new admin_nav_here(__('系统提示')));
                 return ecjia_admin::$controller->showmessage(__('对不起,您没有执行此项操作的权限!'), ecjia::MSGTYPE_HTML | ecjia::MSGSTAT_ERROR, array('links' => array(array('text' => __('重新登录'), 'href' => RC_Uri::url('@privilege/login')))));
-//                royalcms('response')->send();
-//                exit();
             }
             elseif (is_ajax()) {
                 return ecjia_admin::$controller->showmessage(__('对不起,您没有执行此项操作的权限!'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
-//                royalcms('response')->send();
-//                exit();
             }
             else {
                 RC_Cookie::set('admin_login_referer', RC_Uri::current_url());

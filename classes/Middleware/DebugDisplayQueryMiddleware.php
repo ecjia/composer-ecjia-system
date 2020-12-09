@@ -17,9 +17,7 @@ class DebugDisplayQueryMiddleware
             RC_DB::enableQueryLog();
         }
 
-        $response = $next($request);
-
-        return $response;
+        return $next($request);
     }
 
 }
