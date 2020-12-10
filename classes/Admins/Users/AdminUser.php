@@ -5,7 +5,6 @@ namespace Ecjia\System\Admins\Users;
 use Ecjia\System\Frameworks\Contracts\UserInterface;
 use Royalcms\Component\Repository\Repositories\AbstractRepository;
 use RC_Hook;
-use RC_Uri;
 use Royalcms\Component\Support\Traits\Macroable;
 
 class AdminUser extends AbstractRepository implements UserInterface
@@ -30,18 +29,7 @@ class AdminUser extends AbstractRepository implements UserInterface
 
         $this->user = $this->find($userid);
         
-        if (is_string($purviewClass) && class_exists($purviewClass)) {
-            $this->purview = new $purviewClass($userid);
-        }
-        elseif (is_callable($purviewClass)) {
-            $this->purview = $purviewClass($userid);
-        }
-        elseif (is_null($purviewClass)) {
-            $pruviewClass = config('ecjia.admin_user_purview', '\Ecjia\System\Admins\Users\AdminUserDefaultAllotPurview');
-            $this->purview = new $pruviewClass($userid);
-        }
-        
-        $this->purview = RC_Hook::apply_filters('ecjia_admin_user_allot_purview_handle', $this->purview);
+        $this->purview = (new AdminPurviewClass($userid, $purviewClass))->getPurviewInstance();
     }
     
     /**
