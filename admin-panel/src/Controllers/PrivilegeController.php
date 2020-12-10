@@ -266,7 +266,12 @@ class PrivilegeController extends ecjia_admin
 
             RC_Hook::do_action('ecjia_admin_login_before', $model);
 
-            $action_list = (new AdminPurviewClass($model->user_id))->getPurviewInstance()->get();
+            if ($model->action_list == 'all') {
+                $action_list = $model->action_list;
+            } else {
+                $action_list = (new AdminPurviewClass($model->user_id))->getPurviewInstance()->get();
+            }
+
             $this->admin_session($model->user_id, $model->user_name, $action_list, $model->last_login);
 
             // 登录成功，清除密码错误锁定
