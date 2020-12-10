@@ -57,6 +57,7 @@ use Ecjia\Component\ShowMessage\Options\PjaxShowMessageOption;
 use Ecjia\Component\PasswordLock\PasswordLock;
 use Ecjia\System\Admins\AdminMenu\HeaderMenuGroup;
 use Ecjia\Component\QuickNav\QuickNav;
+use Ecjia\System\Admins\Users\AdminPurviewClass;
 use Ecjia\System\Admins\Users\AdminUserRepository;
 use ecjia_admin;
 use ecjia_admin_log;
@@ -265,7 +266,8 @@ class PrivilegeController extends ecjia_admin
 
             RC_Hook::do_action('ecjia_admin_login_before', $model);
 
-            $this->admin_session($model->user_id, $model->user_name, $model->action_list, $model->last_login);
+            $action_list = (new AdminPurviewClass($model->user_id))->getPurviewInstance()->get();
+            $this->admin_session($model->user_id, $model->user_name, $action_list, $model->last_login);
 
             // 登录成功，清除密码错误锁定
             $lock->clearTimes();
