@@ -50,6 +50,7 @@ namespace Ecjia\System\AdminPanel\Controllers;
 
 use admin_nav_here;
 use ecjia;
+use Ecjia\System\Admins\Users\AdminUserRepository;
 use Ecjia\System\Models\AdminLogModel;
 use ecjia_admin;
 use ecjia_page;
@@ -109,14 +110,15 @@ class AdminLogsController extends ecjia_admin
 
         // 查询管理员列表
         $user_list = [];
-        $userdata  = AdminLogModel::with(['admin_user_model' => function ($query) {
-            $query->select('user_id', 'user_name');
-        }])->select('user_id')->distinct()->get();
+//        $userdata  = AdminLogModel::with(['admin_user_model' => function ($query) {
+//            $query->select('user_id', 'user_name');
+//        }])->select('user_id')->distinct()->get();
+        $userdata  = AdminUserRepository::model()->select('user_id', 'user_name')->get();
 
         if (!empty($userdata)) {
             $user_list = $userdata->mapWithKeys(function ($model) {
-                if (!empty($model->admin_user_model)) {
-                    $model->user_name = $model->admin_user_model->user_name;
+                if (!empty($model->user_name)) {
+                    $model->user_name = $model->user_name;
                 } else {
                     $model->user_name = __('佚名') . $model->user_id;
                 }
