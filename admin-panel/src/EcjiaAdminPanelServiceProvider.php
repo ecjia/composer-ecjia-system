@@ -3,7 +3,9 @@ namespace Ecjia\System\AdminPanel;
 
 use Ecjia\System\AdminPanel\Foundation\ScriptLoader\RegisterDefaultScripts;
 use Ecjia\System\AdminPanel\Foundation\ScriptLoader\RegisterDefaultStyles;
+use Ecjia\System\Admins\AdminLog\AdminLogRepository;
 use Ecjia\System\Admins\Users\AdminUserRepository;
+use Ecjia\System\Frameworks\Contracts\AdminLogRepositoryInterface;
 use Ecjia\System\Frameworks\Contracts\AdminUserRepositoryInterface;
 use RC_Hook;
 use RC_Loader;
@@ -63,6 +65,7 @@ class EcjiaAdminPanelServiceProvider extends AppParentServiceProvider
 
         //bind class
         $this->royalcms->bind(AdminUserRepositoryInterface::class, AdminUserRepository::class);
+        $this->royalcms->bind(AdminLogRepositoryInterface::class, AdminLogRepository::class);
     }
 
     /**
