@@ -3,6 +3,8 @@ namespace Ecjia\System\AdminPanel;
 
 use Ecjia\System\AdminPanel\Foundation\ScriptLoader\RegisterDefaultScripts;
 use Ecjia\System\AdminPanel\Foundation\ScriptLoader\RegisterDefaultStyles;
+use Ecjia\System\Admins\Users\AdminUserRepository;
+use Ecjia\System\Frameworks\Contracts\AdminUserRepositoryInterface;
 use RC_Hook;
 use RC_Loader;
 use RC_Locale;
@@ -58,6 +60,9 @@ class EcjiaAdminPanelServiceProvider extends AppParentServiceProvider
 
         $this->registerDefaultStyles();
         $this->registerDefaultScripts();
+
+        //bind class
+        $this->royalcms->bind(AdminUserRepositoryInterface::class, AdminUserRepository::class);
     }
 
     /**
