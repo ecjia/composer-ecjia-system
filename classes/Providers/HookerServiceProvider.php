@@ -55,7 +55,15 @@ class HookerServiceProvider extends ServiceProvider
         ],
 
         'handle_403_error' => [
-            'Ecjia\System\Hookers\Handle403ErrorAction',
+            ['Ecjia\System\Hookers\Handle403ErrorAction', 9],
+        ],
+
+        'handle_404_error' => [
+            ['Ecjia\System\Hookers\Handle404ErrorAction', 9],
+        ],
+
+        'handle_500_error' => [
+            ['Ecjia\System\Hookers\Handle500ErrorAction', 9],
         ],
     ];
 
