@@ -24,7 +24,6 @@ class Handle403ErrorAction
             rc_die(sprintf("File %s not found!", $pathInfo));
         }
 
-        return $exception;
     }
 
 }
