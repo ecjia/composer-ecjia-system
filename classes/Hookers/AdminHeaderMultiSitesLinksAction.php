@@ -19,21 +19,22 @@ class AdminHeaderMultiSitesLinksAction
     public function handle()
     {
         $menus = $this->getMultSitesMenus();
-
-        echo '<li class="divider-vertical hidden-phone hidden-tablet"></li>';
-        echo '<li class="dropdown">';
-        echo '    <a class="dropdown-toggle nav_condensed" href="#" data-toggle="dropdown"><i class="fontello-icon-sitemap"></i> 多站点切换</a>';
-        echo '    <ul class="dropdown-menu">';
-        collect($menus)->each(function ($menu) {
-            if ($menu->action == 'divider') {
-                echo '<li class="divider"></li>';
-            }
-            else {
-                echo '<li><a href="' .$menu->link. '" target="' . $menu->target . '">' .$menu->name. '</a></li>';
-            }
-        });
-        echo '    </ul>';
-        echo '</li>';
+        if (!empty($menus)) {
+            echo '<li class="divider-vertical hidden-phone hidden-tablet"></li>';
+            echo '<li class="dropdown">';
+            echo '    <a class="dropdown-toggle nav_condensed" href="#" data-toggle="dropdown"><i class="fontello-icon-sitemap"></i> 多站点切换</a>';
+            echo '    <ul class="dropdown-menu">';
+            collect($menus)->each(function ($menu) {
+                if ($menu->action == 'divider') {
+                    echo '<li class="divider"></li>';
+                }
+                else {
+                    echo '<li><a href="' .$menu->link. '" target="' . $menu->target . '">' .$menu->name. '</a></li>';
+                }
+            });
+            echo '    </ul>';
+            echo '</li>';
+        }
     }
 
 
