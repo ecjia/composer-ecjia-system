@@ -9,7 +9,6 @@
 	<!-- {ecjia:hook id=admin_print_scripts} -->
 </head>
 <body>
-	<!-- {if $form_act eq "forget_pwd"} -->
 	<div class="login_box">
 		<div class="logo"></div>
 		<div class="error-msg"></div>
@@ -36,38 +35,7 @@
 			</div>  
 		</form>
 	</div>
-	<!-- {/if} -->
 
-	<!-- {if $form_act eq "reset_pwd"} -->
-	<div class="login_box login_box_getpwd">
-		<div class="logo"></div>
-		<div class="error-msg"></div>
-		<form id="forget_form" name="theForm" method="post" action="{url path='@get_password/reset_pwd'}" >
-			<div class="top_b">{t}管理员密码找回{/t}</div>
-			<div class="cnt_b">
-				<div class="formRow">
-					<div class="input-prepend">
-						<span class="add-on">{t}新密码{/t}</span>
-						<input id="username" type="password" name="password" placeholder="{t}管理员新密码{/t}" value="" autocomplete="off" />
-					</div>
-				</div>
-				<div class="formRow">
-					<div class="input-prepend">
-						<span class="add-on">{t}重复新密码{/t}</span>
-						<input id="email" type="password" name="confirm_pwd" placeholder="{t}重复管理员密码{/t}" value="" autocomplete="off" />
-					</div>
-				</div>
-				<!-- {ecjia:hook id=admin_login_captcha} -->
-			</div>
-			<div class="btm_b clearfix">
-				<input type="hidden" name="adminid" value="{$adminid}" />
-				<input type="hidden" name="code" value="{$code}" />
-				<input class="btn btn-inverse pull-right" type="submit" value="{t}确定{/t}" />
-				<span class="link_reg"><a href="{url path='@privilege/login'}">{t}返回登录{/t}</a></span>
-			</div>  
-		</form>
-	</div>
-	<!-- {/if} -->
 	<!-- {ecjia:hook id=admin_print_footer_scripts} -->
 	
 	<script>
