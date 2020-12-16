@@ -47,13 +47,11 @@
 namespace Ecjia\System\AdminPanel\Controllers;
 
 use ecjia;
-use Ecjia\System\Admins\Users\AdminUserModel;
-use Ecjia\App\Captcha\Enums\CaptchaEnum;
 use Ecjia\System\Admins\Users\AdminUserRepository;
+use Ecjia\System\Events\AdminUserForgetPasswordEvent;
 use ecjia_admin;
 use ecjia_password;
 use RC_Api;
-use RC_ENV;
 use RC_Loader;
 use RC_Mail;
 use RC_Script;
@@ -176,20 +174,9 @@ class GetPasswordController extends ecjia_admin
 
     public function forget_pwd()
     {
-//        header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
-//        header("Cache-Control: no-cache, must-revalidate");
-//        header("Pragma: no-cache");
-
         RC_Loader::load_app_class('hooks.plugin_captcha', 'captcha', false);
 
-        $gd_version = RC_ENV::gd_version();
-        if ((intval(ecjia::config('captcha')) & CaptchaEnum::CAPTCHA_ADMIN) && $gd_version > 0) {
-            $this->assign('gd_version', $gd_version);
-            $this->assign('random', mt_rand());
-        }
-        $this->assign('form_act', 'forget_pwd');
-
-        return $this->display('get_pwd.dwt.php');
+        return $this->display('get_pwd.dwt');
     }
 
     public function reset_pwd_mail()
@@ -213,46 +200,16 @@ class GetPasswordController extends ecjia_admin
                 return $this->showmessage(__('用户名与Email地址不匹配,请返回！'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
             }
 
-            /* 生成验证的code */
-            $rand_code = str_random(10);
+            event(new AdminUserForgetPasswordEvent($admin_model));
 
-            $admin_model->setMeta('forget_password_hash', $rand_code);
-
-            $admin_id   = $admin_model['user_id'];
-            $admin_pass = $admin_model['password'];
-
-            $pm = ecjia_password::autoCompatibleDriver($admin_pass);
-
-            $code        = $pm->generateResetPasswordHash($admin_id, $admin_pass, $rand_code);
-            $reset_email = RC_Uri::url('@get_password/reset_pwd_form', array('uid' => $admin_id, 'code' => $code));
-
-            /* 设置重置邮件模板所需要的内容信息 */
-            //$template    = get_mail_template('send_password');
-            $tpl_name = 'send_password';
-            $template = RC_Api::api('mail', 'mail_template', $tpl_name);
-
-            $this->assign('user_name', $admin_username);
-            $this->assign('reset_email', $reset_email);
-            $this->assign('shop_name', ecjia::config('shop_name'));
-            $this->assign('send_date', RC_Time::local_date(ecjia::config('date_format')));
-            $this->assign('sent_date', RC_Time::local_date(ecjia::config('date_format')));
-
-            if (RC_Mail::send_mail('', $admin_email, $template['template_subject'], $this->fetch_string($template['template_content']), $template['is_html'])) {
-                $msg   = __('重置密码的邮件已经发到您的邮箱：') . $admin_email;
-                $state = ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS;
-            } else {
-                $msg   = __('重置密码邮件发送失败!请与管理员联系');
-                $state = ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR;
-            }
-
+            $msg   = __('重置密码的邮件已经发到您的邮箱：') . $admin_email;
             //提示信息
             $links = ecjia_alert_links([
                 'text' => __('返回'),
                 'href' => RC_Uri::url('@privilege/login'),
             ]);
-            return $this->showmessage($msg, $state, array('links' => $links));
-        }
-        catch (\Exception $exception) {
+            return $this->showmessage($msg, ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('links' => $links));
+        } catch (\Exception $exception) {
             return $this->showmessage($exception->getMessage(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
         }
 
@@ -292,9 +249,8 @@ class GetPasswordController extends ecjia_admin
 
         $this->assign('adminid', $adminid);
         $this->assign('code', $code);
-        $this->assign('form_act', 'reset_pwd');
         $this->assign('ur_here', __('修改密码'));
-        return $this->display('get_pwd.dwt');
+        return $this->display('reset_pwd.dwt');
     }
 
     public function reset_pwd()
@@ -339,8 +295,7 @@ class GetPasswordController extends ecjia_admin
             }
 
             return $this->showmessage(__('密码修改成功!'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, ['links' => $links]);
-        }
-        catch (\Exception $exception) {
+        } catch (\Exception $exception) {
             return $this->showmessage($exception->getMessage(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
         }
     }
