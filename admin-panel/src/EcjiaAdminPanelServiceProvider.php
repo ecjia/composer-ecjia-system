@@ -5,8 +5,11 @@ use Ecjia\System\AdminPanel\Foundation\ScriptLoader\RegisterDefaultScripts;
 use Ecjia\System\AdminPanel\Foundation\ScriptLoader\RegisterDefaultStyles;
 use Ecjia\System\Admins\AdminLog\AdminLogRepository;
 use Ecjia\System\Admins\Users\AdminUserRepository;
+use Ecjia\System\Events\AdminUserForgetPasswordEvent;
 use Ecjia\System\Frameworks\Contracts\AdminLogRepositoryInterface;
 use Ecjia\System\Frameworks\Contracts\AdminUserRepositoryInterface;
+use Ecjia\System\Listeners\AdminUserForgetPasswordSendMailListener;
+use RC_Event;
 use RC_Hook;
 use RC_Loader;
 use RC_Locale;
@@ -63,6 +66,9 @@ class EcjiaAdminPanelServiceProvider extends AppParentServiceProvider
         $this->registerDefaultStyles();
         $this->registerDefaultScripts();
 
+        //boot events
+        $this->bootEvent();
+
         //bind class
         $this->royalcms->bind(AdminUserRepositoryInterface::class, AdminUserRepository::class);
         $this->royalcms->bind(AdminLogRepositoryInterface::class, AdminLogRepository::class);
@@ -116,6 +122,11 @@ class EcjiaAdminPanelServiceProvider extends AppParentServiceProvider
         RC_Service::addService('admin_session_logins', 'system', 'Ecjia\System\AdminPanel\Services\AdminSessionLoginsService');
         RC_Service::addService('ecjia_deactivate_plugin', 'system', 'Ecjia\System\AdminPanel\Services\EcjiaDeactivatePluginService');
 
+    }
+
+    protected function bootEvent()
+    {
+        RC_Event::listen(AdminUserForgetPasswordEvent::class, AdminUserForgetPasswordSendMailListener::class);
     }
 
     /**
