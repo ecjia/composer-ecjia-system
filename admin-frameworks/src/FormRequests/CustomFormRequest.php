@@ -55,6 +55,7 @@
 namespace Ecjia\System\Frameworks\FormRequests;
 
 use ecjia_error;
+use Illuminate\Contracts\Validation\Factory as ValidationFactory;
 
 abstract class CustomFormRequest
 {
@@ -117,12 +118,15 @@ abstract class CustomFormRequest
     }
 
     /**
-     * @return \Illuminate\Validation\Validator
+     * @return \Illuminate\Contracts\Validation\Validator
      */
     public function make()
     {
+        /**
+         * @var ValidationFactory $validator
+         */
         $validator = royalcms('validator');
-        return $validator->validate($this->all(), $this->rules(), $this->messages(), $this->attributes());
+        return $validator->make($this->all(), $this->rules(), $this->messages(), $this->attributes());
     }
 
     public function validated()
