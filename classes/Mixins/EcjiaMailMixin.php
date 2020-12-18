@@ -4,8 +4,8 @@
 namespace Ecjia\System\Mixins;
 
 
-use Ecjia\Component\Mailer\Mailer;
-use RC_Hook;
+use Ecjia\App\Mail\MailManager;
+use Ecjia\System\Mailables\CustomUniversalMailabel;
 
 class EcjiaMailMixin
 {
@@ -16,16 +16,26 @@ class EcjiaMailMixin
     public function send_mail()
     {
         return function ($name, $email, $subject, $content, $type = 0, $notification = false) {
+            $custom = new CustomUniversalMailabel();
+            $custom->to($email, $name);
+            $custom->subject($subject);
+            $custom->withSwiftMessage(function ($message) use ($content, $type, $notification) {
+                // Set email format to HTML
+                if ($type) {
+                    $message->setBody($content, 'text/html');
+                } else {
+                    $message->setBody($content, 'text/plain');
+                }
 
-            //hook
-            RC_Hook::add_action('reset_mail_config', ['Ecjia\Component\Mailer\Mailer', 'ecjia_mail_config']);
+                if ($notification) {
+                    $message->setReadReceiptTo(config('mail.from.address'));
+                }
+            });
 
-            return (new Mailer(
-                config('mail.default'),
-                $this->getViewFactory(),
-                $this->getSwiftMailer(),
-                royalcms('events')
-            ))->send_mail($name, $email, $subject, $content, $type, $notification);
+            $result = MailManager::make()
+                ->send($email, $custom);
+
+            return $result;
         };
     }
 
