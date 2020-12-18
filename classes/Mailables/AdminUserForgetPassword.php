@@ -7,7 +7,6 @@ namespace Ecjia\System\Mailables;
 use ecjia;
 use Ecjia\App\Mail\Mailable\MailableAbstract;
 use Ecjia\System\Admins\Users\AdminUserModel;
-use Ecjia\System\Frameworks\Contracts\AdminUserModelInterface;
 use ecjia_error;
 use ecjia_password;
 use RC_Time;
@@ -45,31 +44,25 @@ class AdminUserForgetPassword extends MailableAbstract
      */
     public function build()
     {
+        parent::build();
+
         if (empty($this->templateModel)) {
             return new ecjia_error('mail_template_not_exist', __('邮件模板不存在', 'mail'));
         }
 
-        $content = $this->templateModel->template_content;
+        $content     = $this->templateModel->template_content;
         $reset_email = $this->getResetMailUrl();
-//dd($content);
-//        $view = $this->createViewEngine();
-//        $view->assign('user_name', );
-//        $view->assign('reset_email', );
-//        $view->assign('shop_name', );
-//        $view->assign('send_date', );
+
+        $this->subject($this->templateModel->template_subject);
 
         $data = [
-            'user_name' => $this->adminModel->user_name,
+            'user_name'   => $this->adminModel->user_name,
             'reset_email' => $reset_email,
-            'shop_name' => ecjia::config('shop_name'),
-            'send_date' => RC_Time::local_date(ecjia::config('date_format')),
+            'shop_name'   => ecjia::config('shop_name'),
+            'send_date'   => RC_Time::local_date(ecjia::config('date_format')),
         ];
-//dd(1);
-        $this->view($content, $data);
 
-//        $this->renderContent = $view->fetch('string:' . $content);
-//        $this->html($this->renderContent);
-//        dd($this->renderContent);
+        $this->view($content, $data);
     }
 
     private function getResetMailUrl()
@@ -82,14 +75,13 @@ class AdminUserForgetPassword extends MailableAbstract
         $admin_id   = $this->adminModel->user_id;
         $admin_pass = $this->adminModel->password;
 
-        $pm = ecjia_password::autoCompatibleDriver($admin_pass);
-        $code        = $pm->generateResetPasswordHash($admin_id, $admin_pass, $rand_code);
+        $pm   = ecjia_password::autoCompatibleDriver($admin_pass);
+        $code = $pm->generateResetPasswordHash($admin_id, $admin_pass, $rand_code);
 
         $reset_email = RC_Uri::url('@get_password/reset_pwd_form', array('uid' => $admin_id, 'code' => $code));
 
         return $reset_email;
     }
-
 
 
 }
