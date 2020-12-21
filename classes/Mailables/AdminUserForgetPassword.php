@@ -5,17 +5,17 @@ namespace Ecjia\System\Mailables;
 
 
 use ecjia;
-use Ecjia\App\Mail\Mailable\MailableAbstract;
+use Ecjia\App\Mail\Mailable\MailableWithTemplateAbstract;
 use Ecjia\System\Admins\Users\AdminUserModel;
 use ecjia_error;
 use ecjia_password;
 use RC_Time;
 use RC_Uri;
 
-class AdminUserForgetPassword extends MailableAbstract
+class AdminUserForgetPassword extends MailableWithTemplateAbstract
 {
 
-    protected $eventCode = 'send_password';
+    protected $eventCode = 'admin_forget_password';
 
     /**
      * 订单实例。
@@ -34,7 +34,6 @@ class AdminUserForgetPassword extends MailableAbstract
         parent::__construct();
 
         $this->adminModel = $admin_model;
-
     }
 
     /**
@@ -44,12 +43,6 @@ class AdminUserForgetPassword extends MailableAbstract
      */
     public function build()
     {
-        parent::build();
-
-        if (empty($this->templateModel)) {
-            return new ecjia_error('mail_template_not_exist', __('邮件模板不存在', 'mail'));
-        }
-
         $content     = $this->templateModel->template_content;
         $reset_email = $this->getResetMailUrl();
 
