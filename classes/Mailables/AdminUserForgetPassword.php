@@ -43,6 +43,8 @@ class AdminUserForgetPassword extends MailableWithTemplateAbstract
      */
     public function build()
     {
+        parent::build();
+        
         $content     = $this->templateModel->template_content;
         $reset_email = $this->getResetMailUrl();
 
