@@ -1,6 +1,8 @@
 <?php
 namespace Ecjia\System\AdminPanel;
 
+use Ecjia\Component\AutoLogin\AuthEncrypter;
+use Ecjia\Component\AutoLogin\AuthEncrypterInterface;
 use Ecjia\System\AdminPanel\Foundation\ScriptLoader\RegisterDefaultScripts;
 use Ecjia\System\AdminPanel\Foundation\ScriptLoader\RegisterDefaultStyles;
 use Ecjia\System\Admins\AdminLog\AdminLogRepository;
@@ -72,6 +74,7 @@ class EcjiaAdminPanelServiceProvider extends AppParentServiceProvider
         //bind class
         $this->royalcms->bind(AdminUserRepositoryInterface::class, AdminUserRepository::class);
         $this->royalcms->bind(AdminLogRepositoryInterface::class, AdminLogRepository::class);
+        $this->royalcms->bind(AuthEncrypterInterface::class, AuthEncrypter::class);
     }
 
     /**

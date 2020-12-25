@@ -6,6 +6,7 @@ namespace Ecjia\System\AdminPanel\Controllers;
 
 use ecjia;
 use Ecjia\Component\AutoLogin\AuthEncrypter;
+use Ecjia\Component\AutoLogin\AuthEncrypterInterface;
 use Ecjia\Component\AutoLogin\AuthLoginDecrypt;
 use Ecjia\System\Admins\Users\AdminUserRepository;
 use Ecjia\Theme\AdminPanel\BaseControllers\AdminPanelBaseController;
@@ -64,7 +65,7 @@ class AdminAutoLoginController extends AdminPanelBaseController
         }
 
         try {
-            $encrypter = new AuthEncrypter(config('dscmallx.auth_key'), config('dscmallx.cipher'));
+            $encrypter = royalcms(AuthEncrypterInterface::class);
             $params = (new AuthLoginDecrypt($authcode, $encrypter))->decrypt();
         }
         catch (\Exception $exception) {
