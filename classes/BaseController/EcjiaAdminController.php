@@ -52,6 +52,7 @@ use ecjia;
 use Ecjia\Component\Contracts\EcjiaTemplateFileLoader;
 use Ecjia\System\Admins\AdminPrivilege\AdminPrivilege;
 use Ecjia\System\Admins\Users\AdminUserSession;
+use Ecjia\System\Models\AdminLogModel;
 use ecjia_admin_log;
 use ecjia_app;
 use ecjia_config;
@@ -541,8 +542,6 @@ abstract class EcjiaAdminController extends EcjiaController implements EcjiaTemp
     {
         $log_info = ecjia_admin_log::instance()->get_message($sn, $action, $content);
 
-        $db = RC_Loader::load_model('admin_log_model');
-
         $data = array(
             'log_time'   => RC_Time::gmtime(),
             'user_id'    => $_SESSION['admin_id'],
@@ -550,7 +549,7 @@ abstract class EcjiaAdminController extends EcjiaController implements EcjiaTemp
             'ip_address' => RC_Ip::client_ip(),
         );
 
-        $db->insert($data);
+        AdminLogModel::insert($data);
     }
 
 
