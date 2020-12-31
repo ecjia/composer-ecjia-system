@@ -52,7 +52,6 @@ use ecjia;
 use Ecjia\Component\Contracts\EcjiaTemplateFileLoader;
 use Ecjia\System\Admins\AdminPrivilege\AdminPrivilege;
 use Ecjia\System\Admins\Users\AdminUserSession;
-use Ecjia\System\Middleware\AdminCheckLoginRequest;
 use ecjia_admin_log;
 use ecjia_app;
 use ecjia_config;
@@ -61,7 +60,6 @@ use ecjia_notification;
 use ecjia_screen;
 use ecjia_view;
 use RC_Config;
-use RC_Cookie;
 use RC_ENV;
 use RC_File;
 use RC_Hook;
@@ -72,7 +70,6 @@ use RC_Script;
 use RC_Session;
 use RC_Style;
 use RC_Time;
-use RC_Uri;
 use Smarty;
 
 /**
