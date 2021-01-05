@@ -49,6 +49,8 @@ namespace Ecjia\System\BaseController;
 use admin_menu;
 use admin_nav_here;
 use ecjia;
+use Ecjia\Component\BrowserEvent\PageEventManager;
+use Ecjia\Component\BrowserEvent\PageScriptPrint;
 use Ecjia\Component\Contracts\EcjiaTemplateFileLoader;
 use Ecjia\System\Admins\AdminPrivilege\AdminPrivilege;
 use Ecjia\System\Admins\Users\AdminUserSession;
@@ -91,7 +93,12 @@ abstract class EcjiaAdminController extends EcjiaController implements EcjiaTemp
      * 控制器对象静态属性
      * @var \Ecjia\System\BaseController\EcjiaAdminController
      */
-//    public static $controller;
+    public static $controller;
+
+    /**
+     * @var PageEventManager
+     */
+    protected $page_event;
 
     public function __construct()
     {
@@ -158,6 +165,8 @@ abstract class EcjiaAdminController extends EcjiaController implements EcjiaTemp
         RC_Hook::add_action('admin_enqueue_scripts', function () {
             $this->csrf_token_meta();
         });
+
+        $this->page_event = new PageEventManager($this->getRouteController());
 
         RC_Hook::do_action('ecjia_admin_finish_launching');
     }
@@ -298,6 +307,8 @@ abstract class EcjiaAdminController extends EcjiaController implements EcjiaTemp
      */
     public final function display($tpl_file = null, $cache_id = null, $show = true, $options = array())
     {
+        $this->loadPageScript($this->page_event);
+
         if (strpos($tpl_file, 'string:') !== 0) {
             if (RC_File::file_suffix($tpl_file) !== 'php') {
                 $tpl_file = $tpl_file . '.php';
@@ -312,6 +323,8 @@ abstract class EcjiaAdminController extends EcjiaController implements EcjiaTemp
      */
     public final function fetch($tpl_file = null, $cache_id = null, $options = array())
     {
+        $this->loadPageScript($this->page_event);
+
         if (strpos($tpl_file, 'string:') !== 0) {
             if (RC_File::file_suffix($tpl_file) !== 'php') {
                 $tpl_file = $tpl_file . '.php';
@@ -584,6 +597,19 @@ abstract class EcjiaAdminController extends EcjiaController implements EcjiaTemp
         } else {
             return false;
         }
+    }
+
+    public function loadPageScript($page)
+    {
+        RC_Hook::add_action( 'admin_print_footer_scripts',	array(new PageScriptPrint($page), 'printFooterScripts'), 30 );
+    }
+
+    /**
+     * @return PageEventManager
+     */
+    public function getPageEvent(): PageEventManager
+    {
+        return $this->page_event;
     }
 
 }

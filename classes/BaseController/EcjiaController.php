@@ -189,13 +189,22 @@ abstract class EcjiaController extends RoyalcmsController
      */
     public function isVerificationPublicRoute()
     {
-        $route_m = (royalcms('default-router')->getModule() == config('system.admin_entrance')) ? 'system' : royalcms('default-router')->getModule();
-        $route_controller = $route_m . '/' . royalcms('default-router')->getController() . '/' . royalcms('default-router')->getAction();
+        $route_controller = $this->getRouteController();
         if (in_array($route_controller, $this->public_route)) {
             return true;
         } else {
             return false;
         }
+    }
+
+    /**
+     * @return string
+     */
+    public function getRouteController()
+    {
+        $route_m = (royalcms('default-router')->getModule() == config('system.admin_entrance')) ? 'system' : royalcms('default-router')->getModule();
+        $route_controller = $route_m . '/' . royalcms('default-router')->getController() . '/' . royalcms('default-router')->getAction();
+        return $route_controller;
     }
 
 
