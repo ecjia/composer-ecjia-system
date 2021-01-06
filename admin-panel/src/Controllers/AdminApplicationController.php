@@ -105,6 +105,8 @@ class AdminApplicationController extends ecjia_admin
             RC_App::clean_applications_cache();
         }
 
+        $useapplicationnum = intval($_GET['useapplicationnum']);
+
         ecjia_screen::get_current_screen()->remove_last_nav_here();
         ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here(__('应用管理')));
         $this->assign('ur_here', __('应用管理'));
@@ -151,10 +153,27 @@ class AdminApplicationController extends ecjia_admin
             return $app;
         })->all();
 
+        $use_list = $unuse_list = [];
+
+        foreach ($applications as $key => $val) {
+            if (!empty($val['installed'])) {
+                $use_list[] = $applications[$key];
+            }
+            if (empty($val['installed'])) {
+                $unuse_list[] = $applications[$key];
+            }
+        }
+
         $this->assign('application_num', $application_num);
-        $this->assign('use_application_num', $use_application_num);
-        $this->assign('unuse_application_num', $unuse_application_num);
-        $this->assign('applications', $applications);
+        $this->assign('use_application_num', count($use_list));
+        $this->assign('unuse_application_num', count($unuse_list));
+        if ($useapplicationnum == '1') {
+            $this->assign('applications', $use_list);
+        } elseif ($useapplicationnum == '2') {
+            $this->assign('applications', $unuse_list);
+        } else {
+            $this->assign('applications', $applications);
+        }
 
         return $this->display('application_list.dwt');
     }
