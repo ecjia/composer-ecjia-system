@@ -23,7 +23,6 @@
     }
   },
   "require": {
-    "ecjia/auto-login": "^1.0",
-    "oomphinc/composer-installers-extender": "^2.0"
+    "ecjia/auto-login": "^1.0"
   }
 }
