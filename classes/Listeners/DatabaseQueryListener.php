@@ -38,11 +38,17 @@ class DatabaseQueryListener
                     return $item->format('Y-m-d H:i:s');
                 }
                 return $item;
-            });
+            })->toArray();
 
-            $query = str_replace('?', '"'.'%s'.'"', $query);
-            $sql = vsprintf($query, $bindings);
-            RC_Logger::getLogger('sql')->info('sql:'.$sql);
+            if (empty($bindings)) {
+                $sql = $query;
+                RC_Logger::getLogger('sql')->info('sql:'.$sql);
+            }
+            else {
+                $query = str_replace('?', '"'.'%s'.'"', $query);
+                $sql = vsprintf($query, $bindings);
+                RC_Logger::getLogger('sql')->info('sql:'.$sql);
+            }
         }
 
     }
