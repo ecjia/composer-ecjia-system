@@ -33,9 +33,19 @@ class MacroServiceProvider extends ServiceProvider
         Blueprint::macro('hasIndex', function(string $index): bool {
             $conn = Schema::getConnection();
             $dbSchemaManager = $conn->getDoctrineSchemaManager();
-            $doctrineTable = $dbSchemaManager->listTableDetails($this->getTable());
+            $table = $conn->getTablePrefix().$this->getTable();
+            $doctrineTable = $dbSchemaManager->listTableDetails($table);
 
             return $doctrineTable->hasIndex($index);
+        });
+
+        Blueprint::macro('hasPrimaryKey', function(string $index): bool {
+            $conn = Schema::getConnection();
+            $dbSchemaManager = $conn->getDoctrineSchemaManager();
+            $table = $conn->getTablePrefix().$this->getTable();
+            $doctrineTable = $dbSchemaManager->listTableDetails($table);
+
+            return $doctrineTable->hasPrimaryKey($index);
         });
     }
 
