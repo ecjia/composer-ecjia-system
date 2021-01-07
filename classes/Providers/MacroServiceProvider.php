@@ -32,6 +32,10 @@ class MacroServiceProvider extends ServiceProvider
 
         Blueprint::macro('hasIndex', function(string $index): bool {
             $conn = Schema::getConnection();
+            if ($conn->pretending()) {
+                return true;
+            }
+
             $dbSchemaManager = $conn->getDoctrineSchemaManager();
             $table = $conn->getTablePrefix().$this->getTable();
             $doctrineTable = $dbSchemaManager->listTableDetails($table);
@@ -41,6 +45,10 @@ class MacroServiceProvider extends ServiceProvider
 
         Blueprint::macro('hasPrimaryKey', function(string $index): bool {
             $conn = Schema::getConnection();
+            if ($conn->pretending()) {
+                return true;
+            }
+
             $dbSchemaManager = $conn->getDoctrineSchemaManager();
             $table = $conn->getTablePrefix().$this->getTable();
             $doctrineTable = $dbSchemaManager->listTableDetails($table);
