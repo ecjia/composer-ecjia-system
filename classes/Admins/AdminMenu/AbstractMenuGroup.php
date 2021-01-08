@@ -26,7 +26,7 @@ abstract class AbstractMenuGroup
 
     /**
      * 过滤菜单
-     * @param $menus
+     * @param array $menus
      * @return array
      */
     protected function filterMenu($menus)
