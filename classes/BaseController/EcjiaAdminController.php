@@ -601,7 +601,9 @@ abstract class EcjiaAdminController extends EcjiaController implements EcjiaTemp
 
     public function loadPageScript($page)
     {
-        RC_Hook::add_action( 'admin_print_footer_scripts',	array(new PageScriptPrint($page), 'printFooterScripts'), 30 );
+        $print = new PageScriptPrint($page);
+        RC_Hook::add_action( 'admin_print_footer_scripts',	array($print, 'printFooterScripts'), 30 );
+        RC_Hook::add_action( 'admin_pjax_footer',	array($print, 'printFooterScripts'), 30 );
     }
 
     /**
