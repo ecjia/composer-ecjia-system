@@ -5,11 +5,10 @@ namespace Ecjia\System\AdminPanel\Controllers;
 
 
 use ecjia;
-use Ecjia\Component\AutoLogin\AuthEncrypter;
 use Ecjia\Component\AutoLogin\AuthEncrypterInterface;
 use Ecjia\Component\AutoLogin\AuthLoginDecrypt;
 use Ecjia\System\Admins\Users\AdminUserRepository;
-use Ecjia\Theme\AdminPanel\BaseControllers\AdminPanelBaseController;
+use ecjia_admin;
 use ecjia_error;
 use RC_Hook;
 use RC_Session;
@@ -19,7 +18,7 @@ use RC_Uri;
  * Class AdminAutoLoginController
  * @package Ecjia\Theme\AdminPanel\Controllers\Admincp
  */
-class AdminAutoLoginController extends AdminPanelBaseController
+class AdminAutoLoginController extends ecjia_admin
 {
 
     public function __construct()
