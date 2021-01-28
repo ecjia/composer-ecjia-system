@@ -633,7 +633,7 @@ function build_uri($app, $params, $append = '', $page = 0, $keywords = '', $size
 
         $uri .= '.html';
     }
-    if (($rewrite == 2) && (strpos ( strtolower ( EC_CHARSET ), 'utf' ) !== 0)) {
+    if (($rewrite == 2) && (strpos ( strtolower ( RC_CHARSET ), 'utf' ) !== 0)) {
         $uri = urlencode ( $uri );
     }
     return $uri;
@@ -693,10 +693,11 @@ if ( ! function_exists('ecjia_price_format'))
         }
         
         $currency_format = ecjia::config('currency_format');
-    	if ($currency_format != '￥%s') {
-    		$currency_format = config('site.currency_format');
-    	}
-        return sprintf($currency_format, $price);
+        $currency_format = RC_Hook::apply_filters('ecjia_currency_format_filter', $currency_format);
+
+        $format_price = sprintf($currency_format, $price);
+
+        return $format_price;
     }
 }
 
