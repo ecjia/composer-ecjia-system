@@ -14,11 +14,11 @@ class AdminLogRepository extends AbstractRepository implements AdminLogRepositor
 
     use Macroable;
 
-    protected $model = 'Ecjia\System\Admins\Users\AdminUserModel';
+    protected $model = 'Ecjia\System\Models\AdminLogModel';
 
     public function __construct()
     {
-        $this->model = RC_Hook::apply_filters('ecjia_admin_user_model', $this->model);
+        $this->model = RC_Hook::apply_filters('ecjia_admin_log_model', $this->model);
 
         parent::__construct();
 
