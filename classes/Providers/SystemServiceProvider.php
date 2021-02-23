@@ -86,7 +86,8 @@ class SystemServiceProvider extends AppParentServiceProvider
         }
 
         // 加载扩展函数库
-        RC_Loader::auto_load_func();
+        $this->customAutoloadFunction();
+
 
         // 请求数据自动转义
         $_POST      = rc_addslashes($_POST);
@@ -108,6 +109,21 @@ class SystemServiceProvider extends AppParentServiceProvider
         RC_Hook::do_action('ecjia_loading');
 
         RC_Hook::do_action('ecjia_loading_after');
+    }
+
+    /**
+     * 自动加载函数库
+     */
+    protected function customAutoloadFunction()
+    {
+        //加载框架的函数库
+        RC_Loader::auto_load_func();
+
+        //加载自定义的函数库
+        $autoload_path = $this->royalcms->contentPath() . '/autoload';
+        if (is_dir($autoload_path)) {
+            RC_Loader::auto_load_func($autoload_path);
+        }
     }
 
     /**
