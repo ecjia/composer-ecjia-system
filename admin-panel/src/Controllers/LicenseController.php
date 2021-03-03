@@ -46,6 +46,7 @@
 //
 namespace Ecjia\System\AdminPanel\Controllers;
 
+use Ecjia\System\Frameworks\Uploader\LicenseUploader;
 use ecjia_admin;
 use ecjia_admin_log;
 use ecjia_config;
@@ -140,9 +141,7 @@ class LicenseController extends ecjia_admin
 
         try {
             /* 接收上传文件 */
-            $upload = RC_Upload::uploader('file', array('save_path' => 'data/certificate', 'auto_sub_dirs' => false));
-            $upload->allowed_type('cer,pem');
-            $upload->allowed_mime('application/x-x509-ca-cert,application/octet-stream');
+            $upload = (new LicenseUploader())->getUploader();
 
             if (!$upload->check_upload_file($_FILES['license'])) {
                 return $this->showmessage($upload->error(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
